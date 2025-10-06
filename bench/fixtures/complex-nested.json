@@ -1,0 +1,49 @@
+{
+  "project": {
+    "id": 101,
+    "name": "Advanced Platform",
+    "metadata": {
+      "version": "2.1.0",
+      "author": "Development Team",
+      "tags": ["enterprise", "cloud", "scalable"],
+      "config": {
+        "features": {
+          "authentication": true,
+          "monitoring": false,
+          "logging": {
+            "level": "info",
+            "format": "json",
+            "outputs": ["console", "file"]
+          }
+        },
+        "performance": {
+          "cache_ttl": 3600,
+          "max_connections": 1000,
+          "timeout": 30
+        }
+      }
+    },
+    "team": [
+      {
+        "id": 1,
+        "name": "Alice Johnson",
+        "role": "Lead Developer",
+        "skills": ["JavaScript", "TypeScript", "Node.js", "React"],
+        "contact": {
+          "email": "alice@company.com",
+          "github": "alicejohnson"
+        }
+      },
+      {
+        "id": 2,
+        "name": "Bob Chen",
+        "role": "DevOps Engineer",
+        "skills": ["Docker", "Kubernetes", "AWS", "Terraform"],
+        "contact": {
+          "email": "bob@company.com",
+          "github": "bobchen"
+        }
+      }
+    ]
+  }
+}

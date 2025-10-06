@@ -1,0 +1,31 @@
+#version 1.0
+users[2]{id:u32,name:str,role:str}:
+  1, Alice, admin
+  2, "Bob, Jr.", user
+
+#version 1.0
+user{id:u32,name:str,contact:obj,roles:list}:
+  id: 1
+  name: Alice
+  contact{email:str,phone:str}:
+    email: alice@example.com
+    phone: +123456789
+  roles[2]: admin, editor
+
+#version 1.0
+project{id:u32,name:str,owner:obj,tasks:list}:
+  id: 101
+  name: Alpha
+  owner{id:u32,name:str}:
+    id: 1
+    name: Alice
+  tasks[1]{id:u32,title:str,assignee:obj,status:str,comments:list}:
+    id: 201
+    title: "Design API"
+    assignee{id:u32,name:str}:
+      id: 2
+      name: Bob
+    status: done
+    comments[2]{id:u32,author:str,message:str}:
+      301, Alice, "Looks good!"
+      302, Eve, "Add more tests."

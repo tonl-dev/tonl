@@ -1,0 +1,243 @@
+{
+  "meta": {
+    "version": "2.3.5",
+    "environment": "production",
+    "lastBackup": "2025-11-01T21:30:00Z",
+    "server": {
+      "region": "eu-central",
+      "uptimeHours": 4392.42,
+      "features": {
+        "multiTenant": true,
+        "aiAssistant": true,
+        "realtimeSync": false
+      }
+    }
+  },
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "roles": ["admin", "developer"],
+      "active": true,
+      "preferences": {
+        "theme": "dark",
+        "language": "en",
+        "notifications": {
+          "email": true,
+          "sms": false,
+          "push": true
+        }
+      },
+      "devices": [
+        { "type": "laptop", "os": "Windows 11", "lastActive": "2025-11-01T18:10:00Z" },
+        { "type": "phone", "os": "Android 14", "lastActive": "2025-11-01T18:15:22Z" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Bob Martinez",
+      "email": "bob.m@example.com",
+      "roles": ["project_manager"],
+      "active": false,
+      "preferences": {
+        "theme": "light",
+        "language": "es",
+        "notifications": {
+          "email": false,
+          "sms": true,
+          "push": false
+        }
+      },
+      "devices": [
+        { "type": "tablet", "os": "iPadOS 18", "lastActive": "2025-10-29T11:03:00Z" }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Charlie Zhou",
+      "email": "charlie.z@example.com",
+      "roles": ["qa", "support"],
+      "active": true,
+      "preferences": {
+        "theme": "system",
+        "language": "zh",
+        "notifications": {
+          "email": true,
+          "sms": true,
+          "push": false
+        }
+      },
+      "devices": []
+    }
+  ],
+  "projects": [
+    {
+      "id": 1001,
+      "name": "Neural Analytics Dashboard",
+      "status": "active",
+      "createdAt": "2025-06-12T09:00:00Z",
+      "ownerId": 1,
+      "tags": ["ai", "data", "frontend"],
+      "tasks": [
+        {
+          "id": 501,
+          "title": "Design data schema",
+          "assignedTo": 1,
+          "priority": "high",
+          "completed": true,
+          "comments": [
+            { "id": 9001, "author": 2, "message": "Schema looks solid", "timestamp": "2025-06-13T10:15:00Z" },
+            { "id": 9002, "author": 3, "message": "Added missing indices", "timestamp": "2025-06-13T11:02:00Z" }
+          ]
+        },
+        {
+          "id": 502,
+          "title": "Implement API routes",
+          "assignedTo": 3,
+          "priority": "medium",
+          "completed": false,
+          "comments": []
+        }
+      ],
+      "milestones": [
+        {
+          "name": "MVP Ready",
+          "due": "2025-12-01",
+          "tasks": [501, 502],
+          "achieved": false
+        }
+      ],
+      "analytics": {
+        "views": 15732,
+        "uniqueVisitors": 9841,
+        "countries": [
+          { "code": "US", "count": 4320 },
+          { "code": "DE", "count": 2100 },
+          { "code": "IN", "count": 1543 },
+          { "code": "TR", "count": 834 }
+        ]
+      }
+    },
+    {
+      "id": 1002,
+      "name": "Mobile App Redesign",
+      "status": "on_hold",
+      "createdAt": "2025-07-22T12:00:00Z",
+      "ownerId": 2,
+      "tags": ["mobile", "design"],
+      "tasks": [
+        {
+          "id": 503,
+          "title": "Update brand color palette",
+          "assignedTo": 2,
+          "priority": "low",
+          "completed": true,
+          "comments": [
+            { "id": 9003, "author": 1, "message": "Love the new palette", "timestamp": "2025-07-23T09:45:00Z" }
+          ]
+        }
+      ],
+      "milestones": [],
+      "analytics": {
+        "views": 2531,
+        "uniqueVisitors": 1331,
+        "countries": [
+          { "code": "ES", "count": 443 },
+          { "code": "FR", "count": 291 }
+        ]
+      }
+    }
+  ],
+  "notifications": [
+    { "id": "n001", "type": "comment", "userId": 1, "projectId": 1001, "message": "Eve replied to your comment.", "read": false },
+    { "id": "n002", "type": "system", "userId": 2, "projectId": null, "message": "Server update completed.", "read": true },
+    { "id": "n003", "type": "assignment", "userId": 3, "projectId": 1001, "message": "You were assigned to Implement API routes.", "read": false }
+  ],
+  "activityLog": [
+    { "id": 1, "timestamp": "2025-11-01T10:00:00Z", "action": "user_login", "userId": 1, "ip": "192.168.1.11" },
+    { "id": 2, "timestamp": "2025-11-01T10:02:12Z", "action": "project_view", "userId": 1, "details": { "projectId": 1001, "durationSec": 45 } },
+    { "id": 3, "timestamp": "2025-11-01T10:04:30Z", "action": "task_comment", "userId": 3, "details": { "taskId": 501, "comment": "Looks good!" } },
+    { "id": 4, "timestamp": "2025-11-01T11:15:00Z", "action": "logout", "userId": 2, "ip": "10.0.0.55" }
+  ],
+  "reports": {
+    "weeklySummary": {
+      "week": "2025-W44",
+      "newUsers": 5,
+      "activeProjects": 2,
+      "completedTasks": 1,
+      "errors": null,
+      "uptimePercent": 99.93
+    },
+    "monthlyBilling": [
+      {
+        "month": "2025-10",
+        "totalUsers": 3,
+        "activeUsers": 2,
+        "plan": "Pro",
+        "amountUSD": 39.99,
+        "invoices": [
+          { "invoiceId": "INV-1001", "status": "paid", "date": "2025-10-31" }
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "plans": [
+      { "name": "Free", "maxUsers": 2, "features": ["basicAnalytics"], "price": 0 },
+      { "name": "Pro", "maxUsers": 20, "features": ["analytics", "prioritySupport"], "price": 39.99 },
+      { "name": "Enterprise", "maxUsers": 9999, "features": ["analytics", "prioritySupport", "customIntegrations"], "price": 399.99 }
+    ],
+    "integrations": {
+      "slack": {
+        "enabled": true,
+        "workspace": "companyhq",
+        "channels": ["#alerts", "#devops"]
+      },
+      "github": {
+        "enabled": true,
+        "repositories": [
+          "org/frontend-app",
+          "org/backend-service"
+        ]
+      },
+      "googleAnalytics": {
+        "enabled": false,
+        "trackingId": null
+      }
+    }
+  },
+  "statistics": {
+    "system": {
+      "memoryUsageMB": 845.3,
+      "diskUsagePercent": 71.4,
+      "cpuLoad": [0.35, 0.47, 0.41],
+      "uptimeHours": 4392
+    },
+    "userActivity": {
+      "dailyLogins": [35, 41, 38, 29, 45, 50, 56],
+      "apiRequestsPerMinute": [85, 96, 92, 102, 110, 87],
+      "errorRates": { "5xx": 0.0023, "4xx": 0.0174 }
+    }
+  },
+  "auditTrail": {
+    "entries": [
+      {
+        "id": "a01",
+        "type": "config_change",
+        "userId": 1,
+        "timestamp": "2025-10-25T18:12:00Z",
+        "before": { "realtimeSync": false },
+        "after": { "realtimeSync": true }
+      },
+      {
+        "id": "a02",
+        "type": "role_update",
+        "userId": 2,
+        "timestamp": "2025-10-28T09:20:00Z",
+        "before": ["viewer"],
+        "after": ["project_manager"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "success": true,
+  "data": {
+    "users": [
+      {
+        "id": "user_12345",
+        "username": "johndoe",
+        "email": "john.doe@example.com",
+        "profile": {
+          "first_name": "John",
+          "last_name": "Doe",
+          "avatar": "https://api.example.com/avatars/user_12345.jpg",
+          "bio": "Software developer passionate about creating elegant solutions.",
+          "location": {
+            "city": "San Francisco",
+            "state": "CA",
+            "country": "USA",
+            "coordinates": {
+              "latitude": 37.7749,
+              "longitude": -122.4194
+            }
+          }
+        },
+        "preferences": {
+          "theme": "dark",
+          "language": "en",
+          "notifications": {
+            "email": true,
+            "push": false,
+            "sms": true
+          }
+        },
+        "activity": {
+          "last_login": "2024-11-02T10:30:00Z",
+          "login_count": 247,
+          "sessions": [
+            {
+              "id": "sess_987",
+              "start_time": "2024-11-02T09:15:00Z",
+              "duration": 5400,
+              "ip_address": "192.168.1.100",
+              "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            }
+          ]
+        }
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "per_page": 1,
+      "total_pages": 1,
+      "total_items": 1,
+      "has_next": false,
+      "has_prev": false
+    }
+  },
+  "meta": {
+    "timestamp": "2024-11-02T15:45:30Z",
+    "request_id": "req_abc123def456",
+    "version": "v2.1.0",
+    "server_info": {
+      "region": "us-west-2",
+      "instance_id": "i-0123456789abcdef0"
+    }
+  }
+}

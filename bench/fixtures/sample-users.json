@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
+    "role": "admin",
+    "active": true,
+    "tags": ["engineering", "management"],
+    "lastLogin": "2024-01-15T10:30:00Z"
+  },
+  {
+    "id": 2,
+    "name": "Bob Smith, Jr.",
+    "email": "bob.smith@example.com",
+    "role": "user",
+    "active": false,
+    "tags": ["marketing", "sales"],
+    "lastLogin": "2024-01-10T14:22:00Z"
+  },
+  {
+    "id": 3,
+    "name": "Carol Davis",
+    "email": "carol@company-name.org",
+    "role": "user",
+    "active": true,
+    "tags": ["support"],
+    "lastLogin": "2024-01-18T09:15:00Z"
+  }
+]

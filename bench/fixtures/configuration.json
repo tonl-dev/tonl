@@ -1,0 +1,114 @@
+{
+  "application": {
+    "name": "Microservices Platform",
+    "version": "3.2.1",
+    "environment": "production",
+    "debug": false
+  },
+  "services": [
+    {
+      "name": "user-service",
+      "host": "user-service.internal",
+      "port": 8080,
+      "protocol": "https",
+      "health_check": {
+        "endpoint": "/health",
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3
+      },
+      "database": {
+        "type": "postgresql",
+        "host": "db-user.internal",
+        "port": 5432,
+        "name": "users",
+        "ssl": true,
+        "pool": {
+          "min": 5,
+          "max": 20,
+          "idle_timeout": 300
+        }
+      },
+      "cache": {
+        "type": "redis",
+        "host": "redis-user.internal",
+        "port": 6379,
+        "ttl": 3600,
+        "cluster": ["redis-user-1", "redis-user-2", "redis-user-3"]
+      }
+    },
+    {
+      "name": "order-service",
+      "host": "order-service.internal",
+      "port": 8081,
+      "protocol": "https",
+      "health_check": {
+        "endpoint": "/health",
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3
+      },
+      "database": {
+        "type": "mongodb",
+        "host": "mongo-order.internal",
+        "port": 27017,
+        "name": "orders",
+        "replica_set": "orders-rs"
+      },
+      "message_queue": {
+        "type": "rabbitmq",
+        "host": "mq.internal",
+        "port": 5672,
+        "exchanges": {
+          "orders": "direct",
+          "notifications": "topic"
+        }
+      }
+    }
+  ],
+  "security": {
+    "jwt": {
+      "secret": "${JWT_SECRET}",
+      "expiration": 3600,
+      "refresh_expiration": 86400
+    },
+    "cors": {
+      "allowed_origins": ["https://app.example.com", "https://admin.example.com"],
+      "allowed_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      "allowed_headers": ["Content-Type", "Authorization", "X-Requested-With"]
+    },
+    "rate_limiting": {
+      "enabled": true,
+      "requests_per_minute": 100,
+      "burst_size": 200
+    }
+  },
+  "monitoring": {
+    "metrics": {
+      "prometheus": {
+        "enabled": true,
+        "port": 9090,
+        "path": "/metrics"
+      }
+    },
+    "logging": {
+      "level": "info",
+      "format": "json",
+      "outputs": ["stdout", "elasticsearch"],
+      "elasticsearch": {
+        "host": "elasticsearch.logging.internal",
+        "port": 9200,
+        "index": "application-logs"
+      }
+    },
+    "alerts": {
+      "email": "alerts@example.com",
+      "slack_webhook": "${SLACK_WEBHOOK_URL}",
+      "conditions": {
+        "error_rate": 0.05,
+        "response_time": 500,
+        "cpu_usage": 0.8
+      }
+    }
+  }
+}

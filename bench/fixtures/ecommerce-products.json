@@ -1,0 +1,75 @@
+{
+  "products": [
+    {
+      "id": "prod_001",
+      "name": "Wireless Bluetooth Headphones",
+      "price": 89.99,
+      "currency": "USD",
+      "category": "Electronics",
+      "brand": "AudioTech",
+      "specs": {
+        "battery_life": "30 hours",
+        "noise_cancelling": true,
+        "bluetooth_version": "5.2",
+        "weight": "250g"
+      },
+      "inventory": 150,
+      "reviews": [
+        {
+          "id": "rev_001",
+          "rating": 5,
+          "comment": "Excellent sound quality!",
+          "reviewer": "John D.",
+          "date": "2024-10-15"
+        },
+        {
+          "id": "rev_002",
+          "rating": 4,
+          "comment": "Good value for money",
+          "reviewer": "Sarah M.",
+          "date": "2024-10-20"
+        }
+      ]
+    },
+    {
+      "id": "prod_002",
+      "name": "Smart Fitness Watch",
+      "price": 249.99,
+      "currency": "USD",
+      "category": "Wearables",
+      "brand": "FitLife",
+      "specs": {
+        "display": "1.4\" AMOLED",
+        "water_resistance": "5ATM",
+        "battery_life": "7 days",
+        "sensors": ["heart_rate", "gps", "accelerometer"]
+      },
+      "inventory": 75,
+      "reviews": [
+        {
+          "id": "rev_003",
+          "rating": 4,
+          "comment": "Great features, battery could be better",
+          "reviewer": "Mike R.",
+          "date": "2024-10-18"
+        }
+      ]
+    },
+    {
+      "id": "prod_003",
+      "name": "Portable Power Bank",
+      "price": 45.99,
+      "currency": "USD",
+      "category": "Accessories",
+      "brand": "PowerUp",
+      "specs": {
+        "capacity": "20000mAh",
+        "ports": ["USB-C", "USB-A"],
+        "fast_charging": "65W",
+        "weight": "400g"
+      },
+      "inventory": 200,
+      "reviews": []
+    }
+  ]
+}

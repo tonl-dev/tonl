@@ -1,0 +1,97 @@
+{
+  "analytics": {
+    "report_date": "2024-11-02",
+    "total_users": 125478,
+    "active_users": 45623,
+    "metrics": [
+      {
+        "metric_id": "page_views",
+        "metric_name": "Page Views",
+        "value": 1847293,
+        "change_percent": 12.5,
+        "breakdown": {
+          "desktop": 1108376,
+          "mobile": 585891,
+          "tablet": 153026
+        }
+      },
+      {
+        "metric_id": "session_duration",
+        "metric_name": "Average Session Duration",
+        "value": 245.7,
+        "change_percent": -3.2,
+        "breakdown": {
+          "new_users": 89.3,
+          "returning_users": 312.4
+        }
+      },
+      {
+        "metric_id": "conversion_rate",
+        "metric_name": "Conversion Rate",
+        "value": 3.8,
+        "change_percent": 0.7,
+        "breakdown": {
+          "search": 5.2,
+          "direct": 4.1,
+          "social": 2.9,
+          "email": 3.2
+        }
+      }
+    ],
+    "top_pages": [
+      {
+        "url": "/home",
+        "title": "Homepage",
+        "views": 234567,
+        "unique_visitors": 87432,
+        "avg_time_on_page": 145.3
+      },
+      {
+        "url": "/products",
+        "title": "Products",
+        "views": 198234,
+        "unique_visitors": 72156,
+        "avg_time_on_page": 234.7
+      },
+      {
+        "url": "/blog",
+        "title": "Blog",
+        "views": 145678,
+        "unique_visitors": 54321,
+        "avg_time_on_page": 345.2
+      }
+    ],
+    "user_segments": [
+      {
+        "segment_id": "premium_users",
+        "segment_name": "Premium Users",
+        "count": 15234,
+        "characteristics": {
+          "avg_session_value": 45.67,
+          "retention_rate": 0.89,
+          "lifetime_value": 1250.00
+        }
+      },
+      {
+        "segment_id": "free_users",
+        "segment_name": "Free Users",
+        "count": 89234,
+        "characteristics": {
+          "avg_session_value": 12.34,
+          "retention_rate": 0.45,
+          "lifetime_value": 89.50
+        }
+      },
+      {
+        "segment_id": "trial_users",
+        "segment_name": "Trial Users",
+        "count": 21010,
+        "characteristics": {
+          "avg_session_value": 8.90,
+          "retention_rate": 0.67,
+          "lifetime_value": 34.75
+        }
+      }
+    ]
+  }
+}

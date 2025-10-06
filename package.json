@@ -1,0 +1,58 @@
+{
+  "name": "tonl",
+  "version": "0.2.0",
+  "description": "Token-Optimized Notation Language - A text-first, LLM-friendly serialization format",
+  "homepage": "https://github.com/ersinkoc/tonl",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ersinkoc/tonl.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ersinkoc/tonl/issues"
+  },
+  "files": [
+    "dist/",
+    "docs/",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "tonl": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && node --test test/*.test.ts",
+    "dev": "tsc --watch",
+    "bench": "npm run build && node dist/bench/bench-bytes.js",
+    "bench-tokens": "npm run build && node dist/bench/bench-tokens.js",
+    "bench-comprehensive": "npm run build && node dist/bench/comprehensive-bench.js",
+    "link": "npm run build && npm link",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "serialization",
+    "format",
+    "llm",
+    "compact",
+    "typescript"
+  ],
+  "author": "Ersin KOÇ",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {}
+}

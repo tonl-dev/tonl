@@ -1,0 +1,37 @@
+{
+  "project": {
+    "id": 101,
+    "name": "Alpha Platform",
+    "owner": {
+      "id": 1,
+      "name": "Alice",
+      "contact": {
+        "email": "alice@example.com",
+        "phone": "+1-555-0123"
+      }
+    },
+    "tasks": [
+      {
+        "id": 201,
+        "title": "Design API",
+        "assignee": {
+          "id": 2,
+          "name": "Bob"
+        },
+        "status": "done",
+        "comments": [
+          {
+            "id": 301,
+            "author": "Alice",
+            "message": "Looks good! Let's proceed."
+          },
+          {
+            "id": 302,
+            "author": "Eve",
+            "message": "Add more tests before deployment."
+          }
+        ]
+      }
+    ]
+  }
+}
