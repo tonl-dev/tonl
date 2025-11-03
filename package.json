@@ -22,8 +22,8 @@
   ],
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
     },
     "./schema": {
       "types": "./dist/src/schema/index.d.ts",
@@ -39,7 +39,7 @@
     },
     "./package.json": "./package.json"
   },
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "type": "module",
   "bin": {
     "tonl": "dist/src/cli.js"
@@ -53,7 +53,6 @@
     "bench": "npm run build && node dist/bench/bench-bytes.js",
     "bench-tokens": "npm run build && node dist/bench/bench-tokens.js",
     "bench-comprehensive": "npm run build && node dist/bench/comprehensive-bench.js",
-    "bench-streaming": "npm run build && node --experimental-top-level-await dist/bench/bench-streaming.js",
     "link": "npm run build && npm link",
     "clean": "rimraf dist"
   },
