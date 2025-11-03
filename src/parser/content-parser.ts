@@ -25,7 +25,8 @@ export function parseContent(content: string, context: TONLParseContext): TONLOb
     const line = lines[i];
     const trimmed = line.trim();
 
-    if (!trimmed) {
+    // Skip empty lines and comments (# or @)
+    if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('@')) {
       i++;
       continue;
     }

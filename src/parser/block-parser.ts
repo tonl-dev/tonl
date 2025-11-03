@@ -39,9 +39,9 @@ export function parseBlock(
     }
 
     const currentIndent = line.match(/^(\s*)/)?.[1]?.length || 0;
-    let justEndedMultiline = false;
 
     // Track multiline strings
+    let justEndedMultiline = false;
     if (trimmed.includes('"""')) {
       const quoteCount = (trimmed.match(/"""/g) || []).length;
 
@@ -58,10 +58,17 @@ export function parseBlock(
       }
     }
 
-    const shouldBreak = !inMultilineString && !justEndedMultiline &&
-                       (currentIndent < headerIndent || (currentIndent === headerIndent && !header.isArray));
-    if (shouldBreak) {
+    // Break if we're at a lower indent level
+    if (!inMultilineString && currentIndent < headerIndent) {
       break;
+    }
+
+    // Break if we're at the same level and this is a new header (for arrays) or not an array
+    if (!inMultilineString && !justEndedMultiline && currentIndent === headerIndent) {
+      const isNewHeader = trimmed.endsWith(':');
+      if (!header.isArray || isNewHeader) {
+        break;
+      }
     }
 
     blockLines.push(line);
@@ -89,7 +96,8 @@ export function parseObjectBlock(
   while (lineIndex < lines.length) {
     const line = lines[lineIndex];
     const trimmed = line.trim();
-    if (!trimmed) {
+    // Skip empty lines and comments
+    if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('@')) {
       lineIndex++;
       continue;
     }
@@ -222,7 +230,8 @@ export function parseArrayBlock(
       for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
         const line = lines[lineIndex];
         const trimmed = line.trim();
-        if (!trimmed) continue;
+        // Skip empty lines and comments
+        if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('@')) continue;
 
         const nestedHeader = parseObjectHeader(trimmed);
         if (nestedHeader) {
@@ -254,7 +263,8 @@ export function parseArrayBlock(
     // Tabular object array
     for (const line of lines) {
       const trimmed = line.trim();
-      if (!trimmed) continue;
+      // Skip empty lines and comments
+      if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('@')) continue;
 
       const values = parseTONLLine(trimmed, context.delimiter);
       if (values.length === 0) continue;
