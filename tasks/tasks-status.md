@@ -3,8 +3,8 @@
 **Last Updated:** 2025-11-04
 **Total Tasks:** 41
 **Completed:** 1
-**In Progress:** 0
-**Not Started:** 40
+**In Progress:** 1
+**Not Started:** 39
 **Blocked:** 0
 
 ---
@@ -46,9 +46,9 @@
   - Completion Date: 2025-11-04
 
 - [ ] **T002** - Query Evaluator Core (P1, 4 days)
-  - Status: 🔴 Not Started
-  - Assignee: TBD
-  - Dependencies: T001
+  - Status: 🟡 In Progress
+  - Assignee: Claude
+  - Dependencies: T001 ✅
   - Blocks: T005
 
 - [ ] **T003** - Filter Expression Engine (P1, 3 days)
