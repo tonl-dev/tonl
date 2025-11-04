@@ -11,6 +11,36 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         code, pre { font-family: 'JetBrains Mono', monospace; }
+
+        /* Copy button for code blocks */
+        .code-wrapper { position: relative; }
+        .copy-code-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: white;
+            font-size: 11px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s;
+        }
+        .code-wrapper:hover .copy-code-btn { opacity: 1; }
+        .copy-code-btn:hover { background: rgba(255,255,255,0.2); }
+        .copy-code-btn.copied { background: #10b981; border-color: #10b981; }
+
+        /* Smooth transitions */
+        html { scroll-behavior: smooth; }
+        .sidebar a { transition: all 0.2s; }
+
+        /* Hover glow effect */
+        .border-slate-200:hover {
+            border-color: rgb(226 232 240);
+            box-shadow: 0 0 0 3px rgb(226 232 240 / 0.1);
+        }
     </style>
 </head>
 <body class="bg-white">
@@ -78,15 +108,19 @@
 
                     <div>
                         <h3 class="text-2xl font-semibold text-slate-900 mb-4">Installation</h3>
-                        <div class="bg-slate-900 rounded-lg p-4">
-                            <code class="text-emerald-400">npm install tonl</code>
+                        <div class="code-wrapper">
+                            <div class="bg-slate-900 rounded-lg p-4">
+                                <code class="text-emerald-400">npm install tonl</code>
+                            </div>
+                            <button class="copy-code-btn" onclick="copyCode(this, 'npm install tonl')">Copy</button>
                         </div>
                     </div>
 
                     <div>
                         <h3 class="text-2xl font-semibold text-slate-900 mb-4">Quick Example</h3>
-                        <div class="bg-slate-900 rounded-lg p-6">
-                            <pre class="text-slate-300 text-sm leading-relaxed"><code><span class="text-purple-400">import</span> { TONLDocument } <span class="text-purple-400">from</span> <span class="text-emerald-400">'tonl'</span>;
+                        <div class="code-wrapper">
+                            <div class="bg-slate-900 rounded-lg p-6">
+                                <pre class="text-slate-300 text-sm leading-relaxed"><code><span class="text-purple-400">import</span> { TONLDocument } <span class="text-purple-400">from</span> <span class="text-emerald-400">'tonl'</span>;
 
 <span class="text-slate-500">// Create from JSON</span>
 <span class="text-purple-400">const</span> doc = TONLDocument.fromJSON({
@@ -101,6 +135,8 @@ doc.set(<span class="text-emerald-400">'users[0].age'</span>, <span class="text-
 
 <span class="text-slate-500">// Save</span>
 <span class="text-purple-400">await</span> doc.save(<span class="text-emerald-400">'data.tonl'</span>);</code></pre>
+                            </div>
+                            <button class="copy-code-btn" onclick="copyCode(this, `import { TONLDocument } from 'tonl';\n\nconst doc = TONLDocument.fromJSON({\n  users: [{ name: 'Alice', age: 30 }]\n});\n\nconst result = doc.query('users[*].name');\n\ndoc.set('users[0].age', 31);\n\nawait doc.save('data.tonl');`)">Copy</button>
                         </div>
                     </div>
 
@@ -325,6 +361,27 @@ doc.set(<span class="text-emerald-400">'users[0].age'</span>, <span class="text-
             </div>
         </div>
     </footer>
+
+    <script>
+        function copyCode(btn, text) {
+            navigator.clipboard.writeText(text);
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove('copied');
+            }, 2000);
+        }
+
+        // Add smooth hover effects to cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.border-slate-200');
+            cards.forEach(card => {
+                card.style.transition = 'all 0.2s';
+            });
+        });
+    </script>
 
 </body>
 </html>

@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tonl@1.0.1/dist/browser/tonl.iife.js"></script>
-    <script src="examples-new-data.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 
     <style>
@@ -44,7 +43,7 @@
 
     <!-- Navigation -->
     <nav class="border-b border-slate-200 bg-white sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="max-w-[1800px] mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
                 <a href="index.html" class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
@@ -63,7 +62,7 @@
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-6 py-12" x-data="playground()">
+    <div class="max-w-[1800px] mx-auto px-6 py-12" x-data="playground()">
 
         <!-- Header with Live Stats -->
         <div class="mb-10">
@@ -97,87 +96,47 @@
 
         <!-- Example Templates - Rich Collection -->
         <div class="mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-2xl font-bold text-slate-900">Try These Examples</h3>
-                <button @click="clearAll()" class="px-4 py-2 text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium">Clear All</button>
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-bold text-slate-900">Try These Examples:</h3>
+                <button @click="clearAll()" class="text-sm text-slate-600 hover:text-slate-900 font-medium underline">Clear</button>
             </div>
-
-            <!-- Quick Start -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">🚀 Quick Start</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('small')" class="px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 hover:scale-105 transition text-xs font-medium">📝 Simple</button>
-                    <button @click="loadExample('simpleArray')" class="px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 hover:scale-105 transition text-xs font-medium">📋 Array</button>
-                    <button @click="loadExample('basicNested')" class="px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 hover:scale-105 transition text-xs font-medium">🔗 Nested</button>
-                </div>
-            </div>
-
-            <!-- Business -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">💼 Business</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('users')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">👥 Users</button>
-                    <button @click="loadExample('employees')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">👔 Employees</button>
-                    <button @click="loadExample('customers')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🤝 Customers</button>
-                    <button @click="loadExample('invoices')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📄 Invoices</button>
-                    <button @click="loadExample('orders')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📦 Orders</button>
-                    <button @click="loadExample('inventory')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📊 Inventory</button>
-                </div>
-            </div>
-
-            <!-- E-commerce -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">🛍️ E-commerce</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('ecommerce')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🛒 Store</button>
-                    <button @click="loadExample('catalog')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📚 Catalog</button>
-                    <button @click="loadExample('cart')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🛒 Cart</button>
-                    <button @click="loadExample('reviews')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">⭐ Reviews</button>
-                </div>
-            </div>
-
-            <!-- API & Dev -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">🌐 API & Development</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('api')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🌐 API</button>
-                    <button @click="loadExample('config')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">⚙️ Config</button>
-                    <button @click="loadExample('logs')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📋 Logs</button>
-                    <button @click="loadExample('webhooks')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🪝 Webhooks</button>
-                    <button @click="loadExample('github')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🐙 GitHub</button>
-                </div>
-            </div>
-
-            <!-- Data & Analytics -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">📊 Analytics</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('analytics')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📈 Analytics</button>
-                    <button @click="loadExample('timeseries')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📉 TimeSeries</button>
-                    <button @click="loadExample('metrics')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📊 Metrics</button>
-                    <button @click="loadExample('surveys')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📝 Surveys</button>
-                </div>
-            </div>
-
-            <!-- Social -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">💬 Social & Content</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('social')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">💬 Social</button>
-                    <button @click="loadExample('blog')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📰 Blog</button>
-                    <button @click="loadExample('comments')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">💭 Comments</button>
-                    <button @click="loadExample('notifications')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🔔 Notifs</button>
-                </div>
-            </div>
-
-            <!-- Complex -->
-            <div>
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">🔥 Complex</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('nested')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🔗 Deep Nested</button>
-                    <button @click="loadExample('mixed')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🎭 Mixed</button>
-                    <button @click="loadExample('large')" class="px-3 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-2 border-emerald-600 rounded-lg hover:shadow-xl hover:scale-105 transition text-xs font-bold">🔥 Large</button>
-                </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                <button @click="loadExample('users')" class="px-4 py-3 bg-white border-2 border-slate-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 active:scale-95 transition text-sm font-medium">
+                    👥 User Database (40 lines)
+                </button>
+                <button @click="loadExample('ecommerce')" class="px-4 py-3 bg-white border-2 border-slate-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 active:scale-95 transition text-sm font-medium">
+                    🛍️ E-commerce (50 lines)
+                </button>
+                <button @click="loadExample('api')" class="px-4 py-3 bg-white border-2 border-slate-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 active:scale-95 transition text-sm font-medium">
+                    🌐 API Response (35 lines)
+                </button>
+                <button @click="loadExample('config')" class="px-4 py-3 bg-white border-2 border-slate-300 rounded-lg hover:border-emerald-500 hover:shadow-md transition text-sm font-medium">
+                    ⚙️ App Config (45 lines)
+                </button>
+                <button @click="loadExample('logs')" class="px-4 py-3 bg-white border-2 border-slate-300 rounded-lg hover:border-emerald-500 hover:shadow-md transition text-sm font-medium">
+                    📋 Log Entries (30 lines)
+                </button>
+                <button @click="loadExample('analytics')" class="px-4 py-3 bg-white border-2 border-slate-300 rounded-lg hover:border-emerald-500 hover:shadow-md transition text-sm font-medium">
+                    📊 Analytics (40 lines)
+                </button>
+                <button @click="loadExample('timeseries')" class="px-4 py-3 bg-white border-2 border-slate-300 rounded-lg hover:border-emerald-500 hover:shadow-md transition text-sm font-medium">
+                    📈 Time Series (25 lines)
+                </button>
+                <button @click="loadExample('catalog')" class="px-4 py-3 bg-white border-2 border-slate-300 rounded-lg hover:border-emerald-500 hover:shadow-md transition text-sm font-medium">
+                    📚 Product Catalog (55 lines)
+                </button>
+                <button @click="loadExample('social')" class="px-4 py-3 bg-white border-2 border-slate-300 rounded-lg hover:border-emerald-500 hover:shadow-md transition text-sm font-medium">
+                    💬 Social Feed (30 lines)
+                </button>
+                <button @click="loadExample('nested')" class="px-4 py-3 bg-white border-2 border-slate-300 rounded-lg hover:border-emerald-500 hover:shadow-md transition text-sm font-medium">
+                    🔗 Deep Nesting (45 lines)
+                </button>
+                <button @click="loadExample('small')" class="px-4 py-3 bg-slate-100 border-2 border-slate-300 rounded-lg hover:border-slate-400 transition text-sm font-medium">
+                    📝 Simple (5 lines)
+                </button>
+                <button @click="loadExample('large')" class="px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-2 border-emerald-600 rounded-lg hover:shadow-xl transition text-sm font-bold">
+                    🔥 Large Dataset (80+ lines)
+                </button>
             </div>
         </div>
 
@@ -1329,12 +1288,6 @@
 }`
                     };
 
-                    // Check additional examples first
-                    if (typeof additionalExamples !== "undefined" && additionalExamples[type]) {
-                        this.jsonInput = additionalExamples[type];
-                        this.jsonToTONL();
-                        return;
-                    }
                     this.jsonInput = examples[type];
                     this.jsonToTONL();
                 }

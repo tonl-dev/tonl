@@ -15,27 +15,56 @@
         code, pre { font-family: 'JetBrains Mono', monospace; }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .animate-fade-in-up {
-            animation: fadeInUp 0.6s ease-out;
-        }
+        .animate-fade-in-up { animation: fadeInUp 0.6s ease-out; }
 
         @keyframes pulse-slow {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
+        .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
 
-        .animate-pulse-slow {
-            animation: pulse-slow 3s ease-in-out infinite;
+        /* Interactive Code Block */
+        .code-block-wrapper { position: relative; }
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0;
+        }
+        .code-block-wrapper:hover .copy-btn { opacity: 1; }
+        .copy-btn:hover { background: rgba(255,255,255,0.2); }
+        .copy-btn.copied { background: #10b981; border-color: #10b981; }
+
+        /* Scroll Reveal */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Smooth Scroll */
+        html { scroll-behavior: smooth; }
+
+        /* Mobile Improvements */
+        @media (max-width: 768px) {
+            .code-block-wrapper { font-size: 12px; }
+            .copy-btn { font-size: 10px; padding: 4px 8px; }
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     </style>
 </head>
@@ -93,14 +122,14 @@
                     v1.0.1 - Production Ready
                 </div>
 
-                <h1 class="text-6xl md:text-7xl font-bold mb-6 tracking-tight">
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-tight">
                     <span class="text-slate-900">Token-Optimized</span><br>
-                    <span class="bg-gradient-to-r from-emerald-600 to-emerald-500 bg-clip-text text-transparent">Notation Language</span>
+                    <span class="gradient-text">Notation Language</span>
                 </h1>
 
-                <p class="text-2xl text-slate-600 mb-12 leading-relaxed">
+                <p class="text-xl md:text-2xl text-slate-600 mb-12 leading-relaxed">
                     A text-first, LLM-friendly serialization format.<br>
-                    <span class="font-semibold text-slate-900">38% fewer tokens</span> than JSON. <span class="font-semibold text-slate-900">Zero dependencies</span>. Built for the AI era.
+                    <span class="font-semibold gradient-text">38% fewer tokens</span> than JSON. <span class="font-semibold text-slate-900">Zero dependencies</span>. Built for the AI era.
                 </p>
 
                 <div class="flex flex-wrap items-center gap-4 mb-12">
@@ -118,21 +147,21 @@
                     </a>
                 </div>
 
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-                        <div class="text-2xl font-bold text-emerald-600 mb-1">38%</div>
-                        <div class="text-sm text-slate-600">Token Savings</div>
+                <!-- Stats Grid with Counter Animation -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 reveal">
+                    <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                        <div class="text-2xl font-bold text-emerald-600 mb-1" data-count="38">0</div>
+                        <div class="text-sm text-slate-600">% Token Savings</div>
                     </div>
-                    <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-                        <div class="text-2xl font-bold text-emerald-600 mb-1">496</div>
+                    <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition">
+                        <div class="text-2xl font-bold text-emerald-600 mb-1" data-count="496">0</div>
                         <div class="text-sm text-slate-600">Tests Passing</div>
                     </div>
-                    <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition">
                         <div class="text-2xl font-bold text-emerald-600 mb-1">0</div>
                         <div class="text-sm text-slate-600">Dependencies</div>
                     </div>
-                    <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+                    <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:shadow-md transition">
                         <div class="text-2xl font-bold text-emerald-600 mb-1">8.84KB</div>
                         <div class="text-sm text-slate-600">Gzipped Size</div>
                     </div>
@@ -142,14 +171,24 @@
     </section>
 
     <!-- Live Token Comparison -->
-    <section id="comparison" class="py-20 bg-white">
+    <section id="comparison" class="py-20 bg-white" x-data="{ showComparison: true }">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold text-slate-900 mb-4">Real-World Token Comparison</h2>
                 <p class="text-xl text-slate-600">Same data structure, dramatically different token costs</p>
             </div>
 
-            <div class="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
+            <!-- Interactive Toggle -->
+            <div class="flex justify-center mb-8">
+                <button @click="showComparison = !showComparison" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-lg font-medium transition flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                    </svg>
+                    <span x-text="showComparison ? 'Hide Comparison' : 'Show Comparison'"></span>
+                </button>
+            </div>
+
+            <div x-show="showComparison" x-transition class="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
                 <!-- JSON -->
                 <div>
                     <div class="flex items-center justify-between mb-4">
@@ -261,7 +300,7 @@ users[4]{id,name,email,age,role,active,department}:
 
             <div class="grid md:grid-cols-3 gap-6">
                 <!-- Feature 1: Compact Format -->
-                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition">
+                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition reveal">
                     <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl mb-4">
                         📦
                     </div>
@@ -275,7 +314,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Feature 2: Query API -->
-                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition">
+                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition reveal">
                     <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl mb-4">
                         🔍
                     </div>
@@ -289,7 +328,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Feature 3: Modification -->
-                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition">
+                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition reveal">
                     <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl mb-4">
                         ✏️
                     </div>
@@ -303,7 +342,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Feature 4: Performance/Indexing -->
-                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition">
+                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition reveal">
                     <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl mb-4">
                         ⚡
                     </div>
@@ -317,7 +356,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Feature 5: Streaming -->
-                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition">
+                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition reveal">
                     <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl mb-4">
                         🌊
                     </div>
@@ -331,7 +370,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Feature 6: Schema Validation -->
-                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition">
+                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition reveal">
                     <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl mb-4">
                         ✅
                     </div>
@@ -345,7 +384,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Feature 7: Navigation -->
-                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition">
+                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition reveal">
                     <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl mb-4">
                         🧭
                     </div>
@@ -359,7 +398,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Feature 8: Change Tracking -->
-                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition">
+                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition reveal">
                     <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl mb-4">
                         📊
                     </div>
@@ -373,7 +412,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Feature 9: CLI Tools -->
-                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition">
+                <div class="bg-white border border-slate-200 rounded-lg p-8 hover:shadow-md transition reveal">
                     <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl mb-4">
                         🛠️
                     </div>
@@ -399,7 +438,7 @@ users[4]{id,name,email,age,role,active,department}:
 
             <div class="grid lg:grid-cols-3 gap-8">
                 <!-- Use Case 1: LLM Applications -->
-                <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 hover:shadow-md transition">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 hover:shadow-md transition reveal">
                     <div class="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center text-3xl mb-6">
                         🤖
                     </div>
@@ -436,7 +475,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Use Case 2: Data Analytics -->
-                <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 hover:shadow-md transition">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 hover:shadow-md transition reveal">
                     <div class="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center text-3xl mb-6">
                         📈
                     </div>
@@ -473,7 +512,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Use Case 3: Configuration Management -->
-                <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 hover:shadow-md transition">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 hover:shadow-md transition reveal">
                     <div class="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center text-3xl mb-6">
                         ⚙️
                     </div>
@@ -513,16 +552,32 @@ users[4]{id,name,email,age,role,active,department}:
     </section>
 
     <!-- Code Example Section -->
-    <section class="py-20 bg-slate-50">
+    <section class="py-20 bg-slate-50" x-data="{ activeTab: 'query' }">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold text-slate-900 mb-4">Powerful API Examples</h2>
                 <p class="text-xl text-slate-600">Real working code you can use today</p>
             </div>
 
+            <!-- Tab Navigation -->
+            <div class="flex justify-center mb-8 flex-wrap gap-2">
+                <button @click="activeTab = 'query'" :class="activeTab === 'query' ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 hover:bg-slate-50'" class="px-6 py-3 rounded-lg font-medium transition">
+                    Query Operations
+                </button>
+                <button @click="activeTab = 'modify'" :class="activeTab === 'modify' ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 hover:bg-slate-50'" class="px-6 py-3 rounded-lg font-medium transition">
+                    Modifications
+                </button>
+                <button @click="activeTab = 'index'" :class="activeTab === 'index' ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 hover:bg-slate-50'" class="px-6 py-3 rounded-lg font-medium transition">
+                    Performance
+                </button>
+                <button @click="activeTab = 'stream'" :class="activeTab === 'stream' ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 hover:bg-slate-50'" class="px-6 py-3 rounded-lg font-medium transition">
+                    Streaming
+                </button>
+            </div>
+
             <div class="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
                 <!-- Query Examples -->
-                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div x-show="activeTab === 'query'" x-transition class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm lg:col-span-2">
                     <div class="bg-slate-900 px-6 py-4 border-b border-slate-700">
                         <h3 class="text-lg font-semibold text-white">Query Operations</h3>
                     </div>
@@ -548,7 +603,7 @@ users[4]{id,name,email,age,role,active,department}:
                 </div>
 
                 <!-- Modification Examples -->
-                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div x-show="activeTab === 'modify'" x-transition class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm lg:col-span-2">
                     <div class="bg-slate-900 px-6 py-4 border-b border-slate-700">
                         <h3 class="text-lg font-semibold text-white">Modification Operations</h3>
                     </div>
@@ -571,7 +626,7 @@ doc.<span class="text-blue-600">delete</span>(<span class="text-emerald-600">'us
                 </div>
 
                 <!-- Index Creation -->
-                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div x-show="activeTab === 'index'" x-transition class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm lg:col-span-2">
                     <div class="bg-slate-900 px-6 py-4 border-b border-slate-700">
                         <h3 class="text-lg font-semibold text-white">Performance Indexing</h3>
                     </div>
@@ -592,7 +647,7 @@ doc.<span class="text-blue-600">createIndex</span>(<span class="text-emerald-600
                 </div>
 
                 <!-- Streaming Example -->
-                <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div x-show="activeTab === 'stream'" x-transition class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm lg:col-span-2">
                     <div class="bg-slate-900 px-6 py-4 border-b border-slate-700">
                         <h3 class="text-lg font-semibold text-white">Streaming Large Files</h3>
                     </div>
@@ -707,7 +762,7 @@ doc.<span class="text-blue-600">createIndex</span>(<span class="text-emerald-600
                 <p class="text-xl text-slate-600">All commands you need for data operations</p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto reveal">
                 <div class="bg-slate-900 rounded-lg p-5 hover:bg-slate-800 transition shadow-sm">
                     <div class="text-emerald-400 text-xs font-semibold mb-2 uppercase tracking-wide">Encode</div>
                     <code class="text-slate-300 text-sm block mb-3">tonl encode data.json</code>
@@ -784,7 +839,7 @@ tonl decode filtered.tonl --out result.json</code></pre>
                 <p class="text-xl text-slate-600">Complete implementation guides and specifications available</p>
             </div>
 
-            <div class="grid md:grid-cols-5 gap-6 mb-12 max-w-5xl mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-12 max-w-5xl mx-auto reveal">
                 <div class="bg-slate-50 border-2 border-emerald-500 rounded-xl p-6 text-center hover:shadow-md transition">
                     <div class="text-5xl mb-3">📘</div>
                     <div class="font-semibold text-slate-900 mb-2">TypeScript</div>
@@ -1104,6 +1159,109 @@ tonl decode filtered.tonl --out result.json</code></pre>
             </div>
         </div>
     </section>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Copy to clipboard - FIXED: Only for code examples with pre/code
+        document.addEventListener('DOMContentLoaded', () => {
+            // Find code blocks that have <pre> and <code> tags (real code examples)
+            document.querySelectorAll('pre code').forEach(codeElement => {
+                const pre = codeElement.parentElement;
+                const container = pre.parentElement;
+
+                // Skip if already has a copy button or is a simple CLI command
+                if (container.querySelector('.copy-btn') || pre.textContent.trim().split('\n').length <= 2) {
+                    return;
+                }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-wrapper';
+                container.insertBefore(wrapper, pre);
+                wrapper.appendChild(pre);
+
+                const btn = document.createElement('button');
+                btn.className = 'copy-btn';
+                btn.textContent = 'Copy';
+                btn.onclick = () => {
+                    // Get text content without HTML tags
+                    const code = codeElement.textContent;
+                    navigator.clipboard.writeText(code);
+                    btn.textContent = 'Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = 'Copy';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                };
+                wrapper.appendChild(btn);
+            });
+
+            // Add copy buttons to CLI command blocks (single line commands)
+            document.querySelectorAll('.bg-slate-900.rounded-lg').forEach(block => {
+                // Skip if it already has a wrapper or is part of a code example
+                if (block.closest('.code-block-wrapper') || block.querySelector('pre')) {
+                    return;
+                }
+
+                // Only add to single-line CLI commands
+                const codeElement = block.querySelector('code');
+                if (!codeElement) return;
+
+                const text = codeElement.textContent.trim();
+                // Only for CLI commands (starts with common CLI commands)
+                if (!text.match(/^(npm|tonl|git|cd|node|python|yarn|pnpm)/)) {
+                    return;
+                }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-block-wrapper';
+                wrapper.style.position = 'relative';
+                block.parentNode.insertBefore(wrapper, block);
+                wrapper.appendChild(block);
+
+                const btn = document.createElement('button');
+                btn.className = 'copy-btn';
+                btn.textContent = 'Copy';
+                btn.onclick = () => {
+                    navigator.clipboard.writeText(text);
+                    btn.textContent = 'Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = 'Copy';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                };
+                wrapper.appendChild(btn);
+            });
+
+            // Scroll reveal
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+            reveals.forEach(el => observer.observe(el));
+
+            // Counter animation
+            document.querySelectorAll('[data-count]').forEach(el => {
+                const target = parseInt(el.getAttribute('data-count'));
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        el.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        el.textContent = Math.floor(current);
+                    }
+                }, 30);
+            });
+        });
+    </script>
 
     <!-- Footer -->
     <footer class="border-t border-slate-200 bg-white py-16">
