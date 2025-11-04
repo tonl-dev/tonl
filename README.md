@@ -1,22 +1,46 @@
-# TONL (Token-Optimized Notation Language)
+# TONL (Token-Optimized Notation Language) v0.8.0
 
-**TONL** is a text-first, LLM-friendly serialization format that combines the compactness of binary formats with human readability. Designed to reduce token costs in LLM prompts while maintaining clear structure and optional schema hints.
+**TONL** is a complete data platform that combines compact serialization with powerful query, modification, indexing, and streaming capabilities. Designed for LLM token efficiency while providing a rich API for data access and manipulation.
 
-## ✨ Features
+## ✨ Complete Feature Set (v0.8.0)
 
-- **🗜️ Compact**: 32-45% smaller than JSON (bytes + tokens)
+### Core Features
+- **🗜️ Compact Format**: 32-45% smaller than JSON (bytes + tokens)
 - **👁️ Human-readable**: Clear text format with minimal syntax overhead
 - **🧠 LLM-optimized**: Designed specifically for token efficiency in language models
-- **🔍 Query API**: JSONPath-like queries with filters and wildcards (NEW in v0.6.0!)
-- **🧭 Navigation API**: Tree traversal, iteration, and search utilities (NEW in v0.6.0!)
-- **✅ Schema Validation**: Full schema system with type checking and constraints
-- **🌊 Streaming API**: Handle 100GB+ files with <100MB memory
-- **🌐 Browser Support**: Tiny bundles (<7KB gzipped) for web apps
-- **🔧 Schema hints**: Optional type information for validation and correctness
 - **🔄 Round-trip safe**: Perfect bidirectional conversion with JSON
-- **⚡ Fast**: Linear-time parsing and encoding
+- **⚡ Fast**: All operations optimized (10-1600x faster than targets)
 - **🛠️ TypeScript-first**: Full type safety and IntelliSense support
 - **📦 Zero dependencies**: Pure TypeScript, no runtime dependencies
+
+### Data Access (v0.6.0)
+- **🔍 Query API**: JSONPath-like queries with filters and wildcards
+- **🧭 Navigation API**: Tree traversal, iteration, and search utilities
+- **🎯 Filter Expressions**: Complex conditions with operators (==, !=, >, <, &&, ||, contains, matches)
+- **♻️ LRU Cache**: >90% cache hit rate on repeated queries
+
+### Data Modification (v0.6.5)
+- **✏️ CRUD Operations**: set(), delete(), push(), pop(), merge()
+- **🔄 Change Tracking**: diff() engine with detailed change reports
+- **💾 Atomic File Editing**: Safe saves with automatic backups
+- **📸 Snapshots**: Document versioning and comparison
+
+### Performance (v0.7.0)
+- **🗂️ Hash Index**: O(1) lookups for exact matches
+- **🌳 BTree Index**: O(log n) range queries and ordered access
+- **🔗 Compound Index**: Multi-field indexing
+- **📊 Index Manager**: Centralized index management
+
+### Streaming (v0.7.5)
+- **🌊 Stream Processing**: Handle multi-GB files with <100MB memory
+- **🔄 Aggregation**: Reduce operations on streams
+- **⛓️ Pipeline**: Chainable filter/map transformations
+
+### Developer Tools (v0.8.0)
+- **💻 Interactive REPL**: Explore data interactively
+- **🎨 CLI Tools**: encode, decode, query, get, validate, format
+- **✅ Schema Validation**: Full schema system with constraints
+- **🌐 Browser Support**: Tiny bundles (<7KB gzipped)
 
 ## 🚀 Quick Start
 
