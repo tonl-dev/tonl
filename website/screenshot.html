@@ -49,9 +49,8 @@
 
             <!-- JSON -->
             <div>
-                <div class="flex items-center justify-between mb-3">
+                <div class="mb-3">
                     <span class="text-white font-bold text-2xl">JSON</span>
-                    <span class="px-5 py-2 bg-red-500 text-white rounded-xl font-bold shadow-lg">212 tokens</span>
                 </div>
                 <div class="bg-gray-900 rounded-2xl p-6 shadow-2xl">
                     <pre class="text-gray-400 text-sm leading-relaxed"><code>{
@@ -61,14 +60,22 @@
   ]
 }</code></pre>
                 </div>
-                <div class="text-white text-right mt-2 opacity-75">366 bytes</div>
+                <!-- Progress Bar -->
+                <div class="mt-4">
+                    <div class="flex items-center justify-between text-white mb-2">
+                        <span class="font-semibold">Tokens</span>
+                        <span class="font-bold">212</span>
+                    </div>
+                    <div class="w-full bg-white bg-opacity-20 rounded-full h-6">
+                        <div class="bg-red-500 h-6 rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- TONL -->
             <div>
-                <div class="flex items-center justify-between mb-3">
+                <div class="mb-3">
                     <span class="text-white font-bold text-2xl">TONL</span>
-                    <span class="px-5 py-2 bg-green-500 text-white rounded-xl font-bold shadow-lg">131 tokens</span>
                 </div>
                 <div class="bg-gray-900 rounded-2xl p-6 shadow-2xl border-4 border-green-400">
                     <pre class="text-gray-300 text-sm leading-relaxed"><code><span class="text-purple-400">#version</span> <span class="text-green-400">1.0</span>
@@ -76,27 +83,31 @@
   <span class="text-orange-400">1</span>, Alice, admin
   <span class="text-orange-400">2</span>, Bob, user</code></pre>
                 </div>
-                <div class="text-white text-right mt-2 opacity-75">284 bytes</div>
+                <!-- Progress Bar -->
+                <div class="mt-4">
+                    <div class="flex items-center justify-between text-white mb-2">
+                        <span class="font-semibold">Tokens</span>
+                        <span class="font-bold">131</span>
+                    </div>
+                    <div class="w-full bg-white bg-opacity-20 rounded-full h-6">
+                        <div class="bg-green-500 h-6 rounded-full shadow-lg" style="width: 62%"></div>
+                    </div>
+                </div>
             </div>
 
         </div>
 
         <!-- Savings Highlight -->
-        <div class="bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl px-12 py-8 shadow-2xl">
-            <div class="flex items-center justify-center gap-12 text-white">
+        <div class="bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl px-16 py-10 shadow-2xl">
+            <div class="flex items-center justify-center gap-16 text-white">
                 <div class="text-center">
-                    <div class="text-6xl font-black mb-2">-22%</div>
-                    <div class="text-2xl font-semibold">Bytes</div>
+                    <div class="text-8xl font-black mb-3">38%</div>
+                    <div class="text-3xl font-bold">Token Savings</div>
                 </div>
-                <div class="text-6xl font-black">+</div>
+                <div class="text-8xl font-black">💰</div>
                 <div class="text-center">
-                    <div class="text-6xl font-black mb-2">-38%</div>
-                    <div class="text-2xl font-semibold">Tokens</div>
-                </div>
-                <div class="text-6xl font-black">=</div>
-                <div class="text-center">
-                    <div class="text-5xl font-black mb-2">💰</div>
-                    <div class="text-2xl font-semibold">LLM Cost Savings</div>
+                    <div class="text-5xl font-bold">Reduce</div>
+                    <div class="text-5xl font-bold">LLM Costs</div>
                 </div>
             </div>
         </div>
