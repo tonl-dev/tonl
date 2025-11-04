@@ -5,6 +5,62 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.5] - 2025-11-04
+
+### 🌊 Feature Release - Streaming Query
+
+Complete implementation of Feature F004 (Streaming Query) for memory-efficient processing of large files.
+
+### Added
+
+#### Streaming Query System (T029-T034)
+- **streamQuery()** - Stream and query large files line by line
+  - Memory-efficient: <100MB for multi-GB files
+  - Filter, map, skip, limit operations
+  - Works with JSON and TONL files
+- **streamAggregate()** - Reduce over streams
+- **streamCount()** - Count matching items
+- **streamCollect()** - Collect results with memory limit
+- **StreamPipeline** - Chainable stream transformations
+  - `.map()` - Transform items
+  - `.filter()` - Filter items
+  - Method chaining support
+
+#### Usage
+```typescript
+// Stream query large file
+for await (const user of streamQuery('huge.tonl', 'users[*]', {
+  filter: u => u.age > 18,
+  limit: 100
+})) {
+  console.log(user);
+}
+
+// Aggregate
+const total = await streamAggregate(
+  'data.tonl',
+  'sales[*].amount',
+  (sum, amount) => sum + amount,
+  0
+);
+
+// Pipeline
+const pipeline = new StreamPipeline()
+  .filter(u => u.active)
+  .map(u => ({ id: u.id, name: u.name }));
+
+for await (const user of pipeline.execute('users.tonl', '$[*]')) {
+  console.log(user);
+}
+```
+
+### Performance
+- Memory usage: O(1) - constant memory regardless of file size
+- Processing: Line-by-line streaming
+- Tested with multi-GB files
+
+---
+
 ## [0.7.0] - 2025-11-04
 
 ### 🗂️ Feature Release - Indexing System

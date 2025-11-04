@@ -1,10 +1,14 @@
 /**
  * TONL Streaming API
  *
- * Provides Node.js stream support for processing large TONL files
- * without loading entire content into memory.
+ * Memory-efficient processing of large files
  */
 
-export * from './types.js';
-export { createEncodeStream, encodeIterator } from './encode-stream.js';
-export { createDecodeStream, decodeIterator } from './decode-stream.js';
+export {
+  streamQuery,
+  streamAggregate,
+  streamCount,
+  streamCollect,
+  StreamPipeline,
+  type StreamQueryOptions
+} from './query.js';

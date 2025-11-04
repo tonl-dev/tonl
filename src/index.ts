@@ -68,3 +68,6 @@ export { TONLDocument, type DocumentStats } from './document.js';
 
 // Export Modification API (NEW in v0.6.5!)
 export { FileEditor, type FileEditorOptions, type DiffResult, type DiffEntry } from './modification/index.js';
+
+// Export Streaming API (NEW in v0.7.5!)
+export { streamQuery, streamAggregate, streamCount, streamCollect, StreamPipeline, type StreamQueryOptions } from './stream/index.js';
