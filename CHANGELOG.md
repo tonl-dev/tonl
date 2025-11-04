@@ -5,6 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2025-11-04
+
+### 🗂️ Feature Release - Indexing System
+
+Complete implementation of Feature F003 (Indexing System) for fast O(1)/O(log n) lookups and range queries.
+
+### Added
+
+#### Indexing System (T021-T028)
+- **HashIndex** - O(1) lookups for exact matches
+  - Unique constraint support
+  - Case-insensitive string keys
+  - Collision tracking
+- **BTreeIndex** - O(log n) ordered index with range queries
+  - Range queries: `index.range(start, end)`
+  - Comparison queries: `greaterThan()`, `lessThan()`
+  - Sorted key iteration
+- **CompoundIndex** - Multi-field indexing
+  - Index on multiple fields simultaneously
+  - Automatic compound key generation
+- **IndexManager** - Centralized index management
+  - Create, drop, list indices
+  - Auto-build from documents
+  - Statistics and monitoring
+
+#### Document API Integration
+```typescript
+// Create indices
+doc.createIndex({ name: 'userIdIndex', fields: ['id'], unique: true });
+doc.createIndex({ name: 'ageIndex', fields: ['age'], type: 'btree' });
+
+// Use indices for fast lookups
+const index = doc.getIndex('userIdIndex');
+const paths = index.find(userId); // O(1) lookup
+
+// Range queries
+const ageIndex = doc.getIndex('ageIndex');
+const results = ageIndex.range(18, 65); // All ages 18-65
+
+// Management
+doc.listIndices(); // ['userIdIndex', 'ageIndex']
+doc.dropIndex('ageIndex');
+doc.indexStats(); // Statistics for all indices
+```
+
+### Performance
+- Hash index lookups: O(1)
+- BTree index lookups: O(log n)
+- Range queries: O(log n + k) where k = result size
+- Index creation: O(n) where n = document size
+
+---
+
 ## [0.6.5] - 2025-11-04
 
 ### 🛠️ Feature Release - Modification API

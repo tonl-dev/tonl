@@ -13,6 +13,7 @@ import { entries, keys, values, deepEntries, deepKeys, deepValues, walk, type Wa
 import { readFileSync, writeFileSync } from 'fs';
 import { promises as fs } from 'fs';
 import { set as setByPath, deleteValue as deleteByPath, push as pushToArray, pop as popFromArray, merge as mergeAtPath, diff as diffDocuments, formatDiff, type DiffResult } from './modification/index.js';
+import { IndexManager, type IndexOptions, type IIndex } from './indexing/index.js';
 
 /**
  * Document statistics
@@ -74,6 +75,7 @@ export interface DocumentStats {
 export class TONLDocument {
   private data: TONLValue;
   private evaluator: QueryEvaluator;
+  private indexManager: IndexManager;
 
   /**
    * Private constructor - use static factory methods
@@ -81,6 +83,7 @@ export class TONLDocument {
   private constructor(data: TONLValue) {
     this.data = data;
     this.evaluator = new QueryEvaluator(data);
+    this.indexManager = new IndexManager(data);
   }
 
   // ========================================
@@ -523,5 +526,59 @@ export class TONLDocument {
    */
   snapshot(): TONLDocument {
     return TONLDocument.fromJSON(JSON.parse(JSON.stringify(this.data)));
+  }
+
+  // ========================================
+  // Indexing (NEW in v0.7.0!)
+  // ========================================
+
+  /**
+   * Create an index on specified fields
+   *
+   * @param options - Index options
+   * @returns The created index
+   *
+   * @example
+   * ```typescript
+   * // Create hash index on single field
+   * doc.createIndex({ name: 'userIdIndex', fields: ['id'], unique: true });
+   *
+   * // Create btree index for range queries
+   * doc.createIndex({ name: 'ageIndex', fields: ['age'], type: 'btree' });
+   *
+   * // Create compound index on multiple fields
+   * doc.createIndex({ name: 'nameAgeIndex', fields: ['name', 'age'] });
+   * ```
+   */
+  createIndex(options: IndexOptions): IIndex {
+    return this.indexManager.createIndex(options);
+  }
+
+  /**
+   * Get an index by name
+   */
+  getIndex(name: string): IIndex | undefined {
+    return this.indexManager.getIndex(name);
+  }
+
+  /**
+   * Drop an index
+   */
+  dropIndex(name: string): boolean {
+    return this.indexManager.dropIndex(name);
+  }
+
+  /**
+   * List all index names
+   */
+  listIndices(): string[] {
+    return this.indexManager.listIndices();
+  }
+
+  /**
+   * Get statistics for all indices
+   */
+  indexStats(): Record<string, any> {
+    return this.indexManager.getStats();
   }
 }
