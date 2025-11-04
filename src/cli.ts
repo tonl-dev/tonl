@@ -41,6 +41,8 @@ function parseArgs(args: string[]): { command: string; file: string; options: CL
       case "format":
       case "validate":
       case "generate-types":
+      case "query":
+      case "get":
         command = arg;
         break;
       case "--out":
@@ -330,9 +332,49 @@ function main() {
         break;
       }
 
+      case "query":
+      case "get": {
+        if (!file.endsWith('.tonl') && !file.endsWith('.json')) {
+          console.error("❌ Error: query/get requires a .tonl or .json file");
+          process.exit(1);
+        }
+
+        // Load file
+        const fileContent = readFileSync(file, 'utf-8');
+        let data: any;
+
+        if (file.endsWith('.json')) {
+          data = JSON.parse(fileContent);
+        } else {
+          data = decodeTONL(fileContent, { delimiter: options.delimiter });
+        }
+
+        // Get query expression from remaining args
+        const queryExpr = args.find(a => !a.startsWith('-') && a !== command && a !== file);
+        if (!queryExpr) {
+          console.error("❌ Error: Query expression required");
+          console.log("Usage: tonl query <file> <expression>");
+          process.exit(1);
+        }
+
+        // Execute query
+        const { TONLDocument } = await import('./document.js');
+        const doc = TONLDocument.fromJSON(data);
+        const result = command === 'get' ? doc.get(queryExpr) : doc.query(queryExpr);
+
+        // Output result
+        if (options.out) {
+          writeFileSync(options.out, JSON.stringify(result, null, 2));
+          console.log(`✅ Query result saved to ${options.out}`);
+        } else {
+          console.log(JSON.stringify(result, null, 2));
+        }
+        break;
+      }
+
       default:
         console.error(`❌ Error: Unknown command '${command}'`);
-        console.log("Available commands: encode, decode, stats, format, validate, generate-types");
+        console.log("Available commands: encode, decode, stats, format, validate, generate-types, query, get");
         process.exit(1);
     }
 
@@ -354,6 +396,8 @@ Usage:
   tonl format <file.tonl> [--pretty] [--out <file.tonl>] [options]
   tonl validate <file.tonl> --schema <file.schema.tonl> [--strict]
   tonl generate-types <file.schema.tonl> --out <file.ts>
+  tonl query <file> <expression> [--out <file.json>]
+  tonl get <file> <path> [--out <file.json>]
 
 Options:
   --out <file>           Output file (default: stdout)
@@ -375,6 +419,8 @@ Examples:
   tonl format data.tonl --pretty --out formatted.tonl
   tonl validate users.tonl --schema users.schema.tonl --strict
   tonl generate-types users.schema.tonl --out types.ts
+  tonl query users.tonl "users[?(@.age > 18)]"
+  tonl get data.tonl "user.profile.email"
 `);
   process.exit(0);
 }
