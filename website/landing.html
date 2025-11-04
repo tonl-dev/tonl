@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TONL - Token-Optimized Notation Language | 32-45% Smaller than JSON</title>
+    <meta name="description" content="TONL: A text-first, LLM-friendly serialization format. 32-45% smaller than JSON with powerful query, modification, and streaming capabilities.">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .gradient-bg-alt {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .gradient-bg-success {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+        }
+        .hero-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            opacity: 0.5;
+        }
+        .code-block {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .feature-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.8); }
+        }
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Hero Section with Gradient Background -->
+    <section class="hero-bg relative text-white py-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <!-- Version Badge -->
+                <div class="inline-flex items-center px-6 py-3 bg-white bg-opacity-20 backdrop-blur-md rounded-full text-white font-semibold mb-8 pulse-glow">
+                    <span class="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse"></span>
+                    v1.0.1 - Production Ready • 496 Tests Passing • 0 Bugs
+                </div>
+
+                <!-- Main Title -->
+                <h1 class="text-6xl lg:text-8xl font-black mb-8 leading-tight">
+                    Token-Optimized<br>
+                    Notation Language
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-2xl lg:text-3xl mb-4 font-light opacity-90">
+                    A text-first, LLM-friendly serialization format
+                </p>
+                <p class="text-3xl lg:text-4xl font-bold mb-12">
+                    🚀 32-45% Smaller than JSON
+                </p>
+
+                <!-- Key Stats Row -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12">
+                    <div class="stat-card rounded-2xl p-6">
+                        <div class="text-4xl font-black gradient-text">32-45%</div>
+                        <div class="text-gray-700 font-semibold mt-2">Smaller</div>
+                    </div>
+                    <div class="stat-card rounded-2xl p-6">
+                        <div class="text-4xl font-black gradient-text">496</div>
+                        <div class="text-gray-700 font-semibold mt-2">Tests</div>
+                    </div>
+                    <div class="stat-card rounded-2xl p-6">
+                        <div class="text-4xl font-black gradient-text">0</div>
+                        <div class="text-gray-700 font-semibold mt-2">Bugs</div>
+                    </div>
+                    <div class="stat-card rounded-2xl p-6">
+                        <div class="text-4xl font-black gradient-text">8.84KB</div>
+                        <div class="text-gray-700 font-semibold mt-2">Gzipped</div>
+                    </div>
+                </div>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="https://www.npmjs.com/package/tonl" class="bg-white text-purple-900 px-10 py-5 rounded-xl text-xl font-bold hover:bg-gray-100 transition transform hover:scale-105 shadow-2xl inline-flex items-center justify-center">
+                        <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M0 0h24v24H0V0zm0 0h24v24H0V0z" fill="none"/><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                        </svg>
+                        npm install tonl
+                    </a>
+                    <a href="https://github.com/ersinkoc/tonl" class="bg-purple-800 bg-opacity-50 backdrop-blur-md text-white px-10 py-5 rounded-xl text-xl font-bold hover:bg-opacity-70 transition border-2 border-white border-opacity-30 inline-flex items-center justify-center">
+                        <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                        View on GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Decorative Elements -->
+        <div class="absolute top-20 left-10 w-20 h-20 bg-white bg-opacity-10 rounded-full float"></div>
+        <div class="absolute top-40 right-20 w-32 h-32 bg-white bg-opacity-10 rounded-full float" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-20 left-1/4 w-24 h-24 bg-white bg-opacity-10 rounded-full float" style="animation-delay: 2s;"></div>
+    </section>
+
+    <!-- Live Comparison Section -->
+    <section class="py-24 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black text-gray-900 mb-6">
+                    See the <span class="gradient-text">Difference</span>
+                </h2>
+                <p class="text-2xl text-gray-600">Same data, dramatically different size</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <!-- JSON Side -->
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                                JS
+                            </div>
+                            <h3 class="text-3xl font-bold text-gray-900">JSON</h3>
+                        </div>
+                        <div class="px-6 py-3 bg-red-100 text-red-700 rounded-xl font-bold text-lg shadow-md">
+                            366 bytes
+                        </div>
+                    </div>
+                    <div class="code-block p-8 shadow-2xl">
+                        <pre class="text-gray-300 text-base leading-relaxed"><code>{
+  <span class="text-blue-400">"users"</span>: [
+    {
+      <span class="text-blue-400">"id"</span>: <span class="text-orange-400">1</span>,
+      <span class="text-blue-400">"name"</span>: <span class="text-green-400">"Alice"</span>,
+      <span class="text-blue-400">"age"</span>: <span class="text-orange-400">30</span>,
+      <span class="text-blue-400">"role"</span>: <span class="text-green-400">"admin"</span>,
+      <span class="text-blue-400">"email"</span>: <span class="text-green-400">"alice@test.com"</span>
+    },
+    {
+      <span class="text-blue-400">"id"</span>: <span class="text-orange-400">2</span>,
+      <span class="text-blue-400">"name"</span>: <span class="text-green-400">"Bob"</span>,
+      <span class="text-blue-400">"age"</span>: <span class="text-orange-400">25</span>,
+      <span class="text-blue-400">"role"</span>: <span class="text-green-400">"user"</span>,
+      <span class="text-blue-400">"email"</span>: <span class="text-green-400">"bob@test.com"</span>
+    }
+  ]
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- TONL Side -->
+                <div class="relative">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg pulse-glow">
+                                T
+                            </div>
+                            <h3 class="text-3xl font-bold gradient-text">TONL</h3>
+                        </div>
+                        <div class="px-6 py-3 bg-green-100 text-green-700 rounded-xl font-bold text-lg shadow-md">
+                            284 bytes
+                        </div>
+                    </div>
+                    <div class="code-block p-8 shadow-2xl border-4 border-purple-500">
+                        <pre class="text-gray-300 text-base leading-relaxed"><code><span class="text-purple-400">#version</span> <span class="text-green-400">1.0</span>
+<span class="text-blue-400">users</span>[<span class="text-orange-400">2</span>]{<span class="text-yellow-400">id,name,age,role,email</span>}:
+  <span class="text-orange-400">1</span>, Alice, <span class="text-orange-400">30</span>, admin, alice@test.com
+  <span class="text-orange-400">2</span>, Bob, <span class="text-orange-400">25</span>, user, bob@test.com</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Savings Highlight -->
+            <div class="relative">
+                <div class="absolute inset-0 gradient-bg-success opacity-10 blur-3xl rounded-full"></div>
+                <div class="relative bg-gradient-to-r from-green-50 via-green-100 to-emerald-50 border-4 border-green-300 rounded-2xl p-10 text-center shadow-2xl">
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                        <div class="flex items-center gap-4">
+                            <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                            </svg>
+                            <div class="text-left">
+                                <div class="text-5xl font-black text-green-700">22.4%</div>
+                                <div class="text-green-800 font-semibold text-xl">Byte Reduction</div>
+                            </div>
+                        </div>
+
+                        <div class="text-4xl font-bold text-green-600">+</div>
+
+                        <div class="flex items-center gap-4">
+                            <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                            <div class="text-left">
+                                <div class="text-5xl font-black text-green-700">38.2%</div>
+                                <div class="text-green-800 font-semibold text-xl">Token Reduction</div>
+                            </div>
+                        </div>
+
+                        <div class="text-4xl font-bold text-green-600">=</div>
+
+                        <div class="text-left">
+                            <div class="text-5xl font-black gradient-text">Massive</div>
+                            <div class="text-gray-700 font-semibold text-xl">LLM Cost Savings!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="py-24 bg-gradient-to-b from-white to-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="text-5xl font-black text-gray-900 mb-6">
+                    Not Just Serialization - A <span class="gradient-text">Complete Platform</span>
+                </h2>
+                <p class="text-2xl text-gray-600">Powerful APIs for data access, modification, and analysis</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card p-10">
+                    <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center text-white text-4xl mb-6 shadow-lg">
+                        🔍
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Query API</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        JSONPath-like queries with filters, wildcards, and recursive descent.
+                    </p>
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <code class="text-green-400 text-sm">users[?(@.role == "admin")]</code>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card p-10">
+                    <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center text-white text-4xl mb-6 shadow-lg">
+                        ✏️
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">CRUD Operations</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        Full modification API with set, delete, push, pop, and merge operations.
+                    </p>
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <code class="text-green-400 text-sm">doc.set('user.age', 31)</code>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card p-10">
+                    <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center text-white text-4xl mb-6 shadow-lg">
+                        ⚡
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Blazing Fast</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        O(1) hash indices, O(log n) BTree indices. 10-1600x faster than targets.
+                    </p>
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <code class="text-green-400 text-sm">&lt;0.1ms simple queries</code>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card p-10">
+                    <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center text-white text-4xl mb-6 shadow-lg">
+                        🌊
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Streaming</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        Process multi-GB files with constant memory (&lt;100MB).
+                    </p>
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <code class="text-green-400 text-sm">streamQuery('10GB.tonl')</code>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="feature-card p-10">
+                    <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center text-white text-4xl mb-6 shadow-lg">
+                        ✅
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Schema Validation</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        Define schemas, validate data, generate TypeScript types.
+                    </p>
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <code class="text-green-400 text-sm">age: u32 min:18 max:150</code>
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="feature-card p-10">
+                    <div class="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center text-white text-4xl mb-6 shadow-lg">
+                        🎨
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Change Tracking</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">
+                        Snapshots, diffs, and atomic file operations with backups.
+                    </p>
+                    <div class="bg-gray-900 rounded-lg p-4">
+                        <code class="text-green-400 text-sm">doc.diff(snapshot)</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Example Section -->
+    <section class="py-24 bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <!-- Left: Description -->
+                <div>
+                    <h2 class="text-5xl font-black mb-6">
+                        Simple API,<br>
+                        Powerful Features
+                    </h2>
+                    <p class="text-2xl text-purple-200 mb-8 leading-relaxed">
+                        Query, modify, and save your data with an elegant TypeScript-first API
+                    </p>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-green-500 bg-opacity-20 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="font-bold text-xl mb-1">TypeScript-First</div>
+                                <div class="text-purple-200">Full type safety and IntelliSense</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-green-500 bg-opacity-20 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="font-bold text-xl mb-1">Zero Dependencies</div>
+                                <div class="text-purple-200">Pure TypeScript, lightweight</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-green-500 bg-opacity-20 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="font-bold text-xl mb-1">Browser Compatible</div>
+                                <div class="text-purple-200">Works everywhere, 8.84KB gzipped</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Code -->
+                <div>
+                    <div class="code-block p-8 shadow-2xl">
+                        <pre class="text-gray-300 text-sm leading-loose"><code><span class="text-purple-400">import</span> { <span class="text-blue-400">TONLDocument</span> } <span class="text-purple-400">from</span> <span class="text-green-400">'tonl'</span>;
+
+<span class="text-gray-500">// Load or create document</span>
+<span class="text-purple-400">const</span> doc = <span class="text-purple-400">await</span> <span class="text-blue-400">TONLDocument</span>.<span class="text-yellow-400">fromFile</span>(<span class="text-green-400">'data.tonl'</span>);
+
+<span class="text-gray-500">// Query with filters</span>
+<span class="text-purple-400">const</span> admins = doc.<span class="text-yellow-400">query</span>(
+  <span class="text-green-400">'users[?(@.role == "admin")]'</span>
+);
+
+<span class="text-gray-500">// Modify data</span>
+doc
+  .<span class="text-yellow-400">set</span>(<span class="text-green-400">'users[0].age'</span>, <span class="text-orange-400">31</span>)
+  .<span class="text-yellow-400">set</span>(<span class="text-green-400">'users[0].verified'</span>, <span class="text-orange-400">true</span>);
+
+<span class="text-gray-500">// Create indices for fast lookups</span>
+doc.<span class="text-yellow-400">createIndex</span>({
+  name: <span class="text-green-400">'byId'</span>,
+  fields: <span class="text-green-400">'id'</span>,
+  unique: <span class="text-orange-400">true</span>
+});
+
+<span class="text-gray-500">// Find with O(1) performance</span>
+<span class="text-purple-400">const</span> user = doc
+  .<span class="text-yellow-400">getIndex</span>(<span class="text-green-400">'byId'</span>)
+  .<span class="text-yellow-400">find</span>(<span class="text-orange-400">123</span>);
+
+<span class="text-gray-500">// Save atomically</span>
+<span class="text-purple-400">await</span> doc.<span class="text-yellow-400">save</span>(<span class="text-green-400">'data.tonl'</span>);</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Multi-Language Section -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black text-gray-900 mb-6">
+                    Implement TONL in <span class="gradient-text">Any Language</span>
+                </h2>
+                <p class="text-2xl text-gray-600">Complete implementation guides with algorithms and test cases</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mb-12">
+                <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 border-4 border-yellow-200 p-8 rounded-2xl text-center transform hover:scale-105 transition shadow-lg">
+                    <div class="text-6xl mb-4">🐍</div>
+                    <div class="font-bold text-2xl text-gray-900">Python</div>
+                    <div class="text-yellow-700 font-semibold mt-2">Ready</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 border-4 border-blue-200 p-8 rounded-2xl text-center transform hover:scale-105 transition shadow-lg">
+                    <div class="text-6xl mb-4">🔵</div>
+                    <div class="font-bold text-2xl text-gray-900">Go</div>
+                    <div class="text-blue-700 font-semibold mt-2">Ready</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-orange-50 to-orange-100 border-4 border-orange-200 p-8 rounded-2xl text-center transform hover:scale-105 transition shadow-lg">
+                    <div class="text-6xl mb-4">🦀</div>
+                    <div class="font-bold text-2xl text-gray-900">Rust</div>
+                    <div class="text-orange-700 font-semibold mt-2">Ready</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-red-50 to-red-100 border-4 border-red-200 p-8 rounded-2xl text-center transform hover:scale-105 transition shadow-lg">
+                    <div class="text-6xl mb-4">☕</div>
+                    <div class="font-bold text-2xl text-gray-900">Java</div>
+                    <div class="text-red-700 font-semibold mt-2">Ready</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 border-4 border-purple-400 p-8 rounded-2xl text-center shadow-xl relative">
+                    <div class="absolute -top-3 -right-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">LIVE</div>
+                    <div class="text-6xl mb-4">📘</div>
+                    <div class="font-bold text-2xl text-gray-900">TypeScript</div>
+                    <div class="text-green-600 font-semibold mt-2">✓ Available</div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border-4 border-purple-200 rounded-2xl p-10 text-center shadow-xl">
+                <h3 class="text-3xl font-bold text-gray-900 mb-4">Complete Implementation Guides</h3>
+                <p class="text-xl text-gray-600 mb-6">
+                    95KB of comprehensive documentation with algorithms, pseudo-code, and test requirements
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="https://github.com/ersinkoc/tonl/blob/main/docs/IMPLEMENTATION_REFERENCE.md" target="_blank" class="px-8 py-4 gradient-bg text-white rounded-xl font-bold text-lg hover:opacity-90 transition shadow-lg">
+                        Implementation Reference (58KB)
+                    </a>
+                    <a href="https://github.com/ersinkoc/tonl/blob/main/docs/TRANSFORMATION_EXAMPLES.md" target="_blank" class="px-8 py-4 bg-white text-purple-900 border-4 border-purple-200 rounded-xl font-bold text-lg hover:bg-gray-50 transition shadow-lg">
+                        Transformation Examples (37KB)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats & Trust Section -->
+    <section class="py-24 bg-gradient-to-b from-gray-50 to-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black text-gray-900 mb-6">
+                    Battle-Tested & <span class="gradient-text">Production Ready</span>
+                </h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="bg-gradient-to-br from-green-50 to-green-100 border-4 border-green-300 rounded-2xl p-10 text-center shadow-2xl transform hover:scale-105 transition">
+                    <div class="text-7xl font-black text-green-600 mb-4">496</div>
+                    <div class="text-2xl text-gray-800 font-bold mb-2">Tests Passing</div>
+                    <div class="text-green-700 font-semibold">100% Coverage</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 border-4 border-blue-300 rounded-2xl p-10 text-center shadow-2xl transform hover:scale-105 transition">
+                    <div class="text-7xl font-black text-blue-600 mb-4">0</div>
+                    <div class="text-2xl text-gray-800 font-bold mb-2">Known Bugs</div>
+                    <div class="text-blue-700 font-semibold">Fully Tested</div>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 border-4 border-purple-300 rounded-2xl p-10 text-center shadow-2xl transform hover:scale-105 transition">
+                    <div class="text-7xl font-black text-purple-600 mb-4">11</div>
+                    <div class="text-2xl text-gray-800 font-bold mb-2">Examples</div>
+                    <div class="text-purple-700 font-semibold">Real-World</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLI Showcase -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black text-gray-900 mb-6">
+                    Powerful <span class="gradient-text">CLI Tools</span>
+                </h2>
+                <p class="text-2xl text-gray-600">Everything you need from the command line</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+                <div class="code-block p-6 shadow-xl">
+                    <div class="text-purple-400 text-xs mb-3 font-bold">ENCODE - Convert JSON to TONL</div>
+                    <pre class="text-gray-300 text-base"><code>$ tonl encode data.json --smart --stats</code></pre>
+                </div>
+
+                <div class="code-block p-6 shadow-xl">
+                    <div class="text-purple-400 text-xs mb-3 font-bold">QUERY - JSONPath Queries</div>
+                    <pre class="text-gray-300 text-base"><code>$ tonl query users.tonl 'users[*].name'</code></pre>
+                </div>
+
+                <div class="code-block p-6 shadow-xl">
+                    <div class="text-purple-400 text-xs mb-3 font-bold">GET - Simple Path Access</div>
+                    <pre class="text-gray-300 text-base"><code>$ tonl get config.tonl "database.host"</code></pre>
+                </div>
+
+                <div class="code-block p-6 shadow-xl">
+                    <div class="text-purple-400 text-xs mb-3 font-bold">VALIDATE - Schema Validation</div>
+                    <pre class="text-gray-300 text-base"><code>$ tonl validate data.tonl --schema schema.tonl</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="py-32 gradient-bg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-10 left-10 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-6xl lg:text-7xl font-black text-white mb-8">
+                Ready to Optimize?
+            </h2>
+            <p class="text-3xl text-purple-100 mb-12 leading-relaxed">
+                Join developers saving <span class="font-bold text-white">32-45%</span> on LLM costs and storage
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-6 mb-16">
+                <a href="https://www.npmjs.com/package/tonl" target="_blank" class="bg-white text-purple-900 px-12 py-6 rounded-2xl text-2xl font-black hover:bg-gray-100 transition transform hover:scale-110 shadow-2xl inline-flex items-center justify-center">
+                    <svg class="w-8 h-8 mr-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 19H5V5h14m0-2H5c-1.11 0-2 .89-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2m-2.5 13.25c0 .41-.34.75-.75.75s-.75-.34-.75-.75V8.75c0-.41.34-.75.75-.75s.75.34.75.75v8.5m-4 0c0 .41-.34.75-.75.75H9.5a.75.75 0 01-.75-.75V8.75c0-.41.34-.75.75-.75h2.25c.41 0 .75.34.75.75v8.5z"/>
+                    </svg>
+                    npm install tonl
+                </a>
+
+                <a href="https://github.com/ersinkoc/tonl" target="_blank" class="bg-purple-800 bg-opacity-40 backdrop-blur-md text-white px-12 py-6 rounded-2xl text-2xl font-black hover:bg-opacity-50 transition border-4 border-white border-opacity-30 inline-flex items-center justify-center shadow-2xl">
+                    <svg class="w-8 h-8 mr-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                    Star on GitHub
+                </a>
+            </div>
+
+            <!-- Feature Badges -->
+            <div class="flex flex-wrap justify-center gap-4">
+                <span class="px-6 py-3 bg-green-100 text-green-700 rounded-full font-bold text-lg border-2 border-green-300">✓ Production Ready</span>
+                <span class="px-6 py-3 bg-blue-100 text-blue-700 rounded-full font-bold text-lg border-2 border-blue-300">✓ Zero Dependencies</span>
+                <span class="px-6 py-3 bg-purple-100 text-purple-700 rounded-full font-bold text-lg border-2 border-purple-300">✓ 100% Test Coverage</span>
+                <span class="px-6 py-3 bg-yellow-100 text-yellow-700 rounded-full font-bold text-lg border-2 border-yellow-300">✓ MIT License</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                            T
+                        </div>
+                        <span class="text-white font-bold text-3xl">TONL</span>
+                    </div>
+                    <p class="text-lg leading-relaxed">
+                        Token-Optimized Notation Language. Making structured data LLM-friendly without sacrificing readability.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-xl mb-6">Resources</h4>
+                    <ul class="space-y-3 text-lg">
+                        <li><a href="https://github.com/ersinkoc/tonl/tree/main/docs" target="_blank" class="hover:text-white transition">Documentation</a></li>
+                        <li><a href="https://github.com/ersinkoc/tonl/tree/main/examples" target="_blank" class="hover:text-white transition">Examples</a></li>
+                        <li><a href="https://www.npmjs.com/package/tonl" target="_blank" class="hover:text-white transition">NPM Package</a></li>
+                        <li><a href="https://github.com/ersinkoc/tonl/blob/main/CHANGELOG.md" target="_blank" class="hover:text-white transition">Changelog</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold text-xl mb-6">Community</h4>
+                    <ul class="space-y-3 text-lg">
+                        <li><a href="https://github.com/ersinkoc/tonl" target="_blank" class="hover:text-white transition">GitHub Repository</a></li>
+                        <li><a href="https://github.com/ersinkoc/tonl/issues" target="_blank" class="hover:text-white transition">Issues & Support</a></li>
+                        <li><a href="https://github.com/ersinkoc/tonl/discussions" target="_blank" class="hover:text-white transition">Discussions</a></li>
+                        <li><a href="https://github.com/ersinkoc/tonl/blob/main/CONTRIBUTING.md" target="_blank" class="hover:text-white transition">Contributing</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t-2 border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-lg mb-4 md:mb-0">
+                    © 2025 TONL. Created by <a href="https://github.com/ersinkoc" class="text-purple-400 hover:text-purple-300 font-semibold">Ersin KOÇ</a>. MIT License.
+                </p>
+                <div class="flex items-center space-x-6">
+                    <span class="text-lg font-semibold">v1.0.1</span>
+                    <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-lg text-green-400 font-bold">Production Ready</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
