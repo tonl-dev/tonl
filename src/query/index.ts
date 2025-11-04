@@ -22,3 +22,27 @@ export {
   ValidationResult,
   ASTAnalysis
 } from './validator.js';
+
+// Export evaluator
+export {
+  QueryEvaluator,
+  evaluate,
+  exists,
+  typeOf
+} from './evaluator.js';
+
+// Export context
+export {
+  createContext,
+  createChildContext,
+  isMaxDepthReached,
+  type EvaluationContext
+} from './context.js';
+
+// Export cache
+export {
+  QueryCache,
+  getGlobalCache,
+  resetGlobalCache,
+  type CacheStats
+} from './cache.js';

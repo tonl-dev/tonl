@@ -201,6 +201,13 @@ class PathParser {
         continue;
       }
 
+      // If no root and first token is wildcard, allow it
+      if (nodes.length === 0 && this.match(TokenType.WILDCARD)) {
+        this.consume();
+        nodes.push({ type: 'wildcard' } as WildcardNode);
+        continue;
+      }
+
       // If we reach here and not EOF, unexpected token
       if (!this.match(TokenType.EOF)) {
         const token = this.current();
