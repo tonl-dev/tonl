@@ -7,6 +7,12 @@ import type { StreamDecodeOptions } from './types.js';
 import { decodeTONL } from '../decode.js';
 
 /**
+ * Maximum buffer size to prevent memory exhaustion (10MB)
+ * If a single TONL block exceeds this size, an error will be thrown
+ */
+const MAX_BUFFER_SIZE = 10 * 1024 * 1024; // 10MB
+
+/**
  * Create a transform stream that decodes TONL chunks to JSON
  */
 export function createDecodeStream(options?: StreamDecodeOptions): Transform {
@@ -24,6 +30,14 @@ export function createDecodeStream(options?: StreamDecodeOptions): Transform {
     transform(chunk: Buffer, encoding: string, callback: Function) {
       try {
         buffer += chunk.toString('utf-8');
+
+        // Prevent buffer overflow attacks or malformed files
+        if (buffer.length > MAX_BUFFER_SIZE) {
+          return callback(new Error(
+            `Buffer overflow: TONL block exceeds ${MAX_BUFFER_SIZE} bytes. ` +
+            `This may indicate a malformed TONL file without proper block separators.`
+          ));
+        }
 
         // Split by double newline (TONL block separator) or @tonl markers
         const blocks = buffer.split(/\n\n+|(?=@tonl\s)/);

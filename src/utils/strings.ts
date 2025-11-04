@@ -80,10 +80,3 @@ export function tripleQuoteIfNeeded(value: string, delimiter: TONLDelimiter): st
 export function makeIndent(level: number, spaces: number): string {
   return " ".repeat(level * spaces);
 }
-
-/**
- * Escape delimiter in plain text mode
- */
-export function escapeDelimiter(value: string, delimiter: TONLDelimiter): string {
-  return value.replace(new RegExp(`\\${delimiter}`, 'g'), `\\${delimiter}`);
-}

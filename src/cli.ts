@@ -350,10 +350,23 @@ async function main() {
         }
 
         // Get query expression from remaining args
-        const queryExpr = args.find(a => !a.startsWith('-') && a !== command && a !== file);
+        // Find indices of command and file to determine where query expression starts
+        const commandIndex = args.indexOf(command);
+        const fileIndex = args.indexOf(file);
+        const queryStartIndex = Math.max(commandIndex, fileIndex) + 1;
+
+        // Collect all remaining non-option args and join them
+        // This handles cases where the expression contains spaces
+        const queryExpr = args
+          .slice(queryStartIndex)
+          .filter(a => !a.startsWith('-'))
+          .join(' ')
+          .trim();
+
         if (!queryExpr) {
           console.error("❌ Error: Query expression required");
-          console.log("Usage: tonl query <file> <expression>");
+          console.error("Usage: tonl query <file> <expression>");
+          console.error('Example: tonl query data.tonl "users[?(@.age > 25)]"');
           process.exit(1);
         }
 

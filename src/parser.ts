@@ -36,7 +36,7 @@ export function parseTONLLine(line: string, delimiter: TONLDelimiter = ","): str
           } else {
             state.mode = "inQuote";
           }
-        } else if (char === '\\' && nextChar === delimiter) {
+        } else if (char === '\\' && nextChar !== undefined && nextChar === delimiter) {
           // Escaped delimiter
           state.currentField += delimiter;
           state.i++; // Skip the backslash
@@ -227,11 +227,17 @@ export function detectDelimiter(content: string): TONLDelimiter {
   for (const line of lines) {
     const trimmed = line.trim();
     if (trimmed && !trimmed.startsWith('#') && !trimmed.endsWith('{') && !trimmed.endsWith(':')) {
-      // Count potential delimiters
-      const commaCount = (trimmed.match(/,/g) || []).length;
-      const pipeCount = (trimmed.match(/\|/g) || []).length;
-      const tabCount = (trimmed.match(/\t/g) || []).length;
-      const semicolonCount = (trimmed.match(/;/g) || []).length;
+      // Count potential delimiters in a single pass (optimized)
+      let commaCount = 0, pipeCount = 0, tabCount = 0, semicolonCount = 0;
+
+      for (let i = 0; i < trimmed.length; i++) {
+        switch (trimmed[i]) {
+          case ',': commaCount++; break;
+          case '|': pipeCount++; break;
+          case '\t': tabCount++; break;
+          case ';': semicolonCount++; break;
+        }
+      }
 
       const max = Math.max(commaCount, pipeCount, tabCount, semicolonCount);
       if (max === 0) return ","; // default
