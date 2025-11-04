@@ -134,7 +134,7 @@ function displayStats(originalBytes: number, originalTokens: number, tonlBytes: 
 /**
  * Main CLI execution
  */
-function main() {
+async function main() {
   try {
     const args = process.argv.slice(2);
     const { command, file, options } = parseArgs(args);
@@ -426,4 +426,7 @@ Examples:
 }
 
 // Run CLI
-main();
+main().catch(err => {
+  console.error('❌ Fatal error:', err);
+  process.exit(1);
+});

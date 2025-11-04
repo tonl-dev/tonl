@@ -17,12 +17,12 @@
     "resolveJsonModule": true
   },
   "include": [
-    "src/**/*",
-    "bench/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
     "dist",
-    "test"
+    "test",
+    "bench"
   ]
 }
