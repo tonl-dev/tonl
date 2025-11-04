@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TONL - Screenshot Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 1280px;
+            height: 800px;
+            overflow: hidden;
+        }
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .pattern-bg {
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="gradient-bg pattern-bg flex items-center justify-center">
+
+    <div class="w-full h-full flex items-center justify-center p-16">
+        <div class="w-full max-w-7xl">
+
+            <!-- Main Content -->
+            <div class="grid grid-cols-2 gap-12 items-center">
+
+                <!-- Left: Title and Info -->
+                <div class="text-white">
+
+                    <!-- Logo -->
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-20 h-20 bg-white rounded-2xl flex items-center justify-center shadow-2xl">
+                            <span class="text-5xl font-black gradient-bg bg-clip-text text-transparent">T</span>
+                        </div>
+                        <div>
+                            <h1 class="text-6xl font-black leading-tight">TONL</h1>
+                            <p class="text-xl font-light opacity-90">v1.0.1</p>
+                        </div>
+                    </div>
+
+                    <!-- Tagline -->
+                    <h2 class="text-4xl font-bold mb-4 leading-tight">
+                        Token-Optimized<br>
+                        Notation Language
+                    </h2>
+
+                    <p class="text-2xl mb-8 opacity-90">
+                        A text-first, LLM-friendly serialization format
+                    </p>
+
+                    <!-- Key Feature -->
+                    <div class="bg-white bg-opacity-20 backdrop-blur-md rounded-2xl p-6 mb-8 border-2 border-white border-opacity-30">
+                        <div class="text-5xl font-black mb-2">32-45%</div>
+                        <div class="text-xl font-semibold opacity-90">Smaller than JSON</div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-4 text-center border border-white border-opacity-20">
+                            <div class="text-3xl font-black">496</div>
+                            <div class="text-sm opacity-80">Tests ✓</div>
+                        </div>
+                        <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-4 text-center border border-white border-opacity-20">
+                            <div class="text-3xl font-black">0</div>
+                            <div class="text-sm opacity-80">Bugs</div>
+                        </div>
+                        <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-4 text-center border border-white border-opacity-20">
+                            <div class="text-3xl font-black">8.8KB</div>
+                            <div class="text-sm opacity-80">Gzipped</div>
+                        </div>
+                    </div>
+
+                    <!-- Install -->
+                    <div class="mt-8">
+                        <div class="bg-gray-900 rounded-xl px-8 py-4 inline-block shadow-2xl">
+                            <code class="text-green-400 text-xl font-semibold">npm install tonl</code>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right: Code Comparison -->
+                <div class="space-y-4">
+
+                    <!-- JSON Box -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-white font-bold text-lg">JSON</span>
+                            <span class="px-4 py-1 bg-red-500 text-white rounded-lg font-bold">366 bytes</span>
+                        </div>
+                        <div class="bg-gray-900 rounded-xl p-6 shadow-2xl">
+                            <pre class="text-gray-400 text-sm leading-relaxed"><code>{
+  <span class="text-blue-400">"users"</span>: [
+    {
+      <span class="text-blue-400">"id"</span>: <span class="text-orange-400">1</span>, <span class="text-blue-400">"name"</span>: <span class="text-green-400">"Alice"</span>,
+      <span class="text-blue-400">"age"</span>: <span class="text-orange-400">30</span>, <span class="text-blue-400">"role"</span>: <span class="text-green-400">"admin"</span>
+    },
+    {
+      <span class="text-blue-400">"id"</span>: <span class="text-orange-400">2</span>, <span class="text-blue-400">"name"</span>: <span class="text-green-400">"Bob"</span>,
+      <span class="text-blue-400">"age"</span>: <span class="text-orange-400">25</span>, <span class="text-blue-400">"role"</span>: <span class="text-green-400">"user"</span>
+    }
+  ]
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- TONL Box -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-white font-bold text-lg">TONL</span>
+                            <span class="px-4 py-1 bg-green-500 text-white rounded-lg font-bold">284 bytes (-22%)</span>
+                        </div>
+                        <div class="bg-gray-900 rounded-xl p-6 shadow-2xl border-4 border-green-400">
+                            <pre class="text-gray-300 text-sm leading-relaxed"><code><span class="text-purple-400">#version</span> <span class="text-green-400">1.0</span>
+<span class="text-blue-400">users</span>[<span class="text-orange-400">2</span>]{<span class="text-yellow-400">id,name,age,role</span>}:
+  <span class="text-orange-400">1</span>, Alice, <span class="text-orange-400">30</span>, admin
+  <span class="text-orange-400">2</span>, Bob, <span class="text-orange-400">25</span>, user</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Savings Display -->
+                    <div class="bg-green-500 rounded-xl p-4 shadow-2xl text-center">
+                        <div class="text-white text-2xl font-black">
+                            💰 22% Bytes + 38% Tokens = LLM Cost Savings
+                        </div>
+                    </div>
+
+                    <!-- Features -->
+                    <div class="grid grid-cols-3 gap-2 text-xs">
+                        <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 text-white text-center font-semibold border border-white border-opacity-30">
+                            🔍 Query API
+                        </div>
+                        <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 text-white text-center font-semibold border border-white border-opacity-30">
+                            ✏️ CRUD Ops
+                        </div>
+                        <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-lg p-2 text-white text-center font-semibold border border-white border-opacity-30">
+                            🌊 Streaming
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="absolute bottom-8 left-16 right-16">
+                <div class="flex items-center justify-between text-white">
+                    <div class="flex items-center gap-6 text-sm font-semibold opacity-90">
+                        <span>📦 Zero Dependencies</span>
+                        <span>⚡ 10-1600x Faster</span>
+                        <span>✅ 100% Test Coverage</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-lg font-bold">github.com/ersinkoc/tonl</span>
+                        <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
