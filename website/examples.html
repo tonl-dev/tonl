@@ -219,19 +219,37 @@
 
             <!-- TONL Output -->
             <div class="bg-white border-2 border-emerald-500 rounded-2xl overflow-hidden shadow-xl shadow-emerald-500/10">
-                <div class="bg-emerald-50 border-b-2 border-emerald-500 px-6 py-4 flex items-center justify-between">
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-lg">TONL Output</h3>
-                        <p class="text-sm text-emerald-700 mt-0.5 font-semibold">Automatically optimized format</p>
+                <div class="bg-emerald-50 border-b-2 border-emerald-500 px-6 py-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-lg">TONL Output</h3>
+                            <p class="text-sm text-emerald-700 mt-0.5 font-semibold">Automatically optimized format</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button @click="tonlToJSON()" class="px-4 py-2 text-sm bg-white border border-emerald-300 hover:bg-emerald-50 hover:shadow rounded-lg font-medium">
+                                ← Decode to JSON
+                            </button>
+                            <button @click="copyToClipboard(tonlOutput)" :class="copied ? 'success-pop' : ''" class="px-5 py-2 text-sm bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 hover:shadow-lg active:scale-95">
+                                <span x-show="!copied">📋 Copy</span>
+                                <span x-show="copied" class="text-white">✓ Copied!</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button @click="tonlToJSON()" class="px-4 py-2 text-sm bg-white border border-emerald-300 hover:bg-emerald-50 rounded-lg font-medium transition">
-                            ← Decode to JSON
+
+                    <!-- Type Toggle -->
+                    <div class="flex items-center gap-4">
+                        <button @click="includeTypes = !includeTypes; jsonToTONL();"
+                                :class="includeTypes ? 'bg-emerald-600 text-white border-emerald-700' : 'bg-white text-slate-700 border-slate-300'"
+                                class="border-2 hover:shadow-md px-4 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                            <span x-text="includeTypes ? 'Types: ON ✓' : 'Types: OFF'"></span>
                         </button>
-                        <button @click="copyToClipboard(tonlOutput)" class="px-5 py-2 text-sm bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 transition shadow-md">
-                            <span x-show="!copied">📋 Copy</span>
-                            <span x-show="copied" class="text-white">✓ Copied!</span>
-                        </button>
+                        <div class="text-xs">
+                            <span x-show="!includeTypes" class="text-blue-700 font-medium">📦 Compact mode (max savings)</span>
+                            <span x-show="includeTypes" class="text-emerald-800 font-medium">✅ Validation mode (with type hints)</span>
+                        </div>
                     </div>
                 </div>
 
@@ -280,6 +298,7 @@
                 savings: { bytes: 0, tokens: 0 },
                 error: '',
                 copied: false,
+                includeTypes: false,
 
                 init() {
                     this.loadExample('users');
@@ -290,7 +309,7 @@
                         this.error = '';
                         const data = JSON.parse(this.jsonInput);
                         if (typeof TONL !== 'undefined' && TONL.encodeTONL) {
-                            this.tonlOutput = TONL.encodeTONL(data);
+                            this.tonlOutput = TONL.encodeTONL(data, { includeTypes: this.includeTypes });
                         } else {
                             this.tonlOutput = '#version 1.0\\n' + JSON.stringify(data, null, 2);
                         }

@@ -206,21 +206,62 @@
     </section>
 
     <!-- Live Token Comparison -->
-    <section id="comparison" class="py-20 bg-white" x-data="{ showComparison: true }">
+    <section id="comparison" class="py-20 bg-white" x-data="comparisonData()">
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16">
                 <h2 class="text-4xl font-bold text-slate-900 mb-4">Real-World Token Comparison</h2>
                 <p class="text-xl text-slate-600">Same data structure, dramatically different token costs</p>
             </div>
 
-            <!-- Interactive Toggle -->
-            <div class="flex justify-center mb-8">
-                <button @click="showComparison = !showComparison" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-lg font-medium transition flex items-center gap-2">
+            <!-- Interactive Controls -->
+            <div class="max-w-4xl mx-auto mb-8 space-y-6">
+                <!-- Data Size Slider -->
+                <div class="bg-gradient-to-r from-slate-50 to-emerald-50 border-2 border-slate-200 rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="font-semibold text-slate-900 text-lg">Dataset Size: <span class="text-emerald-600" x-text="dataSize"></span> users</h3>
+                            <p class="text-sm text-slate-600 mt-1">Slide to see how token savings scale with data volume</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-3xl font-bold text-emerald-600" x-text="Math.round(savingsPercent) + '%'"></div>
+                            <div class="text-xs text-slate-600">Token Savings</div>
+                        </div>
+                    </div>
+                    <input type="range" min="1" max="10" step="1" x-model.number="dataSize" @input="updateContent()"
+                           class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+                           style="accent-color: #10b981;">
+                    <div class="flex justify-between text-xs text-slate-500 mt-2">
+                        <span>1</span>
+                        <span>2</span>
+                        <span>3</span>
+                        <span>4</span>
+                        <span>5</span>
+                        <span>6</span>
+                        <span>7</span>
+                        <span>8</span>
+                        <span>9</span>
+                        <span>10</span>
+                    </div>
+                </div>
+
+                <!-- Toggles -->
+                <div class="flex justify-center gap-4 flex-wrap">
+                    <button @click="showComparison = !showComparison" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-3 rounded-lg font-medium transition flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
                     </svg>
-                    <span x-text="showComparison ? 'Hide Comparison' : 'Show Comparison'"></span>
-                </button>
+                        <span x-text="showComparison ? 'Hide Comparison' : 'Show Comparison'"></span>
+                    </button>
+
+                    <button @click="showTypes = !showTypes; updateContent();"
+                            :class="showTypes ? 'bg-emerald-100 border-emerald-300 text-emerald-800' : 'bg-slate-100 border-slate-300 text-slate-700'"
+                            class="border-2 hover:shadow-md px-6 py-3 rounded-lg font-medium transition flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                        </svg>
+                        <span x-text="showTypes ? 'With Types ✓' : 'Show Types'"></span>
+                    </button>
+                </div>
             </div>
 
             <div x-show="showComparison" x-transition class="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto mb-12">
@@ -228,49 +269,10 @@
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-slate-700 font-semibold text-lg">JSON Format</span>
-                        <span class="text-slate-500 text-sm font-medium">348 tokens</span>
+                        <span class="text-slate-500 text-sm font-medium" x-text="jsonTokens + ' tokens'"></span>
                     </div>
                     <div class="bg-slate-50 border border-slate-200 rounded-lg p-6 h-[500px] overflow-auto">
-                        <pre class="text-slate-600 text-sm leading-relaxed"><code>{
-  "users": [
-    {
-      "id": 1001,
-      "name": "Alice Johnson",
-      "email": "alice@example.com",
-      "age": 32,
-      "role": "admin",
-      "active": true,
-      "department": "Engineering"
-    },
-    {
-      "id": 1002,
-      "name": "Bob Smith",
-      "email": "bob@example.com",
-      "age": 28,
-      "role": "user",
-      "active": true,
-      "department": "Marketing"
-    },
-    {
-      "id": 1003,
-      "name": "Carol White",
-      "email": "carol@example.com",
-      "age": 35,
-      "role": "manager",
-      "active": false,
-      "department": "Sales"
-    },
-    {
-      "id": 1004,
-      "name": "David Brown",
-      "email": "david@example.com",
-      "age": 41,
-      "role": "admin",
-      "active": true,
-      "department": "Engineering"
-    }
-  ]
-}</code></pre>
+                        <pre class="text-slate-600 text-sm leading-relaxed"><code x-text="jsonContent"></code></pre>
                     </div>
                     <div class="mt-3">
                         <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
@@ -283,22 +285,34 @@
                 <!-- TONL -->
                 <div>
                     <div class="flex items-center justify-between mb-4">
-                        <span class="text-slate-700 font-semibold text-lg">TONL Format</span>
-                        <span class="text-emerald-600 text-sm font-semibold">216 tokens (-38% typical)</span>
+                        <div class="flex items-center gap-3">
+                            <span class="text-slate-700 font-semibold text-lg">TONL Format</span>
+                            <span x-show="showTypes" class="px-2 py-1 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded">WITH TYPES</span>
+                            <span x-show="!showTypes" class="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded">COMPACT</span>
+                        </div>
+                        <span class="text-emerald-600 text-sm font-semibold" x-text="tonlTokens + ' tokens (-' + Math.round(savingsPercent) + '%)'"></span>
                     </div>
                     <div class="bg-emerald-50/50 border-2 border-emerald-500 rounded-lg p-6 h-[500px] overflow-auto">
-                        <pre class="text-slate-700 text-sm leading-relaxed font-medium"><code>#version 1.0
-users[4]{id,name,email,age,role,active,department}:
-  1001, Alice Johnson, alice@example.com, 32, admin, true, Engineering
-  1002, Bob Smith, bob@example.com, 28, user, true, Marketing
-  1003, Carol White, carol@example.com, 35, manager, false, Sales
-  1004, David Brown, david@example.com, 41, admin, true, Engineering</code></pre>
+                        <pre class="text-slate-700 text-sm leading-relaxed font-medium"><code x-text="tonlContent"></code></pre>
                     </div>
                     <div class="mt-3">
                         <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                            <div class="bg-emerald-500 h-3 transition-all duration-500" style="width: 62%"></div>
+                            <div class="bg-emerald-500 h-3 transition-all duration-500" :style="'width: ' + (100 - Math.round(savingsPercent)) + '%'"></div>
                         </div>
-                        <div class="text-sm text-emerald-600 font-medium mt-2">50-68% of JSON token usage - Save up to 50%!</div>
+                        <div class="text-sm text-emerald-600 font-medium mt-2" x-text="(100 - Math.round(savingsPercent)) + '% of JSON (' + Math.round(savingsPercent) + '% savings)'"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Box -->
+            <div x-show="showTypes" x-transition class="max-w-5xl mx-auto mb-8 bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
+                <div class="flex items-start gap-3">
+                    <svg class="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div>
+                        <p class="text-blue-900 font-semibold mb-1">Type hints enabled (+20 tokens)</p>
+                        <p class="text-blue-800 text-sm">Type hints (u32, str, bool) add ~20 tokens but enable schema validation, TypeScript generation, and better LLM understanding. Still 32% smaller than JSON!</p>
                     </div>
                 </div>
             </div>
@@ -307,18 +321,26 @@ users[4]{id,name,email,age,role,active,department}:
             <div class="max-w-5xl mx-auto bg-slate-900 rounded-xl p-8 md:p-12 shadow-md">
                 <div class="grid md:grid-cols-3 gap-8 items-center">
                     <div class="text-center">
-                        <div class="text-emerald-400 text-6xl font-bold mb-2">↓ 32-50%</div>
-                        <div class="text-slate-300 text-lg">Token Reduction</div>
+                        <div class="text-emerald-400 text-6xl font-bold mb-2" x-text="'↓ ' + Math.round(savingsPercent) + '%'">↓ 38%</div>
+                        <div class="text-slate-300 text-lg">
+                            <span x-text="dataSize + ' records'"></span>
+                            <span x-show="showTypes" class="block text-sm text-slate-400">(with types)</span>
+                            <span x-show="!showTypes" class="block text-sm text-slate-400">(compact)</span>
+                        </div>
                     </div>
                     <div class="text-center">
                         <div class="text-4xl mb-2">💰</div>
                         <div class="text-slate-300 text-lg">Lower API Costs</div>
-                        <div class="text-slate-400 text-sm mt-1">Save thousands on LLM bills</div>
+                        <div class="text-slate-400 text-sm mt-1">
+                            <span x-text="'$' + ((jsonTokens - tonlTokens) * 0.00002).toFixed(4)"></span> saved per request
+                        </div>
                     </div>
                     <div class="text-center">
                         <div class="text-4xl mb-2">⚡</div>
-                        <div class="text-slate-300 text-lg">Faster Processing</div>
-                        <div class="text-slate-400 text-sm mt-1">Less tokens = quicker responses</div>
+                        <div class="text-slate-300 text-lg">Fewer Tokens</div>
+                        <div class="text-slate-400 text-sm mt-1">
+                            <span class="text-emerald-400 font-semibold" x-text="jsonTokens - tonlTokens"></span> tokens saved
+                        </div>
                     </div>
                 </div>
             </div>
@@ -411,7 +433,7 @@ users[4]{id,name,email,age,role,active,department}:
                     </div>
                     <h3 class="text-xl font-semibold text-slate-900 mb-3">Schema Validation</h3>
                     <p class="text-slate-600 mb-4 leading-relaxed">
-                        Define schemas, validate data types, set constraints, and auto-generate TypeScript type definitions.
+                        Define schemas, validate data types, set constraints, and auto-generate TypeScript type definitions. Toggle "Show Types" above to see type hints.
                     </p>
                     <div class="bg-slate-50 rounded-md px-3 py-2">
                         <code class="text-sm text-slate-700">age: u32 min:18 max:120</code>
@@ -1269,6 +1291,59 @@ tonl decode filtered.tonl --out result.json</code></pre>
 
     <!-- Interactive Scripts -->
     <script>
+        // Comparison Data Component
+        function comparisonData() {
+            const users = [
+                { id: 1001, name: "Alice Johnson", email: "alice@example.com", age: 32, role: "admin", active: true, department: "Engineering" },
+                { id: 1002, name: "Bob Smith", email: "bob@example.com", age: 28, role: "developer", active: true, department: "Engineering" },
+                { id: 1003, name: "Carol White", email: "carol@example.com", age: 35, role: "manager", active: false, department: "Sales" },
+                { id: 1004, name: "David Brown", email: "david@example.com", age: 41, role: "admin", active: true, department: "Engineering" },
+                { id: 1005, name: "Eve Martinez", email: "eve@example.com", age: 29, role: "designer", active: true, department: "Design" },
+                { id: 1006, name: "Frank Wilson", email: "frank@example.com", age: 38, role: "developer", active: true, department: "Engineering" },
+                { id: 1007, name: "Grace Lee", email: "grace@example.com", age: 31, role: "analyst", active: true, department: "Analytics" },
+                { id: 1008, name: "Henry Chen", email: "henry@example.com", age: 27, role: "developer", active: false, department: "Engineering" },
+                { id: 1009, name: "Iris Taylor", email: "iris@example.com", age: 33, role: "manager", active: true, department: "Product" },
+                { id: 1010, name: "Jack Anderson", email: "jack@example.com", age: 36, role: "architect", active: true, department: "Engineering" }
+            ];
+
+            return {
+                dataSize: 5,
+                showComparison: true,
+                showTypes: false,
+                jsonContent: '',
+                tonlContent: '',
+                jsonTokens: 0,
+                tonlTokens: 0,
+                savingsPercent: 0,
+
+                init() {
+                    this.updateContent();
+                },
+
+                updateContent() {
+                    const selectedUsers = users.slice(0, this.dataSize);
+                    const data = { users: selectedUsers };
+
+                    // Generate JSON
+                    this.jsonContent = JSON.stringify(data, null, 2);
+                    this.jsonTokens = Math.ceil(this.jsonContent.length / 3.5);
+
+                    // Generate TONL
+                    const typeHints = this.showTypes ? ':u32,:str,:str,:u32,:str,:bool,:str' : '';
+                    let tonl = '#version 1.0\n';
+                    tonl += `users[${this.dataSize}]{id${this.showTypes ? ':u32' : ''},name${this.showTypes ? ':str' : ''},email${this.showTypes ? ':str' : ''},age${this.showTypes ? ':u32' : ''},role${this.showTypes ? ':str' : ''},active${this.showTypes ? ':bool' : ''},department${this.showTypes ? ':str' : ''}}:\n`;
+
+                    selectedUsers.forEach(u => {
+                        tonl += `  ${u.id}, ${u.name}, ${u.email}, ${u.age}, ${u.role}, ${u.active}, ${u.department}\n`;
+                    });
+
+                    this.tonlContent = tonl.trim();
+                    this.tonlTokens = Math.ceil(this.tonlContent.length / 3.5);
+                    this.savingsPercent = ((this.jsonTokens - this.tonlTokens) / this.jsonTokens) * 100;
+                }
+            };
+        }
+
         // Copy to clipboard - FIXED: Only for code examples with pre/code
         document.addEventListener('DOMContentLoaded', () => {
             // Find code blocks that have <pre> and <code> tags (real code examples)
