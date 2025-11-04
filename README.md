@@ -7,9 +7,11 @@
 - **🗜️ Compact**: 32-45% smaller than JSON (bytes + tokens)
 - **👁️ Human-readable**: Clear text format with minimal syntax overhead
 - **🧠 LLM-optimized**: Designed specifically for token efficiency in language models
-- **✅ Schema Validation**: Full schema system with type checking and constraints (v0.4.0)
-- **🌊 Streaming API**: Handle 100GB+ files with <100MB memory (NEW in v0.5.0!)
-- **🌐 Browser Support**: Tiny bundles (<7KB gzipped) for web apps (NEW in v0.5.0!)
+- **🔍 Query API**: JSONPath-like queries with filters and wildcards (NEW in v0.6.0!)
+- **🧭 Navigation API**: Tree traversal, iteration, and search utilities (NEW in v0.6.0!)
+- **✅ Schema Validation**: Full schema system with type checking and constraints
+- **🌊 Streaming API**: Handle 100GB+ files with <100MB memory
+- **🌐 Browser Support**: Tiny bundles (<7KB gzipped) for web apps
 - **🔧 Schema hints**: Optional type information for validation and correctness
 - **🔄 Round-trip safe**: Perfect bidirectional conversion with JSON
 - **⚡ Fast**: Linear-time parsing and encoding
@@ -30,9 +32,31 @@ npm install tonl
 ### Programmatic Usage
 
 ```typescript
-import { encodeTONL, decodeTONL, encodeSmart } from 'tonl';
+import { TONLDocument, encodeTONL, decodeTONL } from 'tonl';
 
-// Basic encoding
+// === Method 1: TONLDocument API (NEW in v0.6.0!) ===
+const doc = TONLDocument.fromJSON({
+  users: [
+    { id: 1, name: "Alice", role: "admin", age: 30 },
+    { id: 2, name: "Bob", role: "user", age: 25 }
+  ]
+});
+
+// Query with path expressions
+doc.get('users[0].name');                          // 'Alice'
+doc.query('users[*].name');                        // ['Alice', 'Bob']
+doc.query('users[?(@.role == "admin")]');          // [{ id: 1, ... }]
+doc.query('$..email');                             // All emails recursively
+
+// Navigate and iterate
+for (const [key, value] of doc.entries()) { ... }
+doc.walk((path, value, depth) => { ... });
+
+// Export
+const tonl = doc.toTONL();
+await doc.save('output.tonl');
+
+// === Method 2: Classic Encode/Decode API ===
 const data = {
   users: [
     { id: 1, name: "Alice", role: "admin" },
@@ -42,9 +66,6 @@ const data = {
 
 const tonlText = encodeTONL(data);
 const restored = decodeTONL(tonlText);
-
-// Smart encoding (optimizes delimiter automatically)
-const optimized = encodeSmart(data);
 ```
 
 ### CLI Usage
