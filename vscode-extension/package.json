@@ -1,0 +1,95 @@
+{
+  "name": "tonl-vscode",
+  "displayName": "TONL Language Support",
+  "description": "Syntax highlighting, IntelliSense, and document explorer for TONL files",
+  "version": "0.1.0",
+  "publisher": "tonl",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Formatters",
+    "Linters"
+  ],
+  "keywords": [
+    "tonl",
+    "data",
+    "serialization",
+    "llm"
+  ],
+  "activationEvents": [
+    "onLanguage:tonl"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "tonl",
+        "aliases": [
+          "TONL",
+          "tonl"
+        ],
+        "extensions": [
+          ".tonl"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "tonl",
+        "scopeName": "source.tonl",
+        "path": "./syntaxes/tonl.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "tonl.validateDocument",
+        "title": "TONL: Validate Document"
+      },
+      {
+        "command": "tonl.formatDocument",
+        "title": "TONL: Format Document"
+      },
+      {
+        "command": "tonl.showDocumentTree",
+        "title": "TONL: Show Document Tree"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "tonl-explorer",
+          "title": "TONL Explorer",
+          "icon": "resources/tonl-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "tonl-explorer": [
+        {
+          "id": "tonlDocumentTree",
+          "name": "Document Tree"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vsce": "^2.15.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ersinkoc/tonl.git",
+    "directory": "vscode-extension"
+  }
+}

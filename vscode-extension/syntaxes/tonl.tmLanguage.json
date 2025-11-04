@@ -1,0 +1,129 @@
+{
+  "name": "TONL",
+  "scopeName": "source.tonl",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#directives"
+    },
+    {
+      "include": "#headers"
+    },
+    {
+      "include": "#values"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.tonl",
+          "match": "^#.*$"
+        }
+      ]
+    },
+    "directives": {
+      "patterns": [
+        {
+          "name": "meta.directive.tonl",
+          "match": "^@(version|delimiter|type|schema)\\b",
+          "captures": {
+            "1": {
+              "name": "keyword.control.directive.tonl"
+            }
+          }
+        }
+      ]
+    },
+    "headers": {
+      "patterns": [
+        {
+          "name": "entity.name.section.tonl",
+          "match": "^([a-zA-Z_][a-zA-Z0-9_]*):",
+          "captures": {
+            "1": {
+              "name": "entity.name.tag.tonl"
+            }
+          }
+        },
+        {
+          "name": "entity.name.section.array.tonl",
+          "match": "^([a-zA-Z_][a-zA-Z0-9_]*)\\[\\d+\\]:",
+          "captures": {
+            "1": {
+              "name": "entity.name.tag.tonl"
+            }
+          }
+        }
+      ]
+    },
+    "values": {
+      "patterns": [
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "include": "#booleans"
+        },
+        {
+          "include": "#null"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.triple.tonl",
+          "begin": "\"\"\"",
+          "end": "\"\"\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.tonl",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.double.tonl",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.tonl",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.tonl",
+          "match": "-?\\d+\\.?\\d*([eE][+-]?\\d+)?"
+        }
+      ]
+    },
+    "booleans": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.tonl",
+          "match": "\\b(true|false)\\b"
+        }
+      ]
+    },
+    "null": {
+      "patterns": [
+        {
+          "name": "constant.language.null.tonl",
+          "match": "\\bnull\\b"
+        }
+      ]
+    }
+  }
+}
