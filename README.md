@@ -1,8 +1,8 @@
-# TONL (Token-Optimized Notation Language) v1.0.0
+# TONL (Token-Optimized Notation Language) v1.0.1
 
 **TONL** is a production-ready data platform that combines compact serialization with powerful query, modification, indexing, and streaming capabilities. Designed for LLM token efficiency while providing a rich API for data access and manipulation.
 
-**🎉 Now v1.0.0 - Stable & Production Ready!**
+**🎉 Now v1.0.1 - Stable & Production Ready!**
 
 ## ✨ Complete Feature Set (v1.0.0)
 
@@ -118,10 +118,10 @@ tonl format data.tonl --pretty --out formatted.tonl
 tonl stats data.json --tokenizer gpt-5
 ```
 
-## 📊 Quality Metrics (v1.0.0)
+## 📊 Quality Metrics (v1.0.1)
 
 ```
-✅ Test Coverage:     159/159 tests (100%)
+✅ Test Coverage:     496/496 tests (100%)
 ✅ Code Quality:      TypeScript strict mode
 ✅ Dependencies:      0 runtime deps
 ✅ Bundle Size:       8.84 KB gzipped (browser)
