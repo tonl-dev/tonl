@@ -467,13 +467,36 @@ See [ROADMAP.md](ROADMAP.md) for detailed development plans.
 - Python binding for ML/AI community
 - GraphQL-like query extensions
 
+## 📚 Complete Documentation
+
+### For Users
+- **[Getting Started](docs/GETTING_STARTED.md)** - Quick start guide with examples
+- **[API Reference](docs/API.md)** - Complete API documentation
+- **[CLI Documentation](docs/CLI.md)** - Command-line tools guide
+- **[Query API](docs/QUERY_API.md)** - JSONPath-like query syntax
+- **[Modification API](docs/MODIFICATION_API.md)** - CRUD operations guide
+- **[Navigation API](docs/NAVIGATION_API.md)** - Tree traversal methods
+- **[Use Cases](docs/USE_CASES.md)** - Real-world examples
+
+### For Implementers (Other Languages)
+- **[Implementation Reference](docs/IMPLEMENTATION_REFERENCE.md)** - Complete spec for implementing TONL in any language
+- **[Transformation Examples](docs/TRANSFORMATION_EXAMPLES.md)** - 20+ JSON↔TONL examples with explanations
+- **[Format Specification](docs/SPECIFICATION.md)** - Technical format specification
+- **[Schema Specification](docs/SCHEMA_SPECIFICATION.md)** - Schema language (TSL) spec
+
+**🌟 NEW:** Language-agnostic implementation guides with pseudo-code, algorithms, and test requirements for building TONL libraries in Python, Go, Rust, Java, C#, and more!
+
+---
+
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 🤝 Contributing
 
-Contributions welcome! Please read the contributing guidelines and submit pull requests to the main repository.
+Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) and submit pull requests to the main repository.
+
+**Implementing TONL in another language?** Check out the [Implementation Reference](docs/IMPLEMENTATION_REFERENCE.md) for complete algorithms and test requirements!
 
 ---
 
