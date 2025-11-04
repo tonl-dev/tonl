@@ -65,3 +65,6 @@ export const encodeTONL = _encodeTONL;
 
 // Export TONLDocument class (NEW in v0.6.0!)
 export { TONLDocument, type DocumentStats } from './document.js';
+
+// Export Modification API (NEW in v0.6.5!)
+export { FileEditor, type FileEditorOptions, type DiffResult, type DiffEntry } from './modification/index.js';

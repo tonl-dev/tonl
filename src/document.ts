@@ -12,7 +12,7 @@ import { parsePath, QueryEvaluator } from './query/index.js';
 import { entries, keys, values, deepEntries, deepKeys, deepValues, walk, type WalkCallback, type WalkOptions, countNodes, find, findAll, some, every } from './navigation/index.js';
 import { readFileSync, writeFileSync } from 'fs';
 import { promises as fs } from 'fs';
-import { set as setByPath, deleteValue as deleteByPath, push as pushToArray, pop as popFromArray, merge as mergeAtPath } from './modification/index.js';
+import { set as setByPath, deleteValue as deleteByPath, push as pushToArray, pop as popFromArray, merge as mergeAtPath, diff as diffDocuments, formatDiff, type DiffResult } from './modification/index.js';
 
 /**
  * Document statistics
@@ -481,5 +481,47 @@ export class TONLDocument {
     mergeAtPath(this.data, pathExpression, updates);
     this.evaluator = new QueryEvaluator(this.data);
     return this;
+  }
+
+  // ========================================
+  // Change Tracking & Diff (NEW in v0.6.5!)
+  // ========================================
+
+  /**
+   * Compare this document with another and get a diff
+   *
+   * @param other - The other document to compare with
+   * @returns Diff result with all changes
+   *
+   * @example
+   * ```typescript
+   * const doc1 = TONLDocument.fromJSON({ a: 1, b: 2 });
+   * const doc2 = TONLDocument.fromJSON({ a: 1, b: 3, c: 4 });
+   * const diff = doc1.diff(doc2);
+   * console.log(diff.summary); // { added: 1, modified: 1, deleted: 0, total: 2 }
+   * ```
+   */
+  diff(other: TONLDocument): DiffResult {
+    return diffDocuments(this.data, other.data);
+  }
+
+  /**
+   * Get a formatted string representation of changes between documents
+   *
+   * @param other - The other document to compare with
+   * @returns Human-readable diff string
+   */
+  diffString(other: TONLDocument): string {
+    const diffResult = this.diff(other);
+    return formatDiff(diffResult);
+  }
+
+  /**
+   * Create a snapshot of the current document state
+   *
+   * @returns A new document with a deep copy of current data
+   */
+  snapshot(): TONLDocument {
+    return TONLDocument.fromJSON(JSON.parse(JSON.stringify(this.data)));
   }
 }

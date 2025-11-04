@@ -5,6 +5,111 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.5] - 2025-11-04
+
+### 🛠️ Feature Release - Modification API
+
+This release completes the Modification API (Feature F002), adding comprehensive document modification, change tracking, and safe file editing capabilities.
+
+---
+
+### Added
+
+#### Modification Operations (T011-T015)
+- **Core Setter** - Set values at any path with automatic path creation
+  - `doc.set('user.profile.age', 31)` - Create intermediate objects automatically
+  - `doc.set('items[0]', 'value')` - Array element modification
+  - Support for nested paths and negative array indices
+  - Method chaining: `doc.set('a', 1).set('b', 2)`
+
+- **Delete Operations** - Remove values from documents
+  - `doc.delete('user.temp')` - Delete properties
+  - `doc.delete('items[0]')` - Remove array elements with index shifting
+  - Graceful handling of non-existent paths
+
+- **Array Operations** - Array-specific manipulations
+  - `doc.push('items', ...values)` - Add elements to end
+  - `doc.pop('items')` - Remove and return last element
+  - All standard array methods supported
+
+- **Transform & Bulk Updates** - Advanced modification patterns
+  - `transform()` - Apply function to values
+  - `updateMany()` - Update multiple paths simultaneously
+  - `merge()` - Shallow merge objects
+
+- **Transaction Support** - Atomic modifications with rollback
+  - Snapshot creation for rollback capability
+  - Change recording for audit trails
+  - Transaction commit/rollback support
+
+#### Change Tracking & Diff (T016)
+- **Diff Engine** - Compare documents and track changes
+  - `doc.diff(other)` - Generate detailed change report
+  - `doc.diffString(other)` - Human-readable diff output
+  - Change types: added, modified, deleted
+  - Nested object and array diff support
+  - Change summary with counts
+
+- **Document Snapshots**
+  - `doc.snapshot()` - Create deep copy for comparison
+  - Enable before/after comparisons
+  - Track modification history
+
+- **ChangeTracker Class** - Monitor modifications in real-time
+  - Enable/disable tracking
+  - Get list of all changes
+  - Clear change history
+
+#### File Editing (T017)
+- **FileEditor Class** - Safe in-place file modification
+  - `FileEditor.open(path)` - Open TONL file for editing
+  - Atomic saves (write to temp + rename)
+  - Automatic backup creation
+  - `editor.save()` - Atomic write with backup
+  - `editor.reload()` - Discard changes
+  - `editor.restoreBackup()` - Restore from backup
+  - `isModified()` - Check for unsaved changes
+
+- **Safety Features**
+  - Atomic file operations (no partial writes)
+  - Automatic `.bak` backup files
+  - Temp file cleanup on errors
+  - Cross-platform compatibility
+
+### Changed
+- **src/index.ts** - Added exports for Modification API
+- **src/document.ts** - Integrated all modification methods
+- **package.json** - Updated version to 0.6.5
+
+### API Additions
+```typescript
+// Document modification
+doc.set(path, value): this
+doc.delete(path): this
+doc.push(arrayPath, ...items): number
+doc.pop(arrayPath): any
+doc.merge(path, updates): this
+
+// Change tracking
+doc.diff(other): DiffResult
+doc.diffString(other): string
+doc.snapshot(): TONLDocument
+
+// File editing
+FileEditor.open(path, options): Promise<FileEditor>
+editor.save(): Promise<void>
+editor.isModified(): boolean
+editor.restoreBackup(): Promise<void>
+```
+
+### Performance
+- Modification operations: O(path length)
+- Diff generation: O(n) where n = total nodes
+- Atomic saves: Same speed as regular saves
+- Memory: Efficient snapshot using JSON deep copy
+
+---
+
 ## [0.6.0] - 2025-11-04
 
 ### 🎉 Major Feature Release - Query & Navigation API
