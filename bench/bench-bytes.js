@@ -3,7 +3,7 @@
  * Byte size benchmark for TONL vs JSON
  */
 import { readFileSync, existsSync } from "fs";
-import { encodeTONL, encodeSmart } from "../src/index.js";
+import { encodeTONL, encodeSmart } from "../dist/index.js";
 function benchmarkFile(filepath) {
     const content = readFileSync(filepath, 'utf8');
     const data = JSON.parse(content);

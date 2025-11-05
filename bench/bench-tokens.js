@@ -3,8 +3,8 @@
  * Token estimation benchmark for TONL vs JSON
  */
 import { readFileSync, existsSync } from "fs";
-import { encodeTONL, encodeSmart } from "../src/index.js";
-import { estimateTokens } from "../src/utils/metrics.js";
+import { encodeTONL, encodeSmart } from "../dist/index.js";
+import { estimateTokens } from "../dist/utils/metrics.js";
 function benchmarkTokens(filepath, tokenizer = "cl100k") {
     const content = readFileSync(filepath, 'utf8');
     const data = JSON.parse(content);
