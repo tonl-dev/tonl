@@ -126,17 +126,19 @@ tonl format data.tonl --pretty --out formatted.tonl
 tonl stats data.json --tokenizer gpt-5
 ```
 
-## 📊 Quality Metrics (v1.0.1)
+## 📊 Quality Metrics (v1.0.2)
 
 ```
 ✅ Test Coverage:     496/496 tests (100%)
+✅ Security Tests:    96 tests (exploit + regression)
+✅ Security Hardened: 9 vulnerabilities fixed 🔒
 ✅ Code Quality:      TypeScript strict mode
 ✅ Dependencies:      0 runtime deps
 ✅ Bundle Size:       8.84 KB gzipped (browser)
 ✅ Performance:       10-1600x faster than targets
-✅ Documentation:     12+ comprehensive guides
+✅ Documentation:     15+ comprehensive guides
 ✅ Examples:          11 working examples
-✅ Production:        Ready ✅
+✅ Production:        Ready & Secure ✅
 ```
 
 ### Streaming API
@@ -163,7 +165,7 @@ for await (const tonlLine of encodeIterator(dataStream)) {
 ```html
 <!-- ESM (modern browsers) -->
 <script type="module">
-  import { encodeTONL, decodeTONL } from 'https://cdn.jsdelivr.net/npm/tonl@1.0.0/+esm';
+  import { encodeTONL, decodeTONL } from 'https://cdn.jsdelivr.net/npm/tonl@1.0.2/+esm';
 
   const data = { users: [{ id: 1, name: "Alice" }] };
   const tonl = encodeTONL(data);
@@ -171,7 +173,7 @@ for await (const tonlLine of encodeIterator(dataStream)) {
 </script>
 
 <!-- UMD (universal) -->
-<script src="https://unpkg.com/tonl@1.0.0/dist/browser/tonl.umd.js"></script>
+<script src="https://unpkg.com/tonl@1.0.2/dist/browser/tonl.umd.js"></script>
 <script>
   const tonl = TONL.encodeTONL({ hello: "world" });
 </script>
