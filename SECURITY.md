@@ -205,6 +205,15 @@ tonl encode \\server\share\file
 - **CWE**: CWE-22 (Improper Limitation of a Pathname to a Restricted Directory)
 - **Credit**: Internal security audit
 
+**[CRITICAL] BF003: Buffer Overflow Fixed**
+- **Issue**: Stream decoder checked buffer size AFTER appending chunks
+- **Impact**: Memory exhaustion DoS via cumulative chunk overflow
+- **Fix**: Moved buffer size check to BEFORE chunk append
+- **Files Changed**:
+  - `src/stream/decode-stream.ts` (1 line fix: check before append)
+- **CWE**: CWE-120 (Buffer Copy without Checking Size of Input)
+- **Credit**: Internal security audit
+
 **Upgrade Recommendation**: All users should upgrade immediately. These are critical security fixes.
 
 ---

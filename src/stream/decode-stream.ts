@@ -29,15 +29,19 @@ export function createDecodeStream(options?: StreamDecodeOptions): Transform {
 
     transform(chunk: Buffer, encoding: string, callback: Function) {
       try {
-        buffer += chunk.toString('utf-8');
+        const chunkStr = chunk.toString('utf-8');
 
-        // Prevent buffer overflow attacks or malformed files
-        if (buffer.length > MAX_BUFFER_SIZE) {
+        // SECURITY FIX (BF003): Check buffer size BEFORE appending chunk
+        // Previous code checked AFTER, allowing cumulative overflow bypass
+        if (buffer.length + chunkStr.length > MAX_BUFFER_SIZE) {
           return callback(new Error(
-            `Buffer overflow: TONL block exceeds ${MAX_BUFFER_SIZE} bytes. ` +
-            `This may indicate a malformed TONL file without proper block separators.`
+            `Buffer overflow prevented: incoming chunk would exceed ${MAX_BUFFER_SIZE} bytes. ` +
+            `Current buffer: ${buffer.length} bytes, chunk: ${chunkStr.length} bytes. ` +
+            `This may indicate a malformed TONL file or a DoS attack.`
           ));
         }
+
+        buffer += chunkStr;
 
         // Split by double newline (TONL block separator) or @tonl markers
         const blocks = buffer.split(/\n\n+|(?=@tonl\s)/);
