@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2025-11-06
+
+### Changed
+- **README.md Modernization**: Completely restructured and modernized the main README
+  - Removed version history references and "NEW in vX.X" annotations
+  - Added professional badges (npm, license, TypeScript)
+  - Reorganized content for better clarity and marketing appeal
+  - Added "Why TONL?" section highlighting key benefits
+  - Improved code examples and use case demonstrations
+  - Streamlined documentation links and structure
+
+### Removed
+- **Documentation Cleanup**: Removed 8 obsolete session report files
+  - Removed `BUG_REPORT.md`, `BUG-AUDIT-REPORT.md`, `DEPLOYMENT-COMPLETE.md`
+  - Removed `PUBLISHED.md`, `LLM_PROMPT.md` (duplicate)
+  - Removed `FINAL-SUMMARY.md`, `SECURITY-AUDIT-SUMMARY.md`, `SECURITY-FIXES-SUMMARY.md`
+  - Consolidated all security information into `SECURITY.md`
+  - Updated references in `CHANGELOG.md` and `VERSION.md`
+
+### Improved
+- **Documentation Quality**: Cleaner, more professional documentation structure
+  - All essential documentation preserved (README, CHANGELOG, SECURITY, etc.)
+  - Removed redundant session reports while keeping audit trail in CHANGELOG
+  - VERSION.md updated to reflect current file structure
+
 ## [1.0.4] - 2025-11-05
 
 ### Fixed
