@@ -7,6 +7,42 @@ import { readFileSync, writeFileSync, existsSync } from "fs";
 import { encodeTONL, decodeTONL, encodeSmart } from "./index.js";
 import { estimateTokens } from "./utils/metrics.js";
 import { parseSchema, validateTONL, generateTypeScript } from "./schema/index.js";
+import { PathValidator } from "./cli/path-validator.js";
+import { SecurityError } from "./errors/index.js";
+
+/**
+ * Safe file read with path validation
+ */
+function safeReadFile(userPath: string): string {
+  try {
+    const safePath = PathValidator.validateRead(userPath);
+    return readFileSync(safePath, 'utf8');
+  } catch (error) {
+    if (error instanceof SecurityError) {
+      console.error(`❌ Security Error: ${error.message}`);
+      console.error(`❌ Access denied to: ${userPath}`);
+      process.exit(1);
+    }
+    throw error;
+  }
+}
+
+/**
+ * Safe file write with path validation
+ */
+function safeWriteFile(userPath: string, content: string): void {
+  try {
+    const safePath = PathValidator.validateWrite(userPath);
+    writeFileSync(safePath, content);
+  } catch (error) {
+    if (error instanceof SecurityError) {
+      console.error(`❌ Security Error: ${error.message}`);
+      console.error(`❌ Cannot write to: ${userPath}`);
+      process.exit(1);
+    }
+    throw error;
+  }
+}
 
 interface CLIOptions {
   out?: string;
@@ -139,12 +175,8 @@ async function main() {
     const args = process.argv.slice(2);
     const { command, file, options } = parseArgs(args);
 
-    if (!existsSync(file)) {
-      console.error(`❌ Error: File '${file}' not found`);
-      process.exit(1);
-    }
-
-    const input = readFileSync(file, 'utf8');
+    // Safely read input file (with path validation)
+    const input = safeReadFile(file);
 
     switch (command) {
       case "encode": {
@@ -160,7 +192,7 @@ async function main() {
         });
 
         if (options.out) {
-          writeFileSync(options.out, tonlOutput);
+          safeWriteFile(options.out, tonlOutput);
           console.log(`✅ Encoded to ${options.out}`);
         } else {
           console.log(tonlOutput);
@@ -185,7 +217,7 @@ async function main() {
         const jsonOutput = JSON.stringify(jsonData, null, 2);
 
         if (options.out) {
-          writeFileSync(options.out, jsonOutput);
+          safeWriteFile(options.out, jsonOutput);
           console.log(`✅ Decoded to ${options.out}`);
         } else {
           console.log(jsonOutput);
@@ -245,7 +277,7 @@ async function main() {
         });
 
         if (options.out) {
-          writeFileSync(options.out, formattedOutput);
+          safeWriteFile(options.out, formattedOutput);
           console.log(`✅ Formatted to ${options.out}`);
         } else {
           console.log(formattedOutput);
@@ -264,14 +296,8 @@ async function main() {
           process.exit(1);
         }
 
-        // Check schema file exists
-        if (!existsSync(options.schema)) {
-          console.error(`❌ Error: Schema file '${options.schema}' not found`);
-          process.exit(1);
-        }
-
-        // Load schema
-        const schemaContent = readFileSync(options.schema, 'utf-8');
+        // Load schema (with path validation)
+        const schemaContent = safeReadFile(options.schema);
         const schema = parseSchema(schemaContent);
 
         // Parse data
@@ -313,8 +339,8 @@ async function main() {
           process.exit(1);
         }
 
-        // Load schema
-        const schemaContent = readFileSync(file, 'utf-8');
+        // Load schema (note: 'file' already validated in main, but use safeReadFile for consistency)
+        const schemaContent = input; // Already read safely at line 179
         const schema = parseSchema(schemaContent);
 
         // Generate TypeScript
@@ -324,8 +350,8 @@ async function main() {
           strict: false
         });
 
-        // Write output
-        writeFileSync(options.out, tsCode);
+        // Write output (with path validation)
+        safeWriteFile(options.out, tsCode);
         console.log(`✅ Generated TypeScript types: ${options.out}`);
         console.log(`   - Custom types: ${schema.customTypes.size}`);
         console.log(`   - Root fields: ${schema.rootFields.length}`);
@@ -339,14 +365,13 @@ async function main() {
           process.exit(1);
         }
 
-        // Load file
-        const fileContent = readFileSync(file, 'utf-8');
+        // Parse file (already safely read at line 179)
         let data: any;
 
         if (file.endsWith('.json')) {
-          data = JSON.parse(fileContent);
+          data = JSON.parse(input);
         } else {
-          data = decodeTONL(fileContent, { delimiter: options.delimiter });
+          data = decodeTONL(input, { delimiter: options.delimiter });
         }
 
         // Get query expression from remaining args
@@ -377,7 +402,7 @@ async function main() {
 
         // Output result
         if (options.out) {
-          writeFileSync(options.out, JSON.stringify(result, null, 2));
+          safeWriteFile(options.out, JSON.stringify(result, null, 2));
           console.log(`✅ Query result saved to ${options.out}`);
         } else {
           console.log(JSON.stringify(result, null, 2));

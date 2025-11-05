@@ -126,11 +126,61 @@ RegexExecutor.test(pattern, input, {
 - Consider query complexity budgets in your application
 - Use indexing for frequently-queried paths
 
+### 4. Path Traversal (v0.8.1+)
+
+**Risk**: CLI file operations could be exploited to read/write arbitrary files.
+
+**Mitigation** (v0.8.1+):
+- All file paths validated before use
+- Directory traversal (../) blocked
+- Absolute paths must be within working directory
+- Symlinks rejected by default
+- Windows-specific protections (UNC paths, reserved names)
+
+**Protected Operations:**
+- All CLI file reads (`tonl encode`, `tonl decode`, etc.)
+- All CLI file writes (`--out` parameter)
+- Schema file loading (`--schema` parameter)
+
+**Path Validation Rules:**
+```typescript
+// ✅ ALLOWED - Relative paths within working directory
+tonl encode data.json
+tonl encode subdir/file.json
+tonl encode ./file.json
+
+// ❌ BLOCKED - Directory traversal
+tonl encode ../../../etc/passwd
+tonl encode subdir/../../etc/passwd
+
+// ❌ BLOCKED - Absolute paths outside working directory
+tonl encode /etc/passwd
+tonl encode C:\Windows\System32\config
+
+// ❌ BLOCKED - Symlinks
+tonl encode link-to-sensitive-file.txt
+
+// ❌ BLOCKED - Windows reserved names
+tonl encode CON
+tonl encode \\server\share\file
+
+// ✅ ALLOWED - Absolute paths WITHIN working directory
+// (for programmatic use, all paths resolved to allowed dir)
+```
+
+**Security Guarantees:**
+- All file operations restricted to current working directory (and subdirectories)
+- Path traversal sequences normalized and validated
+- Symlinks detected and blocked (unless explicitly allowed)
+- Null bytes rejected
+- Windows device names blocked
+- Error messages don't leak sensitive paths
+
 ---
 
 ## Security Changelog
 
-### v0.8.1 (2025-11-05)
+### v0.8.1 (2025-11-05) - Security Release
 
 **[CRITICAL] BF001: ReDoS Vulnerability Fixed**
 - **Issue**: Filter evaluator compiled user-supplied regex without validation
@@ -145,7 +195,17 @@ RegexExecutor.test(pattern, input, {
 - **CWE**: CWE-1333 (Inefficient Regular Expression Complexity)
 - **Credit**: Internal security audit
 
-**Upgrade Recommendation**: All users should upgrade immediately.
+**[CRITICAL] BF002: Path Traversal Fixed**
+- **Issue**: CLI accepted unsanitized file paths
+- **Impact**: Arbitrary file read/write via path traversal or absolute paths
+- **Fix**: Added `PathValidator` with comprehensive path sanitization
+- **Files Changed**:
+  - `src/cli/path-validator.ts` (new)
+  - `src/cli.ts` (all file operations secured with safeReadFile/safeWriteFile)
+- **CWE**: CWE-22 (Improper Limitation of a Pathname to a Restricted Directory)
+- **Credit**: Internal security audit
+
+**Upgrade Recommendation**: All users should upgrade immediately. These are critical security fixes.
 
 ---
 
