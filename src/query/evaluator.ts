@@ -257,6 +257,7 @@ export class QueryEvaluator {
 
   /**
    * Evaluate array index access (e.g., users[0])
+   * SECURITY: Protected against integer overflow (BF008)
    */
   private evaluateIndex(current: any, node: IndexNode): any {
     if (!Array.isArray(current)) {
@@ -265,6 +266,11 @@ export class QueryEvaluator {
 
     const { index } = node;
     const length = current.length;
+
+    // SECURITY FIX (BF008): Validate index is safe integer
+    if (!Number.isSafeInteger(index)) {
+      throw new Error(`Array index out of safe integer range: ${index}`);
+    }
 
     // Handle negative indices (from end)
     const actualIndex = index < 0 ? length + index : index;
@@ -369,13 +375,33 @@ export class QueryEvaluator {
   /**
    * Evaluate array slice (e.g., users[0:5])
    */
+  /**
+   * Evaluate array slice (e.g., users[0:5] or users[::2])
+   * SECURITY: Protected against integer overflow and infinite loops (BF008)
+   */
   private evaluateSlice(current: any, node: SliceNode): any[] {
     if (!Array.isArray(current)) {
       return [];
     }
 
-    const { start, end, step = 1 } = node;
+    let { start, end, step = 1 } = node;
     const length = current.length;
+
+    // SECURITY FIX (BF008): Validate step (prevent infinite loop)
+    if (step === 0) {
+      throw new Error('Slice step cannot be zero');
+    }
+
+    // SECURITY FIX (BF008): Validate safe integers
+    if (start !== undefined && !Number.isSafeInteger(start)) {
+      throw new Error(`Slice start out of safe range: ${start}`);
+    }
+    if (end !== undefined && !Number.isSafeInteger(end)) {
+      throw new Error(`Slice end out of safe range: ${end}`);
+    }
+    if (!Number.isSafeInteger(step)) {
+      throw new Error(`Slice step out of safe range: ${step}`);
+    }
 
     // Resolve start and end indices
     let actualStart = start !== undefined ? start : 0;
@@ -393,9 +419,19 @@ export class QueryEvaluator {
     actualStart = Math.max(0, Math.min(actualStart, length));
     actualEnd = Math.max(0, Math.min(actualEnd, length));
 
+    // Handle negative step (reverse iteration)
+    if (step < 0) {
+      [actualStart, actualEnd] = [actualEnd - 1, actualStart - 1];
+      step = Math.abs(step);
+    }
+
     // Extract slice with step
     const result: any[] = [];
-    for (let i = actualStart; i < actualEnd; i += step) {
+    for (let i = actualStart; i < actualEnd && i < length; i += step) {
+      // Additional safety: limit iterations
+      if (result.length > length) {
+        break; // Prevent infinite loops
+      }
       result.push(current[i]);
     }
 

@@ -69,21 +69,37 @@ export function coerceValue(value: string, type: TONLTypeHint): any {
     case "bool":
       return unquoted === "true";
     case "u32":
+      // SECURITY FIX (BF010): Strict validation - must be decimal integer only
+      if (!/^[0-9]+$/.test(unquoted)) {
+        throw new TypeError(`Invalid u32: must be decimal integer, got: ${unquoted}`);
+      }
       const u32 = parseInt(unquoted, 10);
-      if (isNaN(u32) || u32 < 0 || u32 > 0xFFFFFFFF) {
-        throw new Error(`Invalid u32 value: ${value}`);
+      if (!Number.isFinite(u32) || u32 < 0 || u32 > 0xFFFFFFFF) {
+        throw new RangeError(`Invalid u32: out of range (0-4294967295): ${u32}`);
+      }
+      // SECURITY FIX (BF010): Verify no overflow occurred
+      if (u32.toString() !== unquoted) {
+        throw new RangeError(`Invalid u32: overflow detected: ${unquoted}`);
       }
       return u32;
     case "i32":
+      // SECURITY FIX (BF010): Strict validation
+      if (!/^-?[0-9]+$/.test(unquoted)) {
+        throw new TypeError(`Invalid i32: must be decimal integer, got: ${unquoted}`);
+      }
       const i32 = parseInt(unquoted, 10);
-      if (isNaN(i32) || i32 < -0x80000000 || i32 > 0x7FFFFFFF) {
-        throw new Error(`Invalid i32 value: ${value}`);
+      if (!Number.isFinite(i32) || i32 < -0x80000000 || i32 > 0x7FFFFFFF) {
+        throw new RangeError(`Invalid i32: out of range (-2147483648 to 2147483647): ${i32}`);
+      }
+      if (i32.toString() !== unquoted.replace(/^-/, '-')) {
+        throw new RangeError(`Invalid i32: overflow detected: ${unquoted}`);
       }
       return i32;
     case "f64":
+      // SECURITY FIX (BF010): Reject NaN and Infinity
       const f64 = parseFloat(unquoted);
-      if (isNaN(f64)) {
-        throw new Error(`Invalid f64 value: ${value}`);
+      if (!Number.isFinite(f64)) {
+        throw new RangeError(`Invalid f64: NaN or Infinity not allowed: ${value}`);
       }
       return f64;
     case "str":
