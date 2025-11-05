@@ -9,6 +9,7 @@ import type { TONLValue } from '../types.js';
 
 /**
  * Evaluation context - tracks state during query execution
+ * SECURITY FIX (BF012): Added iteration tracking to prevent query DoS
  */
 export interface EvaluationContext {
   /**
@@ -32,6 +33,18 @@ export interface EvaluationContext {
   currentDepth: number;
 
   /**
+   * Maximum iterations (nodes visited) to prevent DoS
+   * SECURITY FIX (BF012): Default 100,000 iterations
+   */
+  maxIterations: number;
+
+  /**
+   * Current iteration count
+   * SECURITY FIX (BF012): Tracks total nodes visited
+   */
+  iterations: number;
+
+  /**
    * Whether to enable query result caching
    */
   enableCache: boolean;
@@ -49,15 +62,18 @@ export function createContext(
   root: TONLValue,
   options: {
     maxDepth?: number;
+    maxIterations?: number;
     enableCache?: boolean;
   } = {}
 ): EvaluationContext {
-  const { maxDepth = 100, enableCache = true } = options;
+  const { maxDepth = 100, maxIterations = 100_000, enableCache = true } = options;
 
   return {
     root,
     maxDepth,
     currentDepth: 0,
+    maxIterations,
+    iterations: 0,
     enableCache,
     cache: enableCache ? new Map() : undefined
   };
@@ -75,6 +91,8 @@ export function createChildContext(
     current,
     maxDepth: parent.maxDepth,
     currentDepth: parent.currentDepth + 1,
+    maxIterations: parent.maxIterations,
+    iterations: parent.iterations, // Share iteration counter
     enableCache: parent.enableCache,
     cache: parent.cache // Share cache with parent
   };
@@ -85,6 +103,21 @@ export function createChildContext(
  */
 export function isMaxDepthReached(context: EvaluationContext): boolean {
   return context.currentDepth >= context.maxDepth;
+}
+
+/**
+ * Check and increment iteration counter
+ * SECURITY FIX (BF012): Prevents query DoS via excessive iterations
+ */
+export function checkIterationLimit(context: EvaluationContext): void {
+  context.iterations++;
+
+  if (context.iterations > context.maxIterations) {
+    throw new Error(
+      `Query iteration limit exceeded: ${context.iterations} (max: ${context.maxIterations}). ` +
+      `This may indicate an overly complex query or deeply nested data structure.`
+    );
+  }
 }
 
 /**

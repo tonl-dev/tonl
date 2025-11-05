@@ -91,7 +91,10 @@ export class FileEditor {
    * 3. Rename temp file to original (atomic on most systems)
    */
   async save(): Promise<void> {
-    const tempPath = `${this.filePath}.tmp`;
+    // SECURITY NOTE (BF011): Use unique temp filename to reduce collision risk
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(7);
+    const tempPath = `${this.filePath}.tmp.${timestamp}.${random}`;
     const backupPath = `${this.filePath}${this.options.backupSuffix}`;
 
     try {
