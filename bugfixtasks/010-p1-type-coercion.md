@@ -233,4 +233,5 @@ describe('Type Coercion - f64', () => {
 - `test/security/type-coercion.test.ts` (new)
 - `test/regression/infer-regression.test.ts` (update)
 
-**DEADLINE:** 2025-11-19
+**STATUS: 🟢 COMPLETED (2025-11-05)**
+**COMMIT: 078041d - Strict type coercion validation**

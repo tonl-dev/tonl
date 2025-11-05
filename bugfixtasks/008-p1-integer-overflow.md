@@ -160,4 +160,5 @@ it('should clamp out-of-bounds indices', () => {
 - `src/query/evaluator.ts` (fix index/slice logic)
 - `test/security/integer-overflow.test.ts` (new)
 
-**DEADLINE:** 2025-11-19
+**STATUS: 🟢 COMPLETED (2025-11-05)**
+**COMMIT: 078041d - Integer overflow protection added**

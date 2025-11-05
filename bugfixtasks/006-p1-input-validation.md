@@ -104,4 +104,5 @@ it('should reject > 100 nesting levels', () => {
 - `src/parser/block-parser.ts`
 - `test/security/input-validation.test.ts` (new)
 
-**DEADLINE:** 2025-11-19
+**STATUS: 🟢 COMPLETED (2025-11-05)**
+**COMMIT: e973c93 - All 11 security tests passing**

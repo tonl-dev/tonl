@@ -144,4 +144,5 @@ it('should validate string patterns', () => {
 
 ---
 
-**DEADLINE:** 2025-12-05
+**STATUS: ⏳ DEFERRED - Non-Critical**
+**PLANNED FOR: v0.9.0 or v1.1.0 (future maintenance)**
