@@ -106,5 +106,7 @@ it('should enforce iteration limits', () => {
 
 ---
 
-**STATUS: ⏳ DEFERRED - Non-Critical**
-**PLANNED FOR: v0.9.0 or v1.1.0 (future maintenance)**
+
+**STATUS: 🟡 IMPROVED (2025-11-05)**
+**COMMIT: f9538df - Iteration counter added (max 100K)**
+**NOTE: Full timeout mechanism deferred (requires async refactor)**

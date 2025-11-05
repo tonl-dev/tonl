@@ -96,5 +96,7 @@ it('should prevent concurrent saves', async () => {
 
 ---
 
-**STATUS: ⏳ DEFERRED - Non-Critical**
-**PLANNED FOR: v0.9.0 or v1.1.0 (future maintenance)**
+
+**STATUS: 🟡 IMPROVED (2025-11-05)**
+**COMMIT: f9538df - Unique temp filenames reduce collision risk**
+**NOTE: Full file locking deferred (platform-specific implementation)**
