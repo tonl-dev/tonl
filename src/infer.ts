@@ -91,7 +91,8 @@ export function coerceValue(value: string, type: TONLTypeHint): any {
       if (!Number.isFinite(i32) || i32 < -0x80000000 || i32 > 0x7FFFFFFF) {
         throw new RangeError(`Invalid i32: out of range (-2147483648 to 2147483647): ${i32}`);
       }
-      if (i32.toString() !== unquoted.replace(/^-/, '-')) {
+      // BUGFIX: Direct comparison like u32, not replace(/^-/, '-') which is a no-op
+      if (i32.toString() !== unquoted) {
         throw new RangeError(`Invalid i32: overflow detected: ${unquoted}`);
       }
       return i32;
