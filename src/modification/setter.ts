@@ -6,6 +6,27 @@ import type { TONLValue } from '../types.js';
 import type { SetOptions, ModificationResult } from './types.js';
 import { parsePath } from '../query/path-parser.js';
 import type { PathNode } from '../query/types.js';
+import { SecurityError } from '../errors/index.js';
+
+/**
+ * Dangerous property names that could lead to prototype pollution
+ */
+const DANGEROUS_PROPERTIES = new Set([
+  '__proto__',
+  'constructor',
+  'prototype',
+  '__defineGetter__',
+  '__defineSetter__',
+  '__lookupGetter__',
+  '__lookupSetter__',
+]);
+
+/**
+ * Check if a property name is dangerous
+ */
+function isDangerousProperty(propertyName: string): boolean {
+  return DANGEROUS_PROPERTIES.has(propertyName);
+}
 
 /**
  * Set a value at a specific path in a document
@@ -132,11 +153,28 @@ function setProperty(
     throw new Error(`Cannot set property '${propertyName}' on non-object`);
   }
 
+  // SECURITY FIX (BF004): Block dangerous properties
+  if (isDangerousProperty(propertyName)) {
+    throw new SecurityError(
+      `Cannot set '${propertyName}': prototype pollution protection`,
+      {
+        property: propertyName,
+        reason: 'Setting prototype chain properties can lead to security vulnerabilities',
+      }
+    );
+  }
+
   const oldValue = current[propertyName];
 
   if (isLast) {
-    // Set the value
-    current[propertyName] = value;
+    // Set the value using safe property assignment
+    // Use Object.defineProperty for additional safety
+    Object.defineProperty(current, propertyName, {
+      value,
+      writable: true,
+      enumerable: true,
+      configurable: true,
+    });
     return oldValue;
   }
 

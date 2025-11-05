@@ -21,6 +21,27 @@ import { evaluateFilterExpression } from './filter-evaluator.js';
 import { SecurityError } from '../errors/index.js';
 
 /**
+ * Dangerous property names that could lead to prototype pollution
+ * These properties are blocked in all query and modification operations
+ */
+const DANGEROUS_PROPERTIES = new Set([
+  '__proto__',
+  'constructor',
+  'prototype',
+  '__defineGetter__',
+  '__defineSetter__',
+  '__lookupGetter__',
+  '__lookupSetter__',
+]);
+
+/**
+ * Check if a property name is dangerous (prototype pollution risk)
+ */
+function isDangerousProperty(propertyName: string): boolean {
+  return DANGEROUS_PROPERTIES.has(propertyName);
+}
+
+/**
  * Query Evaluator - evaluates path expressions against documents
  */
 export class QueryEvaluator {
@@ -204,6 +225,7 @@ export class QueryEvaluator {
 
   /**
    * Evaluate property access (e.g., user.name)
+   * SECURITY: Protected against prototype pollution (BF004)
    */
   private evaluateProperty(current: any, node: PropertyNode): any {
     if (current === null || current === undefined) {
@@ -211,6 +233,22 @@ export class QueryEvaluator {
     }
 
     if (typeof current !== 'object' || Array.isArray(current)) {
+      return undefined;
+    }
+
+    // SECURITY FIX (BF004): Block dangerous properties
+    if (isDangerousProperty(node.name)) {
+      throw new SecurityError(
+        `Access to '${node.name}' is forbidden (prototype pollution protection)`,
+        {
+          property: node.name,
+          reason: 'Accessing prototype chain properties can lead to security vulnerabilities',
+        }
+      );
+    }
+
+    // SECURITY FIX (BF004): Only access own properties (not inherited)
+    if (!Object.prototype.hasOwnProperty.call(current, node.name)) {
       return undefined;
     }
 

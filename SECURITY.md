@@ -214,6 +214,17 @@ tonl encode \\server\share\file
 - **CWE**: CWE-120 (Buffer Copy without Checking Size of Input)
 - **Credit**: Internal security audit
 
+**[CRITICAL] BF004: Prototype Pollution Fixed**
+- **Issue**: Query evaluator and setter allowed access to `__proto__`, `constructor`, `prototype`
+- **Impact**: Potential RCE via prototype pollution, authentication bypass, privilege escalation
+- **Fix**: Added dangerous property blacklist and hasOwnProperty checks
+- **Files Changed**:
+  - `src/query/evaluator.ts` (add property protection, hasOwnProperty check)
+  - `src/modification/setter.ts` (block dangerous properties in set operations)
+- **Protected Properties**: `__proto__`, `constructor`, `prototype`, `__defineGetter__`, `__defineSetter__`, `__lookupGetter__`, `__lookupSetter__`
+- **CWE**: CWE-1321 (Improperly Controlled Modification of Object Prototype Attributes)
+- **Credit**: Internal security audit
+
 **Upgrade Recommendation**: All users should upgrade immediately. These are critical security fixes.
 
 ---
