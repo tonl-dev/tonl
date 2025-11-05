@@ -38,11 +38,8 @@ Following [Semantic Versioning 2.0.0](https://semver.org/):
 - `docs/CLI_ADDENDUM.md` → Check for version references
 - `docs/MODIFICATION_API.md` → Check for version references
 
-### 5. Security & Audit Documents
+### 5. Security Documents
 - `SECURITY.md` → Update latest version in security policy
-- `SECURITY-AUDIT-SUMMARY.md` → May reference current version
-- `FINAL-SUMMARY.md` → May reference current version
-- `DEPLOYMENT-COMPLETE.md` → May reference deployed version
 
 ## Files That DO NOT Need Updates
 

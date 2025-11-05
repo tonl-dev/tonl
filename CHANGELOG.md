@@ -88,7 +88,7 @@ This release completes the security audit by fixing the remaining 6 vulnerabilit
 - `src/errors/index.ts` - Enhanced with production mode
 - `src/query/cache.ts` - Enhanced with document ID
 
-See [SECURITY.md](SECURITY.md), [SECURITY-AUDIT-SUMMARY.md](SECURITY-AUDIT-SUMMARY.md), and [FINAL-SUMMARY.md](FINAL-SUMMARY.md) for complete details.
+See [SECURITY.md](SECURITY.md) for complete details.
 
 ---
 
@@ -100,7 +100,7 @@ See [SECURITY.md](SECURITY.md), [SECURITY-AUDIT-SUMMARY.md](SECURITY-AUDIT-SUMMA
 
 **This is a critical security release addressing 9 critical and high-priority vulnerabilities including Remote DoS, Arbitrary File Access, Prototype Pollution, and more.**
 
-See [SECURITY.md](SECURITY.md) and [SECURITY-AUDIT-SUMMARY.md](SECURITY-AUDIT-SUMMARY.md) for complete details.
+See [SECURITY.md](SECURITY.md) for complete details.
 
 #### P0 - Critical Vulnerabilities (5/5 fixed)
 
@@ -185,7 +185,6 @@ See [SECURITY.md](SECURITY.md) and [SECURITY-AUDIT-SUMMARY.md](SECURITY-AUDIT-SU
 - `src/errors/index.ts` - SecurityError class
 - `test/security/exploits/*.ts` - 6 exploit test suites
 - `SECURITY.md` - Security policy
-- `SECURITY-AUDIT-SUMMARY.md` - Audit report
 
 ### ⚠️ Upgrade Notes
 
