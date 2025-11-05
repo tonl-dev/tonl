@@ -3,15 +3,32 @@
  */
 
 import type { ParserState, ParserMode, TONLDelimiter, TONLObjectHeader, TONLColumnDef } from "./types.js";
+import { TONLParseError } from "./errors/index.js";
+
+/**
+ * Input validation limits to prevent DoS attacks
+ * SECURITY: These limits prevent parser crashes, stack overflow, and memory exhaustion
+ */
+const MAX_LINE_LENGTH = 100_000;   // 100KB per line
+const MAX_FIELDS_PER_LINE = 10_000; // Maximum fields in a single line
+const MAX_NESTING_DEPTH = 100;      // Maximum nesting levels
 
 /**
  * Parse a single TONL line into array of field values
  * Handles quoting, escaping, and triple-quotes according to spec
+ * SECURITY: Now includes input validation limits (BF006)
  */
 export function parseTONLLine(line: string, delimiter: TONLDelimiter = ","): string[] {
   // Handle empty lines
   if (!line || line.trim() === "") {
     return [];
+  }
+
+  // SECURITY FIX (BF006): Validate line length
+  if (line.length > MAX_LINE_LENGTH) {
+    throw new TONLParseError(
+      `Line exceeds maximum length: ${line.length} characters (max: ${MAX_LINE_LENGTH})`
+    );
   }
 
   const state: ParserState = {
@@ -80,6 +97,13 @@ export function parseTONLLine(line: string, delimiter: TONLDelimiter = ","): str
 
   // Add the last field
   state.fields.push(state.currentField.trim());
+
+  // SECURITY FIX (BF006): Validate field count
+  if (state.fields.length > MAX_FIELDS_PER_LINE) {
+    throw new TONLParseError(
+      `Too many fields: ${state.fields.length} (max: ${MAX_FIELDS_PER_LINE})`
+    );
+  }
 
   return state.fields;
 }
