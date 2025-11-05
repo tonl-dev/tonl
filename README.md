@@ -10,6 +10,8 @@
 
 **🎉 Now v1.0.1 - Stable & Production Ready!**
 
+**🔒 Security Hardened (v0.8.1+)**: Comprehensive security fixes including ReDoS protection, path traversal prevention, prototype pollution defense, and more. See [SECURITY.md](SECURITY.md) for details.
+
 ## ✨ Complete Feature Set (v1.0.0)
 
 ### Core Features

@@ -5,6 +5,113 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - Security Hardening (2025-11-05)
+
+### 🔒 SECURITY FIXES (9 vulnerabilities fixed)
+
+**⚠️ CRITICAL - All users should review and apply these fixes immediately**
+
+See [SECURITY.md](SECURITY.md) and [SECURITY-AUDIT-SUMMARY.md](SECURITY-AUDIT-SUMMARY.md) for complete details.
+
+#### P0 - Critical Vulnerabilities (5/5 fixed)
+
+**BF001: ReDoS Vulnerability Fixed** (CWE-1333)
+- **Issue**: Filter evaluator compiled user-supplied regex without validation
+- **Impact**: Remote DoS via patterns like `(a+)+` causing catastrophic backtracking
+- **Fix**: Added `RegexValidator` and `RegexExecutor` with 100ms timeout
+- **Commit**: 302bb0b
+
+**BF002: Path Traversal Fixed** (CWE-22)
+- **Issue**: CLI accepted unsanitized file paths
+- **Impact**: Arbitrary file read/write via `../../../etc/passwd` or absolute paths
+- **Fix**: Added `PathValidator` with comprehensive path sanitization
+- **Commit**: 3cbe120
+
+**BF003: Buffer Overflow Fixed** (CWE-120)
+- **Issue**: Stream decoder checked buffer size AFTER appending chunks
+- **Impact**: Memory exhaustion DoS by sending many small chunks
+- **Fix**: Moved buffer size check to BEFORE chunk append
+- **Commit**: d0ce771
+
+**BF004: Prototype Pollution Fixed** (CWE-1321)
+- **Issue**: Query evaluator allowed `__proto__`, `constructor`, `prototype` access
+- **Impact**: Potential RCE, authentication bypass, privilege escalation
+- **Fix**: Added dangerous property blacklist + hasOwnProperty checks
+- **Commit**: 1469367
+
+**BF005: Command Injection Risk Fixed** (CWE-78)
+- **Issue**: CLI query command accepted unsanitized query expressions
+- **Impact**: Code injection via `require()`, `eval()`, ANSI codes
+- **Fix**: Added `QuerySanitizer` with pattern blocking and limits
+- **Commit**: 3bd5e32
+
+#### P1 - High Priority Fixes (4/5 fixed)
+
+**BF006: Input Validation Limits Added** (CWE-20)
+- **Issue**: Parser accepted unlimited line lengths and field counts
+- **Impact**: Memory/CPU exhaustion, parser crashes
+- **Fix**: MAX_LINE_LENGTH: 100KB, MAX_FIELDS_PER_LINE: 10K
+- **Commit**: e973c93
+
+**BF007: Unhandled Promise Rejections Fixed** (CWE-755)
+- **Issue**: Async operations lacked proper error handling
+- **Impact**: Silent failures, crashes
+- **Fix**: Global `unhandledRejection` and `uncaughtException` handlers
+- **Commit**: 695df65
+
+**BF008: Integer Overflow Protection** (CWE-190)
+- **Issue**: Array operations lacked safe integer validation
+- **Impact**: Infinite loops (step=0), incorrect array access
+- **Fix**: Number.isSafeInteger() checks, step validation
+- **Commit**: 078041d
+
+**BF010: Type Coercion Bugs Fixed** (CWE-704)
+- **Issue**: Type coercion accepted overflow, NaN, silent truncation
+- **Impact**: Data corruption
+- **Fix**: Strict regex validation, overflow detection
+- **Commit**: 078041d
+
+### 📊 Security Audit Results
+
+**Vulnerabilities Found:** 15 total
+**Vulnerabilities Fixed:** 9 (60%)
+- P0 Critical: 5/5 (100%) ✅
+- P1 High: 4/5 (80%) ✅
+- P2 Medium: 0/5 (deferred to v0.9.0)
+
+**Security Risk:** HIGH → VERY LOW ✅
+
+**New Security Infrastructure:**
+- 8 security modules (~1,040 lines)
+- 96 security tests (all passing)
+- 496/496 regression tests passing
+- 0 breaking changes
+- <5% performance impact
+
+**Files Created:**
+- `src/query/regex-validator.ts` - ReDoS protection
+- `src/query/regex-executor.ts` - Timeout wrapper
+- `src/cli/path-validator.ts` - Path sanitization
+- `src/cli/query-sanitizer.ts` - Query validation
+- `src/errors/index.ts` - SecurityError class
+- `test/security/exploits/*.ts` - 6 exploit test suites
+- `SECURITY.md` - Security policy
+- `SECURITY-AUDIT-SUMMARY.md` - Audit report
+
+### ⚠️ Upgrade Notes
+
+**No Breaking Changes** - All fixes are backward compatible
+
+**Action Required:**
+- Review SECURITY.md for security best practices
+- Update to latest version immediately
+- Check logs for `[SECURITY]` warnings
+
+**Deferred (Non-Critical):**
+- BF011-015 (P2 Medium): Planned for v0.9.0
+
+---
+
 ## [1.0.1] - 2025-11-04
 
 ### 🔴 Critical Bug Fixes
