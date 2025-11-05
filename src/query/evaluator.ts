@@ -15,7 +15,7 @@ import type {
   FilterNode
 } from './types.js';
 import type { TONLValue } from '../types.js';
-import { createContext, createChildContext, isMaxDepthReached, type EvaluationContext } from './context.js';
+import { createContext, createChildContext, isMaxDepthReached, checkIterationLimit, type EvaluationContext } from './context.js';
 import { QueryCache, getGlobalCache } from './cache.js';
 import { evaluateFilterExpression } from './filter-evaluator.js';
 import { SecurityError } from '../errors/index.js';
@@ -195,6 +195,9 @@ export class QueryEvaluator {
     if (isMaxDepthReached(context)) {
       throw new Error('Maximum recursion depth exceeded');
     }
+
+    // SECURITY FIX (BF012): Check iteration limit
+    checkIterationLimit(context);
 
     switch (node.type) {
       case 'root':
