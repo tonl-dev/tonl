@@ -3,7 +3,27 @@
  *
  * Caches the results of evaluated queries to avoid redundant computations
  * when the same path is queried multiple times.
+ *
+ * SECURITY FIX (BF015): Cache keys now include document identity to prevent
+ * cache poisoning between different documents.
  */
+
+/**
+ * Document identity tracking for cache key generation
+ * SECURITY: Prevents cache poisoning by ensuring each document has unique cache
+ */
+const documentIds = new WeakMap<object, number>();
+let nextDocumentId = 1;
+
+/**
+ * Get or assign unique ID for a document
+ */
+function getDocumentId(document: object): number {
+  if (!documentIds.has(document)) {
+    documentIds.set(document, nextDocumentId++);
+  }
+  return documentIds.get(document)!;
+}
 
 /**
  * Query cache with LRU eviction policy
@@ -20,10 +40,12 @@ export class QueryCache {
   }
 
   /**
-   * Get a cached result
+   * Get a cached result (with document identity)
+   * SECURITY FIX (BF015): Now includes document ID in key
    */
-  get(key: string): any | undefined {
-    const entry = this.cache.get(key);
+  get(key: string, document?: object): any | undefined {
+    const cacheKey = document ? this.generateKey(key, document) : key;
+    const entry = this.cache.get(cacheKey);
     if (!entry) {
       return undefined;
     }
@@ -31,17 +53,20 @@ export class QueryCache {
     // Update access time and LRU order
     entry.lastAccess = Date.now();
     entry.hits++;
-    this.updateAccessOrder(key);
+    this.updateAccessOrder(cacheKey);
 
     return entry.value;
   }
 
   /**
-   * Set a cached result
+   * Set a cached result (with document identity)
+   * SECURITY FIX (BF015): Now includes document ID in key
    */
-  set(key: string, value: any): void {
+  set(key: string, value: any, document?: object): void {
+    const cacheKey = document ? this.generateKey(key, document) : key;
+
     // If cache is full, evict LRU item
-    if (this.cache.size >= this.maxSize && !this.cache.has(key)) {
+    if (this.cache.size >= this.maxSize && !this.cache.has(cacheKey)) {
       this.evictLRU();
     }
 
@@ -52,8 +77,17 @@ export class QueryCache {
       hits: 0
     };
 
-    this.cache.set(key, entry);
-    this.updateAccessOrder(key);
+    this.cache.set(cacheKey, entry);
+    this.updateAccessOrder(cacheKey);
+  }
+
+  /**
+   * Generate cache key including document identity
+   * SECURITY FIX (BF015): Prevents cache poisoning
+   */
+  private generateKey(queryKey: string, document: object): string {
+    const docId = getDocumentId(document);
+    return `doc${docId}:${queryKey}`;
   }
 
   /**

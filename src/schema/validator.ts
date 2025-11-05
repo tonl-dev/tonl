@@ -146,7 +146,53 @@ function validatePrimitiveType(
       }
       break;
     case 'u32':
+      if (typeof value !== 'number') {
+        errors.push({
+          field: path,
+          message: `Expected number but got ${typeof value}`,
+          expected: 'number',
+          actual: typeof value
+        });
+      } else if (!Number.isInteger(value)) {
+        errors.push({
+          field: path,
+          message: `Expected integer but got ${value}`,
+          expected: 'integer',
+          actual: 'float'
+        });
+      } else if (value < 0 || value > 0xFFFFFFFF) {
+        errors.push({
+          field: path,
+          message: `u32 out of range: ${value} (expected 0-4294967295)`,
+          expected: '0-4294967295',
+          actual: String(value)
+        });
+      }
+      break;
     case 'i32':
+      if (typeof value !== 'number') {
+        errors.push({
+          field: path,
+          message: `Expected number but got ${typeof value}`,
+          expected: 'number',
+          actual: typeof value
+        });
+      } else if (!Number.isInteger(value)) {
+        errors.push({
+          field: path,
+          message: `Expected integer but got ${value}`,
+          expected: 'integer',
+          actual: 'float'
+        });
+      } else if (value < -0x80000000 || value > 0x7FFFFFFF) {
+        errors.push({
+          field: path,
+          message: `i32 out of range: ${value} (expected -2147483648 to 2147483647)`,
+          expected: '-2147483648 to 2147483647',
+          actual: String(value)
+        });
+      }
+      break;
     case 'f64':
       if (typeof value !== 'number') {
         errors.push({
@@ -154,6 +200,13 @@ function validatePrimitiveType(
           message: `Expected number but got ${typeof value}`,
           expected: 'number',
           actual: typeof value
+        });
+      } else if (!Number.isFinite(value)) {
+        errors.push({
+          field: path,
+          message: `f64 cannot be NaN or Infinity`,
+          expected: 'finite number',
+          actual: String(value)
         });
       }
       break;

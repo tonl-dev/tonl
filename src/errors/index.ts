@@ -20,14 +20,23 @@ export class TONLError extends Error {
   toString(): string {
     let result = `${this.name}: ${this.message}`;
 
+    // SECURITY FIX (BF014): Only show detailed info in development
+    const isDevelopment = process.env.NODE_ENV !== 'production';
+
     if (this.line !== undefined) {
-      result += `\n  at line ${this.line}`;
-      if (this.column !== undefined) {
-        result += `:${this.column}`;
+      if (isDevelopment) {
+        result += `\n  at line ${this.line}`;
+        if (this.column !== undefined) {
+          result += `:${this.column}`;
+        }
+      } else {
+        // Production: minimal info
+        result += ` (line ${this.line})`;
       }
     }
 
-    if (this.source) {
+    // SECURITY FIX (BF014): Only show source code in development
+    if (this.source && isDevelopment) {
       result += `\n\n  ${this.source}`;
       if (this.column !== undefined) {
         result += `\n  ${' '.repeat(this.column)}^`;
