@@ -242,7 +242,46 @@ tonl encode \\server\share\file
 - **CWE**: CWE-78 (OS Command Injection)
 - **Credit**: Internal security audit
 
+**[HIGH] BF006: Input Validation Limits Added**
+- **Issue**: Parser accepted unlimited line lengths and field counts
+- **Impact**: Memory exhaustion, CPU exhaustion, parser crashes
+- **Fix**: Added input validation limits to parser
+- **Files Changed**:
+  - `src/parser.ts` (MAX_LINE_LENGTH: 100KB, MAX_FIELDS_PER_LINE: 10K)
+- **CWE**: CWE-20 (Improper Input Validation)
+- **Credit**: Internal security audit
+
+**[HIGH] BF007: Unhandled Promise Rejections Fixed**
+- **Issue**: Async operations lacked proper error handling
+- **Impact**: Silent failures, application crashes
+- **Fix**: Added global error handlers and wrapped async imports
+- **Files Changed**:
+  - `src/cli.ts` (process.on handlers, try-catch for imports)
+- **CWE**: CWE-755 (Improper Error Handling)
+- **Credit**: Internal security audit
+
+**[HIGH] BF008: Integer Overflow Protection Added**
+- **Issue**: Array index calculations lacked overflow protection
+- **Impact**: Infinite loops (step=0), incorrect array access
+- **Fix**: Added safe integer validation and step=0 check
+- **Files Changed**:
+  - `src/query/evaluator.ts` (Number.isSafeInteger checks, step validation, negative step handling)
+- **CWE**: CWE-190 (Integer Overflow)
+- **Credit**: Internal security audit
+
+**[MEDIUM-HIGH] BF010: Type Coercion Bugs Fixed**
+- **Issue**: Type coercion accepted invalid values (overflow, NaN, silent truncation)
+- **Impact**: Data corruption, silent failures
+- **Fix**: Strict validation with regex checks and overflow detection
+- **Files Changed**:
+  - `src/infer.ts` (strict decimal validation, overflow checks, NaN/Infinity rejection)
+- **CWE**: CWE-704 (Incorrect Type Conversion)
+- **Credit**: Internal security audit
+
 **Upgrade Recommendation**: All users should upgrade immediately. These are critical security fixes.
+
+**Note**: BF009 (Circular Reference) - existing implementation sufficient, no fix needed.
+**Note**: BF011-015 (P2 Medium Priority) - deferred to future maintenance (non-critical).
 
 ---
 
