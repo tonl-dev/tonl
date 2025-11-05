@@ -423,18 +423,31 @@ export class QueryEvaluator {
     actualEnd = Math.max(0, Math.min(actualEnd, length));
 
     // Handle negative step (reverse iteration)
+    // BUGFIX: Corrected reverse iteration logic
     if (step < 0) {
-      [actualStart, actualEnd] = [actualEnd - 1, actualStart - 1];
       step = Math.abs(step);
+
+      // For reverse slicing, determine proper start and end
+      // When start is not specified, begin from the last element
+      // When end is not specified, go to the first element (or before)
+      let reverseStart = start !== undefined ? actualStart : length - 1;
+      let reverseEnd = end !== undefined ? actualEnd : -1;
+
+      // Ensure reverseStart is within bounds
+      if (reverseStart >= length) reverseStart = length - 1;
+      if (reverseStart < 0) reverseStart = -1;
+
+      // Extract slice with reverse iteration
+      const result: any[] = [];
+      for (let i = reverseStart; i > reverseEnd && i >= 0; i -= step) {
+        result.push(current[i]);
+      }
+      return result;
     }
 
-    // Extract slice with step
+    // Extract slice with positive step (forward iteration)
     const result: any[] = [];
     for (let i = actualStart; i < actualEnd && i < length; i += step) {
-      // Additional safety: limit iterations
-      if (result.length > length) {
-        break; // Prevent infinite loops
-      }
       result.push(current[i]);
     }
 
