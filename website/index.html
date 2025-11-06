@@ -96,6 +96,47 @@
         .orb-1 { top: 10%; left: 5%; width: 400px; height: 400px; background: linear-gradient(135deg, #10b981, #059669); animation-delay: 0s; }
         .orb-2 { top: 50%; right: 10%; width: 300px; height: 300px; background: linear-gradient(135deg, #3b82f6, #2563eb); animation-delay: -8s; }
         .orb-3 { bottom: 10%; left: 30%; width: 250px; height: 250px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); animation-delay: -16s; }
+
+        /* Line Numbers */
+        .code-with-lines {
+            display: flex;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .line-numbers-column {
+            padding: 1.5rem 0.5rem 1.5rem 1.5rem;
+            text-align: right;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            line-height: 1.625;
+            user-select: none;
+            border-right: 1px solid #e2e8f0;
+            background: rgba(241, 245, 249, 0.5);
+            min-width: 3rem;
+        }
+
+        .line-numbers-emerald {
+            border-right-color: #10b98144;
+            background: rgba(16, 185, 129, 0.05);
+            color: #059669;
+        }
+
+        .line-num {
+            display: block;
+            line-height: 1.625;
+        }
+
+        .code-column {
+            padding: 1.5rem;
+            flex: 1;
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        .code-column code {
+            display: block;
+            white-space: pre;
+        }
     </style>
 </head>
 <body class="bg-white text-slate-900">
@@ -227,20 +268,15 @@
                             <div class="text-xs text-slate-600">Token Savings</div>
                         </div>
                     </div>
-                    <input type="range" min="1" max="10" step="1" x-model.number="dataSize" @input="updateContent()"
+                    <input type="range" min="1" :max="maxDataSize" step="1" x-model.number="dataSize" @input="updateContent()"
                            class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer"
                            style="accent-color: #10b981;">
                     <div class="flex justify-between text-xs text-slate-500 mt-2">
                         <span>1</span>
-                        <span>2</span>
-                        <span>3</span>
-                        <span>4</span>
-                        <span>5</span>
-                        <span>6</span>
-                        <span>7</span>
-                        <span>8</span>
-                        <span>9</span>
-                        <span>10</span>
+                        <span x-text="Math.floor(maxDataSize * 0.25)"></span>
+                        <span x-text="Math.floor(maxDataSize * 0.5)"></span>
+                        <span x-text="Math.floor(maxDataSize * 0.75)"></span>
+                        <span x-text="maxDataSize"></span>
                     </div>
                 </div>
 
@@ -271,8 +307,11 @@
                         <span class="text-slate-700 font-semibold text-lg">JSON Format</span>
                         <span class="text-slate-500 text-sm font-medium" x-text="jsonTokens + ' tokens'"></span>
                     </div>
-                    <div class="bg-slate-50 border border-slate-200 rounded-lg p-6 h-[500px] overflow-auto">
-                        <pre class="text-slate-600 text-sm leading-relaxed"><code x-text="jsonContent"></code></pre>
+                    <div class="bg-slate-50 border border-slate-200 rounded-lg p-0 h-[500px] overflow-auto relative">
+                        <div class="code-with-lines">
+                            <div class="line-numbers-column" x-html="generateLineNumbers(jsonContent)"></div>
+                            <pre class="code-column text-slate-600 text-sm leading-relaxed"><code x-text="jsonContent"></code></pre>
+                        </div>
                     </div>
                     <div class="mt-3">
                         <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
@@ -292,8 +331,11 @@
                         </div>
                         <span class="text-emerald-600 text-sm font-semibold" x-text="tonlTokens + ' tokens (-' + Math.round(savingsPercent) + '%)'"></span>
                     </div>
-                    <div class="bg-emerald-50/50 border-2 border-emerald-500 rounded-lg p-6 h-[500px] overflow-auto">
-                        <pre class="text-slate-700 text-sm leading-relaxed font-medium"><code x-text="tonlContent"></code></pre>
+                    <div class="bg-emerald-50/50 border-2 border-emerald-500 rounded-lg p-0 h-[500px] overflow-auto relative">
+                        <div class="code-with-lines">
+                            <div class="line-numbers-column line-numbers-emerald" x-html="generateLineNumbers(tonlContent)"></div>
+                            <pre class="code-column text-slate-700 text-sm leading-relaxed font-medium"><code x-text="tonlContent"></code></pre>
+                        </div>
                     </div>
                     <div class="mt-3">
                         <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
@@ -1730,16 +1772,25 @@ tonl decode filtered.tonl --out result.json</code></pre>
 
             return {
                 dataSize: 5,
+                maxDataSize: users.length,
                 showComparison: true,
                 showTypes: false,
                 jsonContent: '',
                 tonlContent: '',
+                jsonContentWithNumbers: '',
+                tonlContentWithNumbers: '',
                 jsonTokens: 0,
                 tonlTokens: 0,
                 savingsPercent: 0,
 
                 init() {
                     this.updateContent();
+                },
+
+                generateLineNumbers(text) {
+                    if (!text) return '<div class="line-num">1</div>';
+                    const lines = text.split('\n');
+                    return lines.map((_, i) => `<div class="line-num">${i + 1}</div>`).join('');
                 },
 
                 updateContent() {
@@ -1749,6 +1800,7 @@ tonl decode filtered.tonl --out result.json</code></pre>
                     // Generate JSON
                     this.jsonContent = JSON.stringify(data, null, 2);
                     this.jsonTokens = Math.ceil(this.jsonContent.length / 3.5);
+                    this.jsonContentWithNumbers = this.generateLineNumbers(this.jsonContent) + '<div class="code-content">' + this.escapeHtml(this.jsonContent) + '</div>';
 
                     // Generate TONL
                     const typeHints = this.showTypes ? ':u32,:str,:str,:u32,:str,:bool,:str' : '';
@@ -1762,6 +1814,13 @@ tonl decode filtered.tonl --out result.json</code></pre>
                     this.tonlContent = tonl.trim();
                     this.tonlTokens = Math.ceil(this.tonlContent.length / 3.5);
                     this.savingsPercent = ((this.jsonTokens - this.tonlTokens) / this.jsonTokens) * 100;
+                    this.tonlContentWithNumbers = this.generateLineNumbers(this.tonlContent) + '<div class="code-content">' + this.escapeHtml(this.tonlContent) + '</div>';
+                },
+
+                escapeHtml(text) {
+                    const div = document.createElement('div');
+                    div.textContent = text;
+                    return div.innerHTML;
                 }
             };
         }
