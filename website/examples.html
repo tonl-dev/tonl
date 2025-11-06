@@ -7,12 +7,65 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="js/tonl.iife.js"></script>
-    <script src="examples-new-data.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 
     <style>
         body { font-family: 'Inter', sans-serif; }
         code, pre, textarea { font-family: 'JetBrains Mono', monospace; }
+
+        /* Line numbers container */
+        .editor-container {
+            position: relative;
+            display: flex;
+        }
+
+        .line-numbers {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            background: #1e293b;
+            color: #64748b;
+            font-size: 10px;
+            padding: 16px 8px;
+            text-align: right;
+            line-height: 1.5;
+            user-select: none;
+            overflow: hidden;
+            border-right: 1px solid #334155;
+        }
+
+        .line-numbers-emerald {
+            background: #064e3b;
+            border-right-color: #10b981;
+            color: #6ee7b7;
+        }
+
+        .editor-textarea {
+            padding-left: 48px !important;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        /* Custom scrollbar for textareas */
+        .editor-textarea::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .editor-textarea::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        .editor-textarea::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        .editor-textarea::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
 
         /* Loading animation */
         @keyframes spin {
@@ -20,268 +73,263 @@
         }
         .loading { animation: spin 1s linear infinite; }
 
-        /* Pulse animation for stats */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        .stat-pulse { animation: pulse 2s ease-in-out infinite; }
-
         /* Smooth transitions */
         button { transition: all 0.2s ease; }
         button:active { transform: scale(0.95); }
-
-        /* Success feedback */
-        @keyframes successPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        .success-pop { animation: successPop 0.3s ease; }
     </style>
 </head>
 <body class="bg-slate-50">
 
     <!-- Navigation -->
-    <nav class="border-b border-slate-200 bg-white sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4">
+    <nav class="border-b border-slate-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3">
             <div class="flex items-center justify-between">
-                <a href="index.html" class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
-                        <span class="text-2xl font-bold text-white">T</span>
+                <a href="index.html" class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
+                        <span class="text-lg font-bold text-white">T</span>
                     </div>
-                    <span class="text-2xl font-bold text-slate-900">TONL</span>
+                    <span class="text-xl font-bold text-slate-900">TONL</span>
                 </a>
 
-                <div class="flex items-center gap-8">
-                    <a href="index.html#features" class="text-slate-600 hover:text-slate-900 font-medium">Features</a>
-                    <a href="docs.html" class="text-slate-600 hover:text-slate-900 font-medium">Docs</a>
+                <div class="flex items-center gap-6 text-sm">
+                    <a href="index.html#features" class="text-slate-600 hover:text-slate-900 transition">Features</a>
+                    <a href="docs.html" class="text-slate-600 hover:text-slate-900 transition">Docs</a>
                     <a href="examples.html" class="text-slate-900 font-semibold">Playground</a>
-                    <a href="https://github.com/ersinkoc/tonl" target="_blank" class="text-slate-600 hover:text-slate-900 font-medium">GitHub</a>
+                    <a href="https://github.com/ersinkoc/tonl" target="_blank" class="text-slate-600 hover:text-slate-900 transition">GitHub</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="max-w-7xl mx-auto px-6 py-12" x-data="playground()">
+    <div class="max-w-6xl mx-auto px-4 py-8" x-data="playground()">
 
         <!-- Header with Live Stats -->
-        <div class="mb-10">
-            <h1 class="text-5xl font-bold text-slate-900 mb-4">Live Playground</h1>
-            <p class="text-2xl text-slate-600 mb-8">Convert JSON to TONL and see real token savings in action</p>
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-slate-900 mb-2">Live Playground</h1>
+            <p class="text-slate-600 mb-6">Convert JSON to TONL and see real token savings</p>
 
-            <!-- Real-Time Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div class="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-md transition">
-                    <div class="text-sm text-slate-600 mb-1">JSON Tokens</div>
-                    <div class="text-3xl font-bold text-slate-900" x-text="jsonTokens"></div>
+            <!-- Compact Stats -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-white border border-slate-200 rounded-lg p-3 shadow-sm">
+                    <div class="text-xs text-slate-500">JSON Tokens</div>
+                    <div class="text-2xl font-bold text-slate-900" x-text="jsonTokens.toLocaleString()"></div>
                 </div>
-                <div class="bg-white border border-emerald-200 rounded-xl p-5 hover:shadow-md transition">
-                    <div class="text-sm text-slate-600 mb-1">TONL Tokens</div>
-                    <div class="text-3xl font-bold text-emerald-600" x-text="tonlTokens"></div>
+                <div class="bg-white border border-slate-200 rounded-lg p-3 shadow-sm">
+                    <div class="text-xs text-slate-500">TONL Tokens</div>
+                    <div class="text-2xl font-bold text-emerald-600" x-text="tonlTokens.toLocaleString()"></div>
                 </div>
-                <div class="bg-emerald-50 border-2 border-emerald-500 rounded-xl p-5 hover:shadow-lg transition stat-pulse">
-                    <div class="text-sm text-emerald-700 font-semibold mb-1">Token Savings</div>
-                    <div class="text-3xl font-bold text-emerald-600" x-text="savings.tokens + '%'"></div>
-                </div>
-                <div class="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-md transition">
-                    <div class="text-sm text-slate-600 mb-1">Bytes Saved</div>
-                    <div class="text-3xl font-bold text-slate-900" x-text="(jsonBytes - tonlBytes)"></div>
-                </div>
-                <div class="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-md transition">
-                    <div class="text-sm text-slate-600 mb-1">Est. $ Saved</div>
-                    <div class="text-3xl font-bold text-green-600" x-text="'$' + ((jsonTokens - tonlTokens) * 0.00002).toFixed(4)"></div>
+                <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 shadow-sm">
+                    <div class="text-xs text-emerald-700 font-semibold">Savings</div>
+                    <div class="text-2xl font-bold text-emerald-600" x-text="savings.tokens + '%'"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Example Templates - Rich Collection -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-2xl font-bold text-slate-900">Try These Examples</h3>
-                <button @click="clearAll()" class="px-4 py-2 text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium">Clear All</button>
+        <!-- Example Templates -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-semibold text-slate-900">Try Examples</h3>
+                <button @click="clearAll()" class="text-xs text-slate-500 hover:text-slate-700 transition">Clear</button>
             </div>
 
-            <!-- Quick Start -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">🚀 Quick Start</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('small')" class="px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 hover:scale-105 transition text-xs font-medium">📝 Simple</button>
-                    <button @click="loadExample('simpleArray')" class="px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 hover:scale-105 transition text-xs font-medium">📋 Array</button>
-                    <button @click="loadExample('basicNested')" class="px-3 py-2 bg-slate-100 border border-slate-300 rounded-lg hover:bg-slate-200 hover:scale-105 transition text-xs font-medium">🔗 Nested</button>
+            <!-- Real JSON File Examples -->
+            <div class="mb-4 p-4 bg-gradient-to-br from-emerald-50 to-teal-50 rounded-lg border border-emerald-200 shadow-sm">
+                <h4 class="text-sm font-semibold text-emerald-900 mb-3 flex items-center gap-2">
+                    <span>⭐</span> Large Datasets (Best for Demo)
+                </h4>
+                <div class="grid grid-cols-3 gap-2">
+                    <button @click="loadExample('employees')" class="group p-3 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-md transition text-left">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xl">👔</span>
+                            <span class="font-semibold text-sm text-emerald-700">Employees</span>
+                        </div>
+                        <div class="text-xs text-slate-500">100 · 45 KB · ~44%</div>
+                    </button>
+                    <button @click="loadExample('products')" class="group p-3 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-md transition text-left">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xl">🛍️</span>
+                            <span class="font-semibold text-sm text-emerald-700">Products</span>
+                        </div>
+                        <div class="text-xs text-slate-500">100 · 31 KB · ~45%</div>
+                    </button>
+                    <button @click="loadExample('apiLogs')" class="group p-3 bg-white border border-slate-300 rounded-lg hover:border-slate-400 hover:shadow-md transition text-left">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xl">📋</span>
+                            <span class="font-semibold text-sm text-slate-700">API Logs</span>
+                        </div>
+                        <div class="text-xs text-slate-500">20 · 5 KB · ~41%</div>
+                    </button>
                 </div>
-            </div>
+                <div class="mt-5 p-6 bg-gradient-to-r from-white to-emerald-50 rounded-xl border-3 border-emerald-500 shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="text-4xl">💡</div>
+                            <div>
+                                <p class="text-base text-emerald-900 font-bold">Pro Tip: Test Type Hints!</p>
+                                <p class="text-xs text-slate-700">Toggle types to see the difference in output size and validation capability</p>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Business -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">💼 Business</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('users')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">👥 Users</button>
-                    <button @click="loadExample('employees')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">👔 Employees</button>
-                    <button @click="loadExample('customers')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🤝 Customers</button>
-                    <button @click="loadExample('invoices')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📄 Invoices</button>
-                    <button @click="loadExample('orders')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📦 Orders</button>
-                    <button @click="loadExample('inventory')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📊 Inventory</button>
-                </div>
-            </div>
+                    <!-- Type Hints Toggle (Shadcn-style) -->
+                    <div class="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700">Include Type Hints</label>
+                                <p class="text-xs text-slate-500">See type metadata difference</p>
+                            </div>
+                            <button @click="includeTypes = !includeTypes; jsonToTONL();"
+                                    :class="includeTypes ? 'bg-emerald-500' : 'bg-slate-300'"
+                                    class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2">
+                                <span :class="includeTypes ? 'translate-x-6' : 'translate-x-1'"
+                                      class="inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200"></span>
+                            </button>
+                        </div>
 
-            <!-- E-commerce -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">🛍️ E-commerce</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('ecommerce')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🛒 Store</button>
-                    <button @click="loadExample('catalog')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📚 Catalog</button>
-                    <button @click="loadExample('cart')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🛒 Cart</button>
-                    <button @click="loadExample('reviews')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">⭐ Reviews</button>
-                </div>
-            </div>
+                        <!-- Before/After Comparison -->
+                        <div class="space-y-2">
+                            <div :class="!includeTypes ? 'bg-blue-50 border-blue-300' : 'bg-slate-50 border-slate-200'"
+                                 class="p-3 rounded-md border transition-all">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-lg">📦</span>
+                                    <span class="text-xs font-semibold" :class="!includeTypes ? 'text-blue-700' : 'text-slate-500'">
+                                        Compact (OFF) - Max Savings
+                                    </span>
+                                </div>
+                                <code class="text-xs text-slate-600 font-mono block">employees[100]:</code>
+                                <div class="text-xs text-slate-500 mt-1">~44% savings</div>
+                            </div>
 
-            <!-- API & Dev -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">🌐 API & Development</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('api')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🌐 API</button>
-                    <button @click="loadExample('config')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">⚙️ Config</button>
-                    <button @click="loadExample('logs')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📋 Logs</button>
-                    <button @click="loadExample('webhooks')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🪝 Webhooks</button>
-                    <button @click="loadExample('github')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🐙 GitHub</button>
-                </div>
-            </div>
+                            <div :class="includeTypes ? 'bg-emerald-50 border-emerald-300' : 'bg-slate-50 border-slate-200'"
+                                 class="p-3 rounded-md border transition-all">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-lg">✅</span>
+                                    <span class="text-xs font-semibold" :class="includeTypes ? 'text-emerald-700' : 'text-slate-500'">
+                                        Validation (ON) - With Types
+                                    </span>
+                                </div>
+                                <code class="text-xs text-slate-600 font-mono block">employees[100]{empId:u32,firstName:str,...}:</code>
+                                <div class="text-xs text-slate-500 mt-1">~39% savings (+ validation)</div>
+                            </div>
+                        </div>
+                    </div>
 
-            <!-- Data & Analytics -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">📊 Analytics</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('analytics')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📈 Analytics</button>
-                    <button @click="loadExample('timeseries')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📉 TimeSeries</button>
-                    <button @click="loadExample('metrics')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📊 Metrics</button>
-                    <button @click="loadExample('surveys')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📝 Surveys</button>
-                </div>
-            </div>
+                    <!-- Record Count Slider -->
+                    <div class="mt-4 p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700">Record Count</label>
+                                <p class="text-xs text-slate-500">Dynamically adjust array size (1-100)</p>
+                            </div>
+                            <div class="text-xl font-bold text-blue-600" x-text="recordCount"></div>
+                        </div>
 
-            <!-- Social -->
-            <div class="mb-6">
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">💬 Social & Content</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('social')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">💬 Social</button>
-                    <button @click="loadExample('blog')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">📰 Blog</button>
-                    <button @click="loadExample('comments')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">💭 Comments</button>
-                    <button @click="loadExample('notifications')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🔔 Notifs</button>
-                </div>
-            </div>
+                        <div class="space-y-3">
+                            <input type="range"
+                                   x-model="recordCount"
+                                   @input="updateRecordCount()"
+                                   min="1"
+                                   max="100"
+                                   step="1"
+                                   class="w-full h-2 bg-gradient-to-r from-blue-200 to-blue-400 rounded-lg appearance-none cursor-pointer slider-thumb">
 
-            <!-- Complex -->
-            <div>
-                <h4 class="text-xs font-semibold text-slate-600 mb-3 uppercase tracking-wide">🔥 Complex</h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                    <button @click="loadExample('nested')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🔗 Deep Nested</button>
-                    <button @click="loadExample('mixed')" class="px-3 py-2 bg-white border border-emerald-300 rounded-lg hover:border-emerald-500 hover:shadow-lg hover:scale-105 transition text-xs font-medium">🎭 Mixed</button>
-                    <button @click="loadExample('large')" class="px-3 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white border-2 border-emerald-600 rounded-lg hover:shadow-xl hover:scale-105 transition text-xs font-bold">🔥 Large</button>
+                            <div class="flex justify-between text-xs text-slate-400">
+                                <span>1 record</span>
+                                <span>10</span>
+                                <span>25</span>
+                                <span>50</span>
+                                <span>100 records</span>
+                            </div>
+
+                            <div class="p-3 bg-blue-50 border border-blue-200 rounded-md">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-lg">🔄</span>
+                                    <span class="text-xs font-semibold text-blue-700">
+                                        Live Encoding
+                                    </span>
+                                </div>
+                                <p class="text-xs text-slate-600">Watch token count change as you adjust record count!</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Main Playground -->
-        <div class="grid lg:grid-cols-2 gap-6">
+        <div class="grid lg:grid-cols-2 gap-4">
 
             <!-- JSON Input -->
-            <div class="bg-white border-2 border-slate-300 rounded-2xl overflow-hidden shadow-lg">
-                <div class="bg-slate-100 border-b-2 border-slate-300 px-6 py-4 flex items-center justify-between">
-                    <div>
-                        <h3 class="font-bold text-slate-900 text-lg">JSON Input</h3>
-                        <p class="text-sm text-slate-600 mt-0.5">Paste or select example data</p>
-                    </div>
+            <div class="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+                <div class="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
+                    <h3 class="text-sm font-semibold text-slate-700">JSON Input</h3>
                     <div class="flex gap-2">
-                        <button @click="formatJSON()" class="px-4 py-2 text-sm bg-white border border-slate-300 hover:bg-slate-50 rounded-lg font-medium transition">
-                            Format JSON
+                        <button @click="formatJSON()" class="px-3 py-1 text-xs bg-white border border-slate-200 hover:bg-slate-50 rounded-md transition">
+                            Format
                         </button>
-                        <button @click="jsonToTONL()" class="px-5 py-2 text-sm bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition shadow-md">
-                            Convert to TONL →
+                        <button @click="jsonToTONL()" class="px-3 py-1 text-xs bg-slate-900 text-white rounded-md hover:bg-slate-800 transition">
+                            Convert →
                         </button>
                     </div>
                 </div>
 
-                <textarea
-                    x-model="jsonInput"
-                    @input="updateStats()"
-                    class="w-full h-[700px] bg-slate-900 text-slate-300 p-6 text-sm border-none focus:outline-none resize-none"
-                    placeholder="Paste your JSON here, or select an example above..."
-                ></textarea>
+                <div class="editor-container">
+                    <div class="line-numbers" x-html="generateLineNumbers(jsonInput)"></div>
+                    <textarea
+                        x-model="jsonInput"
+                        @input="updateStats(); updateLineNumbers()"
+                        @scroll="syncScroll($event, 'json')"
+                        class="editor-textarea w-full h-[600px] bg-slate-900 text-slate-100 p-4 text-xs font-mono border-none focus:outline-none resize-none"
+                        placeholder="Paste JSON or select an example above..."
+                    ></textarea>
+                </div>
 
-                <div class="bg-slate-100 border-t-2 border-slate-300 px-6 py-3 flex items-center justify-between text-sm">
-                    <div class="flex gap-6 text-slate-600">
-                        <span>📦 <span class="font-semibold" x-text="jsonBytes"></span> bytes</span>
-                        <span>🎯 <span class="font-semibold" x-text="jsonTokens"></span> tokens</span>
-                        <span>📄 <span class="font-semibold" x-text="jsonInput.split('\\n').length"></span> lines</span>
-                    </div>
+                <div class="bg-slate-50 border-t border-slate-200 px-4 py-2 text-xs text-slate-600">
+                    <span x-text="jsonBytes.toLocaleString()"></span> bytes ·
+                    <span x-text="jsonTokens.toLocaleString()"></span> tokens ·
+                    <span x-text="jsonInput.split('\\n').length"></span> lines
                 </div>
             </div>
 
             <!-- TONL Output -->
-            <div class="bg-white border-2 border-emerald-500 rounded-2xl overflow-hidden shadow-xl shadow-emerald-500/10">
-                <div class="bg-emerald-50 border-b-2 border-emerald-500 px-6 py-4">
-                    <div class="flex items-center justify-between mb-3">
-                        <div>
-                            <h3 class="font-bold text-slate-900 text-lg">TONL Output</h3>
-                            <p class="text-sm text-emerald-700 mt-0.5 font-semibold">Automatically optimized format</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button @click="tonlToJSON()" class="px-4 py-2 text-sm bg-white border border-emerald-300 hover:bg-emerald-50 hover:shadow rounded-lg font-medium">
-                                ← Decode to JSON
-                            </button>
-                            <button @click="copyToClipboard(tonlOutput)" :class="copied ? 'success-pop' : ''" class="px-5 py-2 text-sm bg-emerald-600 text-white rounded-lg font-semibold hover:bg-emerald-700 hover:shadow-lg active:scale-95">
-                                <span x-show="!copied">📋 Copy</span>
-                                <span x-show="copied" class="text-white">✓ Copied!</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Type Toggle -->
-                    <div class="flex items-center gap-4">
-                        <button @click="includeTypes = !includeTypes; jsonToTONL();"
-                                :class="includeTypes ? 'bg-emerald-600 text-white border-emerald-700' : 'bg-white text-slate-700 border-slate-300'"
-                                class="border-2 hover:shadow-md px-4 py-2 rounded-lg text-xs font-semibold transition flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                            </svg>
-                            <span x-text="includeTypes ? 'Types: ON ✓' : 'Types: OFF'"></span>
+            <div class="bg-white border border-emerald-200 rounded-lg overflow-hidden shadow-sm">
+                <div class="bg-emerald-50 border-b border-emerald-200 px-4 py-3 flex items-center justify-between">
+                    <h3 class="text-sm font-semibold text-emerald-700">TONL Output</h3>
+                    <div class="flex gap-2">
+                        <button @click="tonlToJSON()" class="px-3 py-1 text-xs bg-white border border-emerald-200 hover:bg-emerald-50 rounded-md transition">
+                            ← Decode
                         </button>
-                        <div class="text-xs">
-                            <span x-show="!includeTypes" class="text-blue-700 font-medium">📦 Compact mode (max savings)</span>
-                            <span x-show="includeTypes" class="text-emerald-800 font-medium">✅ Validation mode (with type hints)</span>
-                        </div>
+                        <button @click="copyToClipboard(tonlOutput)" class="px-3 py-1 text-xs bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition">
+                            <span x-show="!copied">Copy</span>
+                            <span x-show="copied">✓</span>
+                        </button>
                     </div>
                 </div>
 
-                <textarea
-                    x-model="tonlOutput"
-                    readonly
-                    class="w-full h-[700px] bg-slate-900 text-slate-300 p-6 text-sm border-none focus:outline-none resize-none"
-                    placeholder="TONL output will appear here after conversion..."
-                ></textarea>
+                <div class="editor-container">
+                    <div class="line-numbers line-numbers-emerald" x-html="generateLineNumbers(tonlOutput)"></div>
+                    <textarea
+                        x-model="tonlOutput"
+                        readonly
+                        @scroll="syncScroll($event, 'tonl')"
+                        class="editor-textarea w-full h-[600px] bg-slate-900 text-emerald-100 p-4 text-xs font-mono border-none focus:outline-none resize-none"
+                        placeholder="TONL output will appear here..."
+                    ></textarea>
+                </div>
 
-                <div class="bg-emerald-50 border-t-2 border-emerald-500 px-6 py-3 flex items-center justify-between text-sm">
-                    <div class="flex gap-6 text-slate-700">
-                        <span>📦 <span class="font-semibold text-emerald-600" x-text="tonlBytes"></span> bytes <span x-show="tonlBytes > 0" class="text-emerald-600 font-semibold" x-text="'(-' + savings.bytes + '%)'"></span></span>
-                        <span>🎯 <span class="font-semibold text-emerald-600" x-text="tonlTokens"></span> tokens <span x-show="tonlTokens > 0" class="text-emerald-600 font-bold" x-text="'(-' + savings.tokens + '%)'"></span></span>
-                        <span>📄 <span class="font-semibold text-emerald-600" x-text="tonlOutput.split('\\n').length"></span> lines</span>
-                    </div>
+                <div class="bg-emerald-50 border-t border-emerald-200 px-4 py-2 text-xs font-semibold text-emerald-700">
+                    <span x-text="tonlBytes.toLocaleString()"></span> bytes ·
+                    <span x-text="tonlTokens.toLocaleString()"></span> tokens ·
+                    <span x-show="tonlBytes > 0" class="text-emerald-600" x-text="'↓ ' + savings.tokens + '%'"></span>
                 </div>
             </div>
 
         </div>
 
         <!-- Error Display -->
-        <div x-show="error" class="mt-6 bg-red-50 border-2 border-red-300 rounded-xl p-6">
-            <div class="flex items-start gap-3">
-                <svg class="w-6 h-6 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                </svg>
-                <div>
-                    <p class="text-red-900 font-bold mb-1">Conversion Error</p>
-                    <p class="text-red-700 text-sm" x-text="error"></p>
-                </div>
-            </div>
+        <div x-show="error" class="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
+            <p class="text-xs font-semibold text-red-900 mb-1">Error</p>
+            <p class="text-xs text-red-700" x-text="error"></p>
         </div>
 
     </div>
@@ -299,9 +347,12 @@
                 error: '',
                 copied: false,
                 includeTypes: false,
+                recordCount: 10,
+                currentExample: 'users',
+                fullDataCache: {},
 
-                init() {
-                    this.loadExample('users');
+                async init() {
+                    await this.loadExample('users');
                 },
 
                 jsonToTONL() {
@@ -309,7 +360,10 @@
                         this.error = '';
                         const data = JSON.parse(this.jsonInput);
                         if (typeof TONL !== 'undefined' && TONL.encodeTONL) {
-                            this.tonlOutput = TONL.encodeTONL(data, { includeTypes: this.includeTypes });
+                            // IMPORTANT: Pass includeTypes option!
+                            this.tonlOutput = TONL.encodeTONL(data, {
+                                includeTypes: this.includeTypes
+                            });
                         } else {
                             this.tonlOutput = '#version 1.0\\n' + JSON.stringify(data, null, 2);
                         }
@@ -371,7 +425,59 @@
                     this.updateStats();
                 },
 
-                loadExample(type) {
+                generateLineNumbers(text) {
+                    if (!text) return '<div style="color:#334155">1</div>';
+                    const lines = text.split('\n').length;
+                    let html = '';
+                    for (let i = 1; i <= lines; i++) {
+                        html += `<div>${i}</div>`;
+                    }
+                    return html;
+                },
+
+                updateLineNumbers() {
+                    // Trigger Alpine to recompute line numbers
+                    this.$nextTick(() => {
+                        // Force update
+                    });
+                },
+
+                syncScroll(event, editor) {
+                    // Sync scroll of line numbers with textarea
+                    const textarea = event.target;
+                    const lineNumbers = textarea.previousElementSibling;
+                    if (lineNumbers) {
+                        lineNumbers.scrollTop = textarea.scrollTop;
+                    }
+                },
+
+                async loadExample(type) {
+                    this.currentExample = type;
+
+                    // Priority: Load from JSON files for large datasets
+                    const jsonFiles = ['users', 'employees', 'products', 'transactions', 'apiLogs', 'config'];
+
+                    if (jsonFiles.includes(type)) {
+                        try {
+                            // Check cache first
+                            if (!this.fullDataCache[type]) {
+                                const response = await fetch(`json/${type}.json`);
+                                if (response.ok) {
+                                    this.fullDataCache[type] = await response.json();
+                                }
+                            }
+
+                            if (this.fullDataCache[type]) {
+                                this.applyRecordCount(this.fullDataCache[type]);
+                                return;
+                            }
+                        } catch (error) {
+                            console.warn(`Could not load ${type}.json:`, error.message);
+                            // Fall through to inline examples
+                        }
+                    }
+
+                    // Fallback: Inline examples for compatibility
                     const examples = {
                         small: `{
   "name": "Alice Smith",
@@ -1079,7 +1185,7 @@
           "bio": "Technology enthusiast | Developer | Open Source contributor"
         },
         "content": {
-          "text": "Just discovered TONL - an amazing token-optimized format for LLM applications! Up to 50% smaller than JSON. Perfect for reducing API costs. Check it out! #TONL #LLM #AI #CostOptimization",
+          "text": "Just discovered TONL - an amazing token-optimized format for LLM applications! 38% smaller than JSON. Perfect for reducing API costs. Check it out! #TONL #LLM #AI #CostOptimization",
           "language": "en",
           "hashtags": ["TONL", "LLM", "AI", "CostOptimization"],
           "mentions": ["@tonl_official"],
@@ -1348,18 +1454,93 @@
 }`
                     };
 
-                    // Check additional examples first
-                    if (typeof additionalExamples !== "undefined" && additionalExamples[type]) {
-                        this.jsonInput = additionalExamples[type];
-                        this.jsonToTONL();
-                        return;
-                    }
                     this.jsonInput = examples[type];
                     this.jsonToTONL();
+                },
+
+                applyRecordCount(fullData) {
+                    try {
+                        let limitedData = { ...fullData };
+
+                        // Find array fields and limit them
+                        for (const key in limitedData) {
+                            if (Array.isArray(limitedData[key]) && limitedData[key].length > 0) {
+                                limitedData[key] = limitedData[key].slice(0, this.recordCount);
+                            }
+                        }
+
+                        this.jsonInput = JSON.stringify(limitedData, null, 2);
+                        this.jsonToTONL();
+                    } catch (error) {
+                        console.error('Error applying record count:', error);
+                    }
+                },
+
+                updateRecordCount() {
+                    if (this.fullDataCache[this.currentExample]) {
+                        this.applyRecordCount(this.fullDataCache[this.currentExample]);
+                    }
                 }
             }
         }
     </script>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white mt-16 py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <!-- About -->
+                <div>
+                    <h4 class="text-sm font-bold mb-3">TONL</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        Token-Optimized Notation Language
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-sm font-bold mb-3">Quick Links</h4>
+                    <ul class="space-y-1 text-xs">
+                        <li><a href="index.html" class="text-slate-400 hover:text-white transition">Home</a></li>
+                        <li><a href="index.html#features" class="text-slate-400 hover:text-white transition">Features</a></li>
+                        <li><a href="docs.html" class="text-slate-400 hover:text-white transition">Documentation</a></li>
+                        <li><a href="examples.html" class="text-emerald-400 hover:text-emerald-300 transition font-semibold">Playground</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources -->
+                <div>
+                    <h4 class="text-sm font-bold mb-3">Resources</h4>
+                    <ul class="space-y-1 text-xs">
+                        <li><a href="https://github.com/ersinkoc/tonl" target="_blank" class="text-slate-400 hover:text-white transition">GitHub</a></li>
+                        <li><a href="https://www.npmjs.com/package/tonl" target="_blank" class="text-slate-400 hover:text-white transition">npm Package</a></li>
+                        <li><a href="https://github.com/ersinkoc/tonl/issues" target="_blank" class="text-slate-400 hover:text-white transition">Report Issues</a></li>
+                        <li><a href="https://github.com/ersinkoc/tonl/discussions" target="_blank" class="text-slate-400 hover:text-white transition">Discussions</a></li>
+                    </ul>
+                </div>
+
+                <!-- Community -->
+                <div>
+                    <h4 class="text-sm font-bold mb-3">Community</h4>
+                    <ul class="space-y-1 text-xs">
+                        <li><a href="https://twitter.com/ersinkoc" target="_blank" class="text-slate-400 hover:text-white transition">Twitter</a></li>
+                        <li><a href="https://github.com/ersinkoc" target="_blank" class="text-slate-400 hover:text-white transition">GitHub Profile</a></li>
+                        <li><span class="text-slate-400">MIT License</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-slate-800 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-slate-400">
+                <p>© 2025 TONL · MIT License</p>
+                <div class="flex items-center gap-3 mt-3 md:mt-0">
+                    <span>v1.0.5</span>
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                    <span class="text-emerald-400">Production Ready</span>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 </body>
 </html>
