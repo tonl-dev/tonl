@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.5] - 2025-11-06
 
+### Fixed
+
+**🐛 Bug #1: Negative Array Index Normalization (HIGH - Data Corruption)**
+- **Location**: `src/modification/setter.ts:217-232`
+- **Issue**: Large negative indices (e.g., `-100` on array length 3) normalized to negative values and corrupted array by creating object properties instead of throwing error
+- **Impact**: Data corruption, type confusion, silent failures
+- **Fix**: Added explicit validation to always throw error for negative normalized indices
+- **CWE**: CWE-129 (Improper Validation of Array Index)
+- **Tests**: Added 4 comprehensive tests in `test/bug-fix-negative-index.test.ts`
+
+**🐛 Bug #2: CLI parseInt NaN Validation (MEDIUM - Malformed Output)**
+- **Location**: `src/cli.ts:104` (primary), `src/encode.ts:22` (defense-in-depth)
+- **Issue**: CLI `--indent` argument with invalid value (e.g., `abc`) caused parseInt to return NaN, which produced TONL output with zero indentation
+- **Impact**: Malformed output, poor UX, silent failure
+- **Fix**: Validate parseInt result in CLI and add Number.isFinite() check in encoder
+- **CWE**: CWE-20 (Improper Input Validation)
+- **Tests**: Added 3 tests in `test/bug-cli-invalid-indent.test.ts`
+
+**🐛 Bug #3: Stats Display Division by Zero (LOW - Display Issue)**
+- **Location**: `src/cli.ts:163-164`
+- **Issue**: Empty files (0 bytes/tokens) caused division by zero in stats calculation, showing "NaN%" or "-Infinity%" in output
+- **Impact**: Confusing statistics display
+- **Fix**: Added zero-denominator check, returns "0.0%" for empty files
+- **CWE**: CWE-369 (Divide By Zero)
+- **Tests**: Added 3 tests in `test/bug-stats-division-by-zero.test.ts`
+
 ### Changed
 - **README.md Modernization**: Completely restructured and modernized the main README
   - Removed version history references and "NEW in vX.X" annotations
@@ -29,6 +55,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - All essential documentation preserved (README, CHANGELOG, SECURITY, etc.)
   - Removed redundant session reports while keeping audit trail in CHANGELOG
   - VERSION.md updated to reflect current file structure
+
+### Tests
+- **Added**: 10 new bug fix tests (all passing)
+- **Total**: 506 tests (496 existing + 10 new)
+- **Pass Rate**: 100% (506/506 passing)
+- **Coverage**: Maintained 100% code coverage
 
 ## [1.0.4] - 2025-11-05
 

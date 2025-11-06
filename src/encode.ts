@@ -19,7 +19,8 @@ export function encodeTONL(input: any, opts: {
   const delimiter = opts.delimiter || ",";
   const includeTypes = opts.includeTypes ?? false;
   const version = opts.version || "1.0";
-  const indent = opts.indent ?? 2;
+  // BUGFIX: Validate indent is a valid number, default to 2 if NaN
+  const indent = (opts.indent !== undefined && Number.isFinite(opts.indent) && opts.indent >= 0) ? opts.indent : 2;
   const singleLinePrimitiveLists = opts.singleLinePrimitiveLists ?? true;
 
   const context: TONLEncodeContext = {

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TONL Browser Build Test</title>
+</head>
+<body>
+    <h1>TONL Browser Build Test</h1>
+    <div id="output"></div>
+
+    <!-- Load local TONL library -->
+    <script src="../dist/browser/tonl.iife.js"></script>
+
+    <script>
+        const output = document.getElementById('output');
+
+        function log(message) {
+            const p = document.createElement('p');
+            p.textContent = message;
+            output.appendChild(p);
+        }
+
+        try {
+            log('Testing TONL browser build...');
+            log('');
+
+            // Test 1: Check if TONL exists
+            if (typeof TONL === 'undefined') {
+                log('❌ ERROR: TONL global object not found!');
+            } else {
+                log('✅ TONL global object exists');
+                log('   Available: ' + Object.keys(TONL).join(', '));
+            }
+
+            // Test 2: Check encodeTONL
+            if (typeof TONL.encodeTONL !== 'function') {
+                log('❌ ERROR: TONL.encodeTONL is not a function!');
+                log('   Type: ' + typeof TONL.encodeTONL);
+            } else {
+                log('✅ TONL.encodeTONL exists');
+            }
+
+            // Test 3: Check decodeTONL
+            if (typeof TONL.decodeTONL !== 'function') {
+                log('❌ ERROR: TONL.decodeTONL is not a function!');
+                log('   Type: ' + typeof TONL.decodeTONL);
+            } else {
+                log('✅ TONL.decodeTONL exists');
+            }
+
+            log('');
+            log('--- Testing encode/decode ---');
+
+            // Test 4: Encode simple data
+            const testData = {
+                users: [
+                    { id: 1, name: "Alice", role: "admin" },
+                    { id: 2, name: "Bob", role: "user" }
+                ]
+            };
+
+            const tonlOutput = TONL.encodeTONL(testData);
+            log('✅ Encode successful!');
+            log('Output:');
+            log(tonlOutput);
+
+            // Test 5: Decode back
+            const decoded = TONL.decodeTONL(tonlOutput);
+            log('');
+            log('✅ Decode successful!');
+            log('Decoded: ' + JSON.stringify(decoded, null, 2));
+
+            // Test 6: Verify round-trip
+            const match = JSON.stringify(testData) === JSON.stringify(decoded);
+            if (match) {
+                log('');
+                log('✅ Round-trip successful! Data matches.');
+            } else {
+                log('');
+                log('❌ Round-trip failed! Data mismatch.');
+            }
+
+        } catch (error) {
+            log('');
+            log('❌ ERROR: ' + error.message);
+            log('Stack: ' + error.stack);
+        }
+    </script>
+</body>
+</html>

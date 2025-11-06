@@ -43,7 +43,7 @@ describe('Bug Verification Tests', () => {
     const tonl = doc.toTONL();
 
     // Decode and verify
-    const decoded = TONLDocument.fromTONL(tonl);
+    const decoded = TONLDocument.parse(tonl);
     const result = decoded.get('emptyArray');
     assert.deepStrictEqual(result, [], 'Empty array should remain empty');
   });

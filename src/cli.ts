@@ -101,7 +101,12 @@ function parseArgs(args: string[]): { command: string; file: string; options: CL
         i++;
         break;
       case "--indent":
-        options.indent = parseInt(nextArg, 10);
+        // BUGFIX: Validate parseInt result to prevent NaN
+        const indentValue = parseInt(nextArg, 10);
+        if (Number.isNaN(indentValue) || indentValue < 0) {
+          throw new Error(`Invalid indent value: ${nextArg}. Must be a positive integer.`);
+        }
+        options.indent = indentValue;
         i++;
         break;
       case "--smart":
@@ -155,8 +160,13 @@ function byteSize(text: string): number {
  * Display statistics
  */
 function displayStats(originalBytes: number, originalTokens: number, tonlBytes: number, tonlTokens: number, filename: string) {
-  const byteSavings = ((originalBytes - tonlBytes) / originalBytes * 100).toFixed(1);
-  const tokenSavings = ((originalTokens - tonlTokens) / originalTokens * 100).toFixed(1);
+  // BUGFIX: Handle division by zero case (empty files)
+  const byteSavings = originalBytes > 0
+    ? ((originalBytes - tonlBytes) / originalBytes * 100).toFixed(1)
+    : '0.0';
+  const tokenSavings = originalTokens > 0
+    ? ((originalTokens - tonlTokens) / originalTokens * 100).toFixed(1)
+    : '0.0';
 
   console.log(`\n📊 TONL Statistics for ${filename}`);
   console.log(`┌─────────────────┬─────────────┬─────────────┬────────────┐`);
