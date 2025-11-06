@@ -10,6 +10,13 @@ export type TONLArray = TONLValue[];
 export type TONLTypeHint = "u32" | "i32" | "f64" | "bool" | "null" | "str" | "obj" | "list";
 export type TONLDelimiter = "," | "|" | "\t" | ";";
 
+/**
+ * Sentinel value to represent missing/undefined fields in tabular format
+ * Distinguishes between explicit null (field exists with null value)
+ * and missing field (field doesn't exist in original data)
+ */
+export const MISSING_FIELD_MARKER = "-";
+
 export interface EncodeOptions {
   delimiter?: TONLDelimiter;
   includeTypes?: boolean;     // add :type hints to headers

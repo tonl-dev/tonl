@@ -136,6 +136,58 @@ export function getUniformColumns(arr: any[]): string[] {
 }
 
 /**
+ * Check if an array is semi-uniform (objects share a significant percentage of keys)
+ * This allows for optional fields while still using tabular format
+ */
+export function isSemiUniformObjectArray(arr: any[], threshold: number = 0.7): boolean {
+  if (arr.length === 0) return true;
+  if (!arr.every(item => typeof item === "object" && item !== null && !Array.isArray(item))) {
+    return false;
+  }
+
+  // Collect all unique keys across all objects
+  const allKeysSet = new Set<string>();
+  for (const item of arr) {
+    Object.keys(item).forEach(key => allKeysSet.add(key));
+  }
+  const allKeys = Array.from(allKeysSet);
+
+  // Calculate how many objects contain each key
+  const keyFrequency = new Map<string, number>();
+  for (const key of allKeys) {
+    let count = 0;
+    for (const item of arr) {
+      if (key in item) count++;
+    }
+    keyFrequency.set(key, count);
+  }
+
+  // Check if at least `threshold` percent of keys are present in most objects
+  const commonKeyCount = Array.from(keyFrequency.values()).filter(
+    freq => freq >= arr.length * threshold
+  ).length;
+
+  return commonKeyCount >= allKeys.length * threshold;
+}
+
+/**
+ * Get all columns (union of all keys) from an array of objects
+ * Returns keys in sorted order for stability
+ */
+export function getAllColumns(arr: any[]): string[] {
+  if (arr.length === 0) return [];
+
+  const allKeysSet = new Set<string>();
+  for (const item of arr) {
+    if (item && typeof item === "object" && !Array.isArray(item)) {
+      Object.keys(item).forEach(key => allKeysSet.add(key));
+    }
+  }
+
+  return Array.from(allKeysSet).sort();
+}
+
+/**
  * Try to infer type from string value (when no type hint provided)
  */
 export function inferTypeFromString(value: string): TONLTypeHint {

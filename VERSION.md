@@ -1,6 +1,6 @@
 # Version Management
 
-**Current Version: 1.0.5**
+**Current Version: 1.0.6**
 
 This file tracks all locations where the TONL version number is referenced throughout the project. When releasing a new version, update the version number in all files listed below.
 
@@ -14,20 +14,20 @@ Following [Semantic Versioning 2.0.0](https://semver.org/):
 ## Core Files (Must Update)
 
 ### 1. Package Configuration
-- `package.json` → `"version": "1.0.5"`
+- `package.json` → `"version": "1.0.6"`
 - `package-lock.json` → Auto-updated by npm
 - `vscode-extension/package.json` → VSCode extension has independent versioning (0.1.0)
 
 ### 2. Documentation
-- `README.md` → `**🎉 v1.0.5 - Stable, Secure & Production Ready**`
-- `README.md` → CDN links: `@1.0.5` in jsdelivr and unpkg URLs
+- `README.md` → `**🎉 v1.0.6 - Enhanced Token Optimization**`
+- `README.md` → CDN links: `@1.0.6` in jsdelivr and unpkg URLs
 - `CHANGELOG.md` → Add new version section at top
 
 ### 3. Website Files
 - `website/index.html` → Version badge, CDN links, footer version
-  - Hero section: `v1.0.5 - Fully Secure`
-  - Browser usage: `@1.0.5` in CDN URLs
-  - Footer: `v1.0.5`
+  - Hero section: `v1.0.6 - Enhanced Token Optimization`
+  - Browser usage: `@1.0.6` in CDN URLs
+  - Footer: `v1.0.6`
 - `website/examples-backup.html` → Example data may contain version references
 - `website/docs.html` → Documentation may reference version
 

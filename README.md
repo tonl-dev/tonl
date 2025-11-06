@@ -8,7 +8,7 @@
 
 **TONL** is a production-ready data platform that combines compact serialization with powerful query, modification, indexing, and streaming capabilities. Designed for LLM token efficiency while providing a rich API for data access and manipulation.
 
-**🎉 v1.0.5 - Stable, Secure & Production Ready**
+**🎉 v1.0.6 - Enhanced Token Optimization**
 
 [![npm version](https://badge.fury.io/js/tonl.svg)](https://www.npmjs.com/package/tonl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -308,7 +308,7 @@ logs[1000]{timestamp:i64,level:str,message:str,metadata:obj}:
 ### ESM (Modern Browsers)
 ```html
 <script type="module">
-  import { encodeTONL, decodeTONL } from 'https://cdn.jsdelivr.net/npm/tonl@1.0.5/+esm';
+  import { encodeTONL, decodeTONL } from 'https://cdn.jsdelivr.net/npm/tonl@1.0.6/+esm';
 
   const data = { users: [{ id: 1, name: "Alice" }] };
   const tonl = encodeTONL(data);
@@ -318,7 +318,7 @@ logs[1000]{timestamp:i64,level:str,message:str,metadata:obj}:
 
 ### UMD (Universal)
 ```html
-<script src="https://unpkg.com/tonl@1.0.5/dist/browser/tonl.umd.js"></script>
+<script src="https://unpkg.com/tonl@1.0.6/dist/browser/tonl.umd.js"></script>
 <script>
   const tonl = TONL.encodeTONL({ hello: "world" });
   console.log(tonl);

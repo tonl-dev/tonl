@@ -3,6 +3,7 @@
  */
 
 import type { TONLParseContext, TONLValue, TONLObject, TONLArray, TONLObjectHeader, TONLColumnDef } from '../types.js';
+import { MISSING_FIELD_MARKER } from '../types.js';
 import { parseObjectHeader, parseTONLLine } from '../parser.js';
 import { coerceValue } from '../infer.js';
 import { parsePrimitiveValue } from './line-parser.js';
@@ -295,6 +296,11 @@ export function parseArrayBlock(
       for (let j = 0; j < header.columns.length && j < values.length; j++) {
         const column = header.columns[j];
         const value = values[j];
+
+        // Skip missing field marker - don't add the field to the object
+        if (value === MISSING_FIELD_MARKER) {
+          continue;
+        }
 
         if (value.startsWith('[') || value.includes('{')) {
           rowObj[column.name] = parsePrimitiveValue(value, context);

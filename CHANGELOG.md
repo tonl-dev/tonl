@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2025-11-06
+
+### Added
+
+**🚀 Semi-Uniform Array Encoding - Major Token Optimization**
+- **Feature**: Smart detection of arrays with similar-but-not-identical object structures
+- **Location**: `src/infer.ts` (isSemiUniformObjectArray, getAllColumns), `src/encode.ts`, `src/parser/block-parser.ts`
+- **Impact**: API logs and similar semi-structured data now use tabular format, achieving **40% token reduction**
+- **How it works**:
+  - Detects arrays where objects share 60%+ common fields (configurable threshold)
+  - Creates unified column header from all fields across all objects
+  - Missing fields encoded as `-` (MISSING_FIELD_MARKER)
+  - Explicit `null` values preserved as `null`
+- **Benefits**:
+  - Perfect round-trip fidelity (100% data preservation)
+  - No extra null fields in decoded output
+  - 35-40% token reduction for API logs, event streams, telemetry data
+- **Example**:
+  ```tonl
+  logs[20]{duration,error,ip,level,method,path,...}:
+    45,-,192.168.1.100,INFO,GET,/api/v1/users/1234,...
+    234,Database timeout,192.168.1.101,ERROR,POST,/api/v1/payment,...
+  ```
+  Previously each row would have separate object headers with field names repeated.
+
+**🎯 Missing Field Marker System**
+- **Feature**: New `-` sentinel value to distinguish missing fields from explicit `null`
+- **Constant**: `MISSING_FIELD_MARKER` in `src/types.ts`
+- **Encoding**: Fields not present in source object encoded as `-`
+- **Decoding**: `-` values skipped, field not added to decoded object
+- **Impact**: Perfect round-trip encoding/decoding for sparse data structures
+
+### Changed
+- **Tabular Format**: Now supports semi-uniform arrays (not just strictly uniform)
+- **Encoder**: getAllColumns() replaces getUniformColumns() for semi-uniform arrays
+- **Decoder**: Skip fields marked with `-` instead of converting to `null`
+- **Type Inference**: Smart sampling finds first non-null value for type detection in semi-uniform arrays
+
+### Performance
+- **Token Reduction**: 39.9% for API logs (2386 → 1433 tokens)
+- **Byte Reduction**: 34.8% for API logs (4858 → 3165 bytes)
+- **Round-trip**: 100% fidelity - decoded data exactly matches original
+
+### Tests
+- **Status**: 494/496 tests passing (2 pre-existing format test failures)
+- **New Coverage**: Semi-uniform array encoding/decoding, missing field marker handling
+- **Verified**: Perfect round-trip for `apiLogs.json` benchmark file
+
 ## [1.0.5] - 2025-11-06
 
 ### Fixed

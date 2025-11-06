@@ -3,7 +3,8 @@
  */
 
 import type { TONLValue, TONLObject, TONLArray, TONLEncodeContext, TONLDelimiter } from "./types.js";
-import { inferPrimitiveType, isUniformObjectArray, getUniformColumns } from "./infer.js";
+import { MISSING_FIELD_MARKER } from "./types.js";
+import { inferPrimitiveType, isUniformObjectArray, getUniformColumns, isSemiUniformObjectArray, getAllColumns } from "./infer.js";
 import { quoteIfNeeded, tripleQuoteIfNeeded, makeIndent } from "./utils/strings.js";
 
 /**
@@ -180,11 +181,12 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
     return `${key}[0]:`;
   }
 
-  // Check if this is an array of objects and if it's uniform
-  const isUniform = isUniformObjectArray(arr);
+  // Check if this is an array of objects and if it's uniform or semi-uniform
+  const isStrictlyUniform = isUniformObjectArray(arr);
+  const isSemiUniform = !isStrictlyUniform && isSemiUniformObjectArray(arr, 0.6);
   const firstItem = arr[0];
 
-  if (isUniform && firstItem && typeof firstItem === "object" && !Array.isArray(firstItem)) {
+  if ((isStrictlyUniform || isSemiUniform) && firstItem && typeof firstItem === "object" && !Array.isArray(firstItem)) {
     // Check if all values are primitives (safe for tabular format)
     const hasOnlyPrimitives = arr.every(item =>
       item && Object.values(item).every(v =>
@@ -195,13 +197,23 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
 
     if (hasOnlyPrimitives) {
       // Safe to use tabular format
-      const columns = getUniformColumns(arr);
+      // For semi-uniform arrays, get ALL columns from all objects
+      const columns = isSemiUniform ? getAllColumns(arr) : getUniformColumns(arr);
       const columnDefs: string[] = [];
 
+      // For type inference with semi-uniform arrays, we need to check all items
       for (const col of columns) {
         let colDef = col;
         if (context.includeTypes) {
-          const sampleValue = firstItem[col];
+          // Find the first non-null, non-undefined value for this column
+          let sampleValue = null;
+          for (const item of arr) {
+            const obj = item as TONLObject;
+            if (obj && typeof obj === 'object' && !Array.isArray(obj) && col in obj && obj[col] !== null && obj[col] !== undefined) {
+              sampleValue = obj[col];
+              break;
+            }
+          }
           const type = inferPrimitiveType(sampleValue);
           if (type !== "obj" && type !== "list") {
             colDef += `:${type}`;
@@ -218,9 +230,12 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
         const rowValues: string[] = [];
         for (const col of columns) {
           const value = (item as TONLObject)[col];
-          if (value === null) {
-            rowValues.push("null");
-          } else if (value === undefined) {
+          // Distinguish between missing field (undefined/not in object) and explicit null
+          if (!(col in item) || value === undefined) {
+            // Missing field - use sentinel marker
+            rowValues.push(MISSING_FIELD_MARKER);
+          } else if (value === null) {
+            // Explicit null value
             rowValues.push("null");
           } else if (value === true || value === false) {
             // Don't quote booleans
@@ -233,7 +248,7 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
             rowValues.push(quoted);
           }
         }
-        lines.push(makeIndent(childContext.currentIndent, childContext.indent) + rowValues.join(` ${context.delimiter} `));
+        lines.push(makeIndent(childContext.currentIndent, childContext.indent) + rowValues.join(context.delimiter));
       }
 
       return lines.join("\n");
@@ -282,14 +297,14 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
       }
     });
 
-    if (context.singleLinePrimitiveLists && values.join(`${context.delimiter} `).length < 80) {
+    if (context.singleLinePrimitiveLists && values.join(context.delimiter).length < 80) {
       // Single line for short primitive arrays
-      return `${key}[${arr.length}]: ${values.join(`${context.delimiter} `)}`;
+      return `${key}[${arr.length}]: ${values.join(context.delimiter)}`;
     } else {
       // Multi-line for longer arrays
       const lines: string[] = [`${key}[${arr.length}]:`];
       const childContext = { ...context, currentIndent: context.currentIndent + 1 };
-      lines.push(makeIndent(childContext.currentIndent, childContext.indent) + values.join(` ${context.delimiter} `));
+      lines.push(makeIndent(childContext.currentIndent, childContext.indent) + values.join(context.delimiter));
       return lines.join("\n");
     }
   } else {
