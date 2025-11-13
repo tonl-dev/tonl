@@ -9,6 +9,7 @@ import { coerceValue } from '../infer.js';
 import { parsePrimitiveValue } from './line-parser.js';
 import { parseSingleLineObject } from './value-parser.js';
 import { extractNestedBlockLines } from './utils.js';
+import { TONLParseError } from '../errors/index.js';
 
 /**
  * Parse a block starting from a header
@@ -149,7 +150,16 @@ export function parseObjectBlock(
     const arrayMatch = trimmed.match(/^(.+)\[(\d+)\]:\s*(.+)$/);
     if (arrayMatch) {
       const key = arrayMatch[1].trim();
+      // BUGFIX BUG-F001: Validate parseInt result to prevent NaN
       const arrayLength = parseInt(arrayMatch[2], 10);
+      if (!Number.isSafeInteger(arrayLength) || arrayLength < 0) {
+        throw new TONLParseError(
+          `Invalid array length: ${arrayMatch[2]}`,
+          context.currentLine,
+          undefined,
+          line
+        );
+      }
       const valuePart = arrayMatch[3].trim();
 
       if (valuePart.includes('{') || valuePart.includes(':')) {

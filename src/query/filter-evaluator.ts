@@ -18,6 +18,25 @@ import { RegexExecutor } from './regex-executor.js';
 import { SecurityError } from '../errors/index.js';
 
 /**
+ * SECURITY: Dangerous property names that should never be accessed
+ * Prevents prototype pollution attacks
+ */
+const DANGEROUS_PROPERTIES = new Set([
+  '__proto__',
+  'constructor',
+  'prototype'
+]);
+
+/**
+ * Check if a property name is dangerous
+ * @param propertyName - The property name to check
+ * @returns True if the property is dangerous
+ */
+function isDangerousProperty(propertyName: string): boolean {
+  return DANGEROUS_PROPERTIES.has(propertyName);
+}
+
+/**
  * Evaluate a filter expression against a current value (context item)
  *
  * @param expression - The filter expression AST
@@ -301,9 +320,12 @@ function evaluateFilterValue(
 /**
  * Get a property value from the current item using dot-separated path
  *
+ * SECURITY: Validates property names to prevent prototype pollution
+ *
  * @param path - Dot-separated property path (e.g., "profile.age")
  * @param currentItem - The current object
  * @returns Property value or undefined
+ * @throws {SecurityError} If path contains dangerous properties
  */
 function getPropertyValue(path: string, currentItem: any): any {
   if (currentItem === null || currentItem === undefined) {
@@ -318,6 +340,14 @@ function getPropertyValue(path: string, currentItem: any): any {
   let current = currentItem;
 
   for (const part of parts) {
+    // BUGFIX BUG-S001: Validate property name to prevent prototype pollution
+    if (isDangerousProperty(part)) {
+      throw new SecurityError(
+        `Access to '${part}' is forbidden - potential prototype pollution`,
+        { path, property: part, reason: 'Dangerous property access blocked' }
+      );
+    }
+
     if (current === null || current === undefined) {
       return undefined;
     }
