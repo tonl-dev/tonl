@@ -1,0 +1,9 @@
+ID,FirstName,LastName,Email,Department,Position,Salary,HireDate,Active
+1,John,Smith,john.smith@company.com,IT,Software Engineer,85000,2022-01-15,true
+2,Jane,Johnson,jane.johnson@company.com,HR,HR Manager,95000,2021-06-01,true
+3,Michael,Davis,michael.davis@company.com,Sales,Sales Representative,65000,2023-03-20,true
+4,Emily,Chen,emily.chen@company.com,Finance,Financial Analyst,78000,2022-09-10,true
+5,David,Wilson,david.wilson@company.com,IT,DevOps Engineer,92000,2021-11-05,true
+6,Sarah,Brown,sarah.brown@company.com,Marketing,Marketing Specialist,62000,2023-01-12,false
+7,James,Miller,james.miller@company.com,IT,Frontend Developer,80000,2022-07-18,true
+8,Lisa,Garcia,lisa.garcia@company.com,Finance,Accountant,70000,2023-02-28,true

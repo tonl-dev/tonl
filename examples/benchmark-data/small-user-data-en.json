@@ -1,0 +1,20 @@
+{
+  "user": {
+    "id": 1,
+    "name": "John Smith",
+    "email": "john.smith@example.com",
+    "age": 28,
+    "premium": true,
+    "preferences": {
+      "language": "en",
+      "theme": "dark",
+      "notifications": true
+    }
+  },
+  "lastLogin": "2025-11-14T10:30:00Z",
+  "actions": ["login", "view_profile", "edit_settings"],
+  "stats": {
+    "loginCount": 156,
+    "sessionDuration": 45.2
+  }
+}

@@ -1,0 +1,480 @@
+{
+  "hospital": {
+    "id": "HOSP_001",
+    "name": "Metropolitan Medical Center",
+    "location": {
+      "address": "456 Health Avenue, Medical District, NY 10019",
+      "coordinates": {
+        "latitude": 40.7614,
+        "longitude": -73.9776
+      },
+      "phone": "+12125550100",
+      "email": "info@metromed.com"
+    },
+    "departments": [
+      {
+        "id": "DEPT_001",
+        "name": "Emergency Department",
+        "capacity": 25,
+        "currentPatients": 18,
+        "doctors": 12,
+        "nurses": 35
+      },
+      {
+        "id": "DEPT_002",
+        "name": "Cardiology",
+        "capacity": 40,
+        "currentPatients": 32,
+        "doctors": 18,
+        "nurses": 42
+      },
+      {
+        "id": "DEPT_003",
+        "name": "Neurology",
+        "capacity": 30,
+        "currentPatients": 24,
+        "doctors": 14,
+        "nurses": 38
+      },
+      {
+        "id": "DEPT_004",
+        "name": "Orthopedics",
+        "capacity": 35,
+        "currentPatients": 28,
+        "doctors": 16,
+        "nurses": 40
+      }
+    ],
+    "statistics": {
+      "totalBeds": 200,
+      "occupiedBeds": 156,
+      "totalDoctors": 89,
+      "totalNurses": 245,
+      "dailyPatients": {
+        "outpatient": 342,
+        "inpatient": 156,
+        "emergency": 67,
+        "surgery": 23
+      }
+    }
+  },
+  "patients": [
+    {
+      "id": "PAT_00001",
+      "ssn": "123-45-6789",
+      "firstName": "Sarah",
+      "lastName": "Williams",
+      "birthDate": "1985-06-15",
+      "gender": "Female",
+      "bloodType": "A+",
+      "contact": {
+        "phone": "+12125551111",
+        "email": "sarah.williams@email.com",
+        "address": "789 Park Avenue, Manhattan, NY 10021",
+        "emergencyContact": {
+          "name": "Robert Williams",
+          "relation": "Spouse",
+          "phone": "+12125551112"
+        }
+      },
+      "insurance": {
+        "company": "Blue Cross Blue Shield",
+        "policyNumber": "BC-2025-001234",
+        "coverage": ["supplemental", "hospitalization"],
+        "validUntil": "2025-12-31"
+      },
+      "medicalHistory": [
+        {
+          "date": "2024-03-15",
+          "diagnosis": "Hypertension",
+          "treatment": "Blood pressure medication therapy",
+          "doctor": "Dr. James Anderson"
+        },
+        {
+          "date": "2024-09-20",
+          "diagnosis": "Type 2 Diabetes",
+          "treatment": "Insulin therapy initiated",
+          "doctor": "Dr. Emily Chen"
+        }
+      ],
+      "allergies": ["Penicillin", "Peanuts"],
+      "currentMedications": [
+        {
+          "name": "Lisinopril 10mg",
+          "dosage": "1x1",
+          "startDate": "2024-03-15",
+          "prescribedBy": "Dr. James Anderson"
+        },
+        {
+          "name": "Metformin 1000mg",
+          "dosage": "1x2",
+          "startDate": "2024-09-20",
+          "prescribedBy": "Dr. Emily Chen"
+        }
+      ],
+      "visits": [
+        {
+          "id": "VISIT_001",
+          "date": "2025-11-10T09:00:00Z",
+          "department": "Cardiology",
+          "doctor": "Dr. James Anderson",
+          "complaint": "Chest pain and shortness of breath",
+          "vitalSigns": {
+            "bloodPressure": "160/95",
+            "heartRate": 92,
+            "temperature": 36.8,
+            "oxygenSaturation": 97,
+            "respiratoryRate": 18
+          },
+          "diagnosis": "Hypertensive crisis",
+          "treatment": "IV antihypertensive treatment",
+          "status": "discharged",
+          "notes": "Medication dosage adjusted, follow-up scheduled"
+        }
+      ],
+      "labResults": [
+        {
+          "date": "2025-11-10T09:30:00Z",
+          "tests": [
+            {
+              "name": "Total Cholesterol",
+              "value": 245,
+              "unit": "mg/dL",
+              "referenceRange": "0-200",
+              "status": "High"
+            },
+            {
+              "name": "HDL Cholesterol",
+              "value": 35,
+              "unit": "mg/dL",
+              "referenceRange": "40-60",
+              "status": "Low"
+            },
+            {
+              "name": "LDL Cholesterol",
+              "value": 165,
+              "unit": "mg/dL",
+              "referenceRange": "0-130",
+              "status": "High"
+            },
+            {
+              "name": "Fasting Blood Sugar",
+              "value": 145,
+              "unit": "mg/dL",
+              "referenceRange": "70-100",
+              "status": "High"
+            },
+            {
+              "name": "HbA1c",
+              "value": 7.8,
+              "unit": "%",
+              "referenceRange": "4.0-5.6",
+              "status": "High"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAT_00002",
+      "ssn": "987-65-4321",
+      "firstName": "Michael",
+      "lastName": "Davis",
+      "birthDate": "1972-09-22",
+      "gender": "Male",
+      "bloodType": "O+",
+      "contact": {
+        "phone": "+12125552222",
+        "email": "michael.davis@email.com",
+        "address": "321 Broadway, New York, NY 10007",
+        "emergencyContact": {
+          "name": "Jennifer Davis",
+          "relation": "Daughter",
+          "phone": "+12125552223"
+        }
+      },
+      "insurance": {
+        "company": "Aetna",
+        "policyNumber": "AT-2025-005678",
+        "coverage": ["comprehensive", "inpatient"],
+        "validUntil": "2026-03-31"
+      },
+      "medicalHistory": [
+        {
+          "date": "2023-12-10",
+          "diagnosis": "Heart Attack (Myocardial Infarction)",
+          "treatment": "Stent placement",
+          "doctor": "Dr. Robert Miller"
+        }
+      ],
+      "allergies": [],
+      "currentMedications": [
+        {
+          "name": "Aspirin 81mg",
+          "dosage": "1x1",
+          "startDate": "2023-12-10",
+          "prescribedBy": "Dr. Robert Miller"
+        },
+        {
+          "name": "Atorvastatin 40mg",
+          "dosage": "1x1",
+          "startDate": "2023-12-10",
+          "prescribedBy": "Dr. Robert Miller"
+        },
+        {
+          "name": "Metoprolol 50mg",
+          "dosage": "1x1",
+          "startDate": "2023-12-15",
+          "prescribedBy": "Dr. Robert Miller"
+        }
+      ],
+      "visits": [
+        {
+          "id": "VISIT_002",
+          "date": "2025-11-12T14:30:00Z",
+          "department": "Cardiology",
+          "doctor": "Dr. Robert Miller",
+          "complaint": "Regular checkup",
+          "vitalSigns": {
+            "bloodPressure": "125/80",
+            "heartRate": 68,
+            "temperature": 36.5,
+            "oxygenSaturation": 98,
+            "respiratoryRate": 16
+          },
+          "diagnosis": "Coronary artery disease - stable phase",
+          "treatment": "Continue current therapy",
+          "status": "follow-up scheduled",
+          "notes": "Echocardiogram in 6 months"
+        }
+      ],
+      "labResults": [
+        {
+          "date": "2025-11-12T15:00:00Z",
+          "tests": [
+            {
+              "name": "Troponin T",
+              "value": 0.015,
+              "unit": "ng/mL",
+              "referenceRange": "0-0.014",
+              "status": "Slightly High"
+            },
+            {
+              "name": "CK-MB",
+              "value": 12,
+              "unit": "U/L",
+              "referenceRange": "0-25",
+              "status": "Normal"
+            },
+            {
+              "name": "Total Cholesterol",
+              "value": 165,
+              "unit": "mg/dL",
+              "referenceRange": "0-200",
+              "status": "Normal"
+            },
+            {
+              "name": "LDL Cholesterol",
+              "value": 89,
+              "unit": "mg/dL",
+              "referenceRange": "0-130",
+              "status": "Normal"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "staff": [
+    {
+      "id": "DOC_001",
+      "type": "doctor",
+      "firstName": "James",
+      "lastName": "Anderson",
+      "title": "Dr.",
+      "specialization": "Cardiology",
+      "department": "DEPT_002",
+      "experience": 15,
+      "licenseNumber": "NY-12345",
+      "contact": {
+        "phone": "+12125553333",
+        "email": "james.anderson@metromed.com"
+      },
+      "schedule": [
+        {
+          "day": "Monday",
+          "hours": "09:00-17:00",
+          "available": true
+        },
+        {
+          "day": "Tuesday",
+          "hours": "09:00-17:00",
+          "available": true
+        },
+        {
+          "day": "Wednesday",
+          "hours": "09:00-12:00",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "NUR_001",
+      "type": "nurse",
+      "firstName": "Emily",
+      "lastName": "Chen",
+      "title": "RN",
+      "department": "DEPT_002",
+      "experience": 8,
+      "licenseNumber": "NY-67890",
+      "contact": {
+        "phone": "+12125554444",
+        "email": "emily.chen@metromed.com"
+      },
+      "shifts": [
+        {
+          "date": "2025-11-14",
+          "shift": "Day 08:00-16:00",
+          "department": "Cardiology Unit"
+        },
+        {
+          "date": "2025-11-15",
+          "shift": "Night 20:00-08:00",
+          "department": "Emergency Department"
+        }
+      ]
+    }
+  ],
+  "appointments": [
+    {
+      "id": "APPT_001",
+      "patientId": "PAT_00001",
+      "doctorId": "DOC_001",
+      "departmentId": "DEPT_002",
+      "date": "2025-11-18T10:30:00Z",
+      "duration": 30,
+      "type": "Follow-up",
+      "status": "scheduled",
+      "notes": "Blood test results to be reviewed"
+    },
+    {
+      "id": "APPT_002",
+      "patientId": "PAT_00002",
+      "doctorId": "DOC_001",
+      "departmentId": "DEPT_002",
+      "date": "2025-11-25T14:00:00Z",
+      "duration": 45,
+      "type": "Echocardiogram",
+      "status": "scheduled",
+      "notes": "6-month follow-up echocardiogram"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "INV_001",
+      "category": "Medication",
+      "name": "Lisinopril 10mg Tablet",
+      "brand": "Zestril",
+      "stock": 1250,
+      "unit": "bottles",
+      "expiryDate": "2026-12-31",
+      "supplier": "McKesson",
+      "price": {
+        "purchase": 15.50,
+        "sell": 25.25,
+        "currency": "USD"
+      },
+      "storage": {
+        "location": "Pharmacy A",
+        "temperature": "Room temperature",
+        "humidity": "<60%"
+      }
+    },
+    {
+      "id": "INV_002",
+      "category": "Medical Equipment",
+      "name": "Blood Pressure Monitor",
+      "brand": "Omron",
+      "model": "M3 Comfort",
+      "stock": 45,
+      "unit": "units",
+      "expiryDate": null,
+      "supplier": "Medline",
+      "price": {
+        "purchase": 85.00,
+        "sell": 125.00,
+        "currency": "USD"
+      },
+      "storage": {
+        "location": "Medical Supply Room",
+        "temperature": "Room temperature",
+        "humidity": "Normal"
+      }
+    },
+    {
+      "id": "INV_003",
+      "category": "Supplies",
+      "name": "Sterile Gloves",
+      "brand": "Ansell",
+      "size": "L",
+      "stock": 15000,
+      "unit": "pairs",
+      "expiryDate": "2028-06-30",
+      "supplier": "Cardinal Health",
+      "price": {
+        "purchase": 0.85,
+        "sell": 1.25,
+        "currency": "USD"
+      },
+      "storage": {
+        "location": "Supply Closet",
+        "temperature": "Room temperature",
+        "humidity": "<50%"
+      }
+    }
+  ],
+  "billing": {
+    "invoices": [
+      {
+        "id": "INV_2025_001",
+        "patientId": "PAT_00001",
+        "date": "2025-11-10T16:00:00Z",
+        "services": [
+          {
+            "name": "Cardiology Consultation",
+            "code": "C001",
+            "quantity": 1,
+            "unitPrice": 250.00,
+            "total": 250.00,
+            "covered": 200.00,
+            "patientPayment": 50.00
+          },
+          {
+            "name": "ECG",
+            "code": "E001",
+            "quantity": 1,
+            "unitPrice": 75.00,
+            "total": 75.00,
+            "covered": 60.00,
+            "patientPayment": 15.00
+          },
+          {
+            "name": "Blood Test Panel",
+            "code": "L001",
+            "quantity": 1,
+            "unitPrice": 125.00,
+            "total": 125.00,
+            "covered": 100.00,
+            "patientPayment": 25.00
+          }
+        ],
+        "totalAmount": 450.00,
+        "insuranceCoverage": 360.00,
+        "patientResponsibility": 90.00,
+        "status": "Paid",
+        "paymentDate": "2025-11-10T18:30:00Z",
+        "paymentMethod": "Credit Card"
+      }
+    ]
+  }
+}

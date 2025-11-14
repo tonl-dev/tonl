@@ -1,0 +1,195 @@
+# Project Management System
+projects:
+  - id: "PRJ-001"
+    name: "Web Site Redesign"
+    status: "in_progress"
+    priority: "high"
+    budget: 150000
+    currency: "TRY"
+    start_date: "2025-09-01"
+    target_date: "2025-12-31"
+
+    team:
+      - id: "TM-001"
+        name: "Ahmet Yılmaz"
+        role: "Project Manager"
+        email: "ahmet@company.com"
+        hourly_rate: 250
+      - id: "TM-002"
+        name: "Ayşe Demir"
+        role: "Frontend Developer"
+        email: "ayse@company.com"
+        hourly_rate: 180
+      - id: "TM-003"
+        name: "Mehmet Kaya"
+        role: "Backend Developer"
+        email: "mehmet@company.com"
+        hourly_rate: 200
+
+    tasks:
+      - id: "TSK-001"
+        title: "Requirements Analysis"
+        status: "completed"
+        assignee: "TM-001"
+        estimated_hours: 40
+        actual_hours: 35
+        start_date: "2025-09-01"
+        end_date: "2025-09-15"
+
+      - id: "TSK-002"
+        title: "UI/UX Design"
+        status: "completed"
+        assignee: "TM-002"
+        estimated_hours: 80
+        actual_hours: 90
+        start_date: "2025-09-10"
+        end_date: "2025-10-15"
+        dependencies: ["TSK-001"]
+
+      - id: "TSK-003"
+        title: "Frontend Development"
+        status: "in_progress"
+        assignee: "TM-002"
+        estimated_hours: 120
+        actual_hours: 85
+        start_date: "2025-10-16"
+        dependencies: ["TSK-002"]
+
+      - id: "TSK-004"
+        title: "Backend API Development"
+        status: "in_progress"
+        assignee: "TM-003"
+        estimated_hours: 100
+        actual_hours: 60
+        start_date: "2025-10-16"
+        dependencies: ["TSK-001"]
+
+      - id: "TSK-005"
+        title: "Testing & QA"
+        status: "pending"
+        assignee: "TM-001"
+        estimated_hours: 60
+        actual_hours: 0
+        dependencies: ["TSK-003", "TSK-004"]
+
+      - id: "TSK-006"
+        title: "Deployment"
+        status: "pending"
+        assignee: "TM-003"
+        estimated_hours: 20
+        actual_hours: 0
+        dependencies: ["TSK-005"]
+
+    milestones:
+      - id: "MIL-001"
+        name: "Design Phase Complete"
+        date: "2025-10-15"
+        status: "completed"
+        tasks: ["TSK-002"]
+
+      - id: "MIL-002"
+        name: "Development Phase Complete"
+        date: "2025-12-15"
+        status: "pending"
+        tasks: ["TSK-003", "TSK-004"]
+
+      - id: "MIL-003"
+        name: "Project Launch"
+        date: "2025-12-31"
+        status: "pending"
+        tasks: ["TSK-006"]
+
+  - id: "PRJ-002"
+    name: "Mobile App Development"
+    status: "planning"
+    priority: "medium"
+    budget: 250000
+    currency: "TRY"
+    start_date: "2025-11-15"
+    target_date: "2026-03-31"
+
+    team:
+      - id: "TM-004"
+        name: "Zeynep Öztürk"
+        role: "Mobile Developer"
+        email: "zeynep@company.com"
+        hourly_rate: 220
+      - id: "TM-005"
+        name: "Can Polat"
+        role: "Backend Developer"
+        email: "can@company.com"
+        hourly_rate: 200
+      - id: "TM-006"
+        name: "Elif Çelik"
+        role: "UI/UX Designer"
+        email: "elif@company.com"
+        hourly_rate: 190
+
+    tasks:
+      - id: "TSK-007"
+        title: "Mobile App Planning"
+        status: "not_started"
+        assignee: "TM-004"
+        estimated_hours: 30
+        actual_hours: 0
+
+      - id: "TSK-008"
+        title: "Mobile UI Design"
+        status: "not_started"
+        assignee: "TM-006"
+        estimated_hours: 60
+        actual_hours: 0
+
+clients:
+  - id: "CLT-001"
+    name: "ABC Corporation"
+    contact_person: "John Smith"
+    email: "john.smith@abc.com"
+    phone: "+1-555-0123"
+    address: "123 Business St, New York, NY 10001"
+    projects: ["PRJ-001"]
+
+  - id: "CLT-002"
+    name: "XYZ Limited"
+    contact_person: "Sarah Johnson"
+    email: "sarah@xyz.com"
+    phone: "+44-20-1234-5678"
+    address: "456 Tech Lane, London, UK EC1A 1BB"
+    projects: ["PRJ-002"]
+
+billing:
+  hourly_rates:
+    project_manager: 250
+    senior_developer: 220
+    developer: 200
+    junior_developer: 150
+    designer: 190
+    qa_tester: 160
+
+  expenses:
+    - id: "EXP-001"
+      project_id: "PRJ-001"
+      description: "Software Licenses"
+      amount: 5000
+      currency: "TRY"
+      date: "2025-09-20"
+      category: "software"
+
+    - id: "EXP-002"
+      project_id: "PRJ-001"
+      description: "Cloud Hosting"
+      amount: 2000
+      currency: "TRY"
+      date: "2025-10-01"
+      category: "infrastructure"
+
+reports:
+  monthly_summary:
+    month: "2025-11"
+    total_projects: 2
+    active_projects: 1
+    completed_tasks: 8
+    total_hours_worked: 285
+    total_expenses: 7000
+    revenue_this_month: 71250
+    profit_margin: 0.85

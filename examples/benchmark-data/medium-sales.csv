@@ -1,0 +1,16 @@
+OrderID,OrderDate,CustomerID,CustomerName,ProductID,ProductName,Category,Quantity,UnitPrice,TotalPrice,Discount,FinalPrice,SalesRep,Region,PaymentMethod,Status
+ORD-001,2025-11-01,CUST-001,Metal A.Ş.,PROD-001,Dizüstü Bilgisayar,Electronics,2,15500.00,31000.00,1550.00,29450.00,Ahmet Yılmaz,Marmara,Credit Card,Delivered
+ORD-002,2025-11-02,CUST-002,Teknik Ltd.,PROD-002,Ofis Sandalyesi,Furniture,5,2500.00,12500.00,625.00,11875.00,Ayşe Demir,Ege,Credit Card,Processing
+ORD-003,2025-11-03,CUST-001,Metal A.Ş.,PROD-003,Yazıcı,Electronics,1,4500.00,4500.00,0.00,4500.00,Ahmet Yılmaz,Marmara,Bank Transfer,Delivered
+ORD-004,2025-11-04,CUST-003,Yazılım Inc.,PROD-004,Monitör,Electronics,4,2800.00,11200.00,560.00,10640.00,Mehmet Kaya,Marmara,Credit Card,Delivered
+ORD-005,2025-11-05,CUST-004,Üretim San.,PROD-005,İş Masası,Furniture,3,3200.00,9600.00,480.00,9120.00,Fatma Öztürk,İç Anadolu,Cash,Delivered
+ORD-006,2025-11-06,CUST-005,Lojistik Tic.,PROD-006,Klavye,Electronics,10,450.00,4500.00,225.00,4275.00,Ayşe Demir,Marmara,Bank Transfer,Processing
+ORD-007,2025-11-07,CUST-002,Teknik Ltd.,PROD-001,Dizüstü Bilgisayar,Electronics,1,15500.00,15500.00,775.00,14725.00,Mehmet Kaya,Ege,Credit Card,Shipped
+ORD-008,2025-11-08,CUST-006,Eğitim Merk.,PROD-007,Projektör,Electronics,2,8900.00,17800.00,890.00,16910.00,Ahmet Yılmaz,Akdeniz,Credit Card,Delivered
+ORD-009,2025-11-09,CUST-003,Yazılım Inc.,PROD-008,Fare,Electronics,8,320.00,2560.00,128.00,2432.00,Mehmet Kaya,Marmara,Cash,Delivered
+ORD-010,2025-11-10,CUST-007,Medikal Grup,PROD-009,Tıbbi Cihaz,Medical,1,45000.00,45000.00,2250.00,42750.00,Fatma Öztürk,Marmara,Bank Transfer,Processing
+ORD-011,2025-11-11,CUST-001,Metal A.Ş.,PROD-010,Endüstriyel Robot,Industrial,1,125000.00,125000.00,6250.00,118750.00,Ahmet Yılmaz,Marmara,Credit Card,Negotiating
+ORD-012,2025-11-12,CUST-004,Üretim San.,PROD-011,Depo Rafı,Industrial,15,1200.00,18000.00,900.00,17100.00,Ayşe Demir,İç Anadolu,Bank Transfer,Delivered
+ORD-013,2025-11-13,CUST-008,Gıda A.Ş.,PROD-012,Paketleme Makinesi,Industrial,2,28000.00,56000.00,2800.00,53200.00,Mehmet Kaya,Marmara,Credit Card,Shipped
+ORD-014,2025-11-14,CUST-009,Otomotiv Ltd.,PROD-013,Araba Tamir Ekipmanı,Industrial,1,35000.00,35000.00,1750.00,33250.00,Fatma Öztürk,İç Anadolu,Bank Transfer,Processing
+ORD-015,2025-11-14,CUST-005,Lojistik Tic.,PROD-014,Forklift,Industrial,1,98000.00,98000.00,4900.00,93100.00,Ahmet Yılmaz,Marmara,Credit Card,Negotiating

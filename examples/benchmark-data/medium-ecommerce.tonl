@@ -1,0 +1,115 @@
+#version 1.0
+root{analytics,catalog,customers,products}:
+  analytics{dailyStats,searchTerms,topProducts}:
+    dailyStats{averageOrderValue,conversions,date,pageViews,revenue,uniqueVisitors}: averageOrderValue: 8123.93 conversions: 234 date: 2025-11-14 pageViews: 15420 revenue: 1899999.95 uniqueVisitors: 8932
+    searchTerms[3]{count,term}:
+      1243,iphone 15
+      987,macbook
+      756,samsung
+    topProducts[3]{productId,sales,views}:
+      prod_001,89,3421
+      prod_002,67,2897
+      prod_003,45,2134
+  catalog{categories,id,lastUpdated,name,version}:
+    categories[2]:
+      [0]{id,name,productCount,slug,subcategories}:
+        id: cat_001
+        name: Telefonlar
+        productCount: 156
+        slug: telefonlar
+        subcategories[2]{id,name,productCount}:
+          sub_001,Akıllı Telefonlar,89
+          sub_002,Klasik Telefonlar,67
+      [1]{id,name,productCount,slug,subcategories}:
+        id: cat_002
+        name: Bilgisayarlar
+        productCount: 203
+        slug: bilgisayarlar
+        subcategories[2]{id,name,productCount}:
+          sub_003,Dizüstü Bilgisayarlar,124
+          sub_004,Masaüstü Bilgisayarlar,79
+    id: catalog_001
+    lastUpdated: "2025-11-14T09:15:00Z"
+    name: Electronics Store
+    version: "2.1"
+  customers[1]:
+    [0]{address,email,firstName,id,lastName,loyaltyPoints,memberSince,orders,phone}:
+      address{city,country,district,street,zipCode}: city: İstanbul country: Turkey district: Kadıköy street: "Atatürk Cad. No:123" zipCode: "34710"
+      email: mehmet.kaya@example.com
+      firstName: Mehmet
+      id: cust_001
+      lastName: Kaya
+      loyaltyPoints: 1250
+      memberSince: "2023-03-15T00:00:00Z"
+      orders[1]:
+        [0]{date,id,items,status,total}:
+          date: "2025-10-28T14:30:00Z"
+          id: order_001
+          items[1]{price,productId,quantity}:
+            44999.99,prod_001,1
+          status: delivered
+          total: 44999.99
+      phone: +905321234567
+  products[3]:
+    [0]{availability,brand,categoryId,createdAt,features,id,images,name,price,rating,seo,sku,specifications,stock,updatedAt}:
+      availability: true
+      brand: Apple
+      categoryId: sub_001
+      createdAt: "2025-09-15T10:00:00Z"
+      features[5]: 5G Destekli,Su Geçirmez (IP68),Kablosuz Şarj,Face ID,ProMotion Ekran
+      id: prod_001
+      images[2]{alt,isPrimary,url}:
+        iPhone 15 Pro Ön,true,"https://example.com/images/iphone15pro-front.jpg"
+        iPhone 15 Pro Arka,false,"https://example.com/images/iphone15pro-back.jpg"
+      name: iPhone 15 Pro
+      price{currency,discount,regular}: currency: TRY discount: 44999.99 regular: 49999.99
+      rating{average,count,distribution}:
+        average: 4.8
+        count: 234
+        distribution{1,2,3,4,5}: 1: 1 2: 4 3: 9 4: 31 5: 189
+      seo{description,keywords,title}:
+        description: Apple iPhone 15 Pro 128GB siyah renk seçeneği ile taksitli ödeme imkanı.
+        keywords[4]: iphone,apple,akıllı telefon,5g
+        title: iPhone 15 Pro 128GB Siyah - En Uygun Fiyat
+      sku: APL-IP15P-128-BLK
+      specifications{battery,camera,processor,ram,screen,storage}: battery: 3274mAh camera: 48MP processor: A17 Pro ram: 8GB screen: 6.1 inch storage: 128GB
+      stock{available,reserved,warehouse}: available: 45 reserved: 8 warehouse: Ankara Merkez
+      updatedAt: "2025-11-10T15:30:00Z"
+    [1]{availability,brand,categoryId,createdAt,features,id,images,name,price,rating,sku,specifications,stock,updatedAt}:
+      availability: true
+      brand: Samsung
+      categoryId: sub_001
+      createdAt: "2025-09-20T14:00:00Z"
+      features[5]: S-Pen Included,5G Destekli,45W Hızlı Şarj,Kurban Koruyucu,DeX Support
+      id: prod_002
+      images[1]{alt,isPrimary,url}:
+        Galaxy S24 Ultra Titanium,true,"https://example.com/images/gs24u-titanium.jpg"
+      name: Samsung Galaxy S24 Ultra
+      price{currency,discount,regular}: currency: TRY discount: 52999.99 regular: 57999.99
+      rating{average,count,distribution}:
+        average: 4.7
+        count: 189
+        distribution{1,2,3,4,5}: 1: 1 2: 3 3: 8 4: 32 5: 145
+      sku: SAM-GS24U-256-TIT
+      specifications{battery,camera,processor,ram,screen,storage}: battery: 5000mAh camera: 200MP processor: Snapdragon 8 Gen 3 ram: 12GB screen: 6.8 inch storage: 256GB
+      stock{available,reserved,warehouse}: available: 23 reserved: 5 warehouse: İstanbul Merkez
+      updatedAt: "2025-11-12T11:15:00Z"
+    [2]{availability,brand,categoryId,createdAt,features,id,images,name,price,rating,sku,specifications,stock,updatedAt}:
+      availability: true
+      brand: Apple
+      categoryId: sub_003
+      createdAt: "2025-08-10T09:00:00Z"
+      features[5]: 18 Saat Pil Ömrü,Liquid Retina Display,MagSafe 3,Thunderbolt 4,Silikon Keyboard
+      id: prod_003
+      images[1]{alt,isPrimary,url}:
+        MacBook Air M3 Gümüş,true,"https://example.com/images/macbook-air-m3.jpg"
+      name: MacBook Air M3
+      price{currency,discount,regular}: currency: TRY discount: 39999.99 regular: 42999.99
+      rating{average,count,distribution}:
+        average: 4.9
+        count: 567
+        distribution{1,2,3,4,5}: 1: 0 2: 2 3: 11 4: 65 5: 489
+      sku: APL-MBA-M3-512-SLV
+      specifications{graphics,processor,ram,screen,storage,weight}: graphics: 8-core GPU processor: Apple M3 ram: 8GB screen: 13.6 inch storage: 512GB SSD weight: 1.24kg
+      stock{available,reserved,warehouse}: available: 12 reserved: 3 warehouse: İzmir Şube
+      updatedAt: "2025-11-13T16:45:00Z"

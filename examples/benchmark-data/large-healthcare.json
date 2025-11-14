@@ -1,0 +1,480 @@
+{
+  "hospital": {
+    "id": "HOSP_001",
+    "name": "İstanbul Memorial Hastanesi",
+    "location": {
+      "address": "Şişli, Halaskargazi Cd. No:7, 34371 İstanbul",
+      "coordinates": {
+        "latitude": 41.0536,
+        "longitude": 28.9893
+      },
+      "phone": "+902123144000",
+      "email": "info@memorial.com.tr"
+    },
+    "departments": [
+      {
+        "id": "DEPT_001",
+        "name": "Acil Servis",
+        "capacity": 25,
+        "currentPatients": 18,
+        "doctors": 12,
+        "nurses": 35
+      },
+      {
+        "id": "DEPT_002",
+        "name": "Kardiyoloji",
+        "capacity": 40,
+        "currentPatients": 32,
+        "doctors": 18,
+        "nurses": 42
+      },
+      {
+        "id": "DEPT_003",
+        "name": "Nöroloji",
+        "capacity": 30,
+        "currentPatients": 24,
+        "doctors": 14,
+        "nurses": 38
+      },
+      {
+        "id": "DEPT_004",
+        "name": "Ortopedi",
+        "capacity": 35,
+        "currentPatients": 28,
+        "doctors": 16,
+        "nurses": 40
+      }
+    ],
+    "statistics": {
+      "totalBeds": 200,
+      "occupiedBeds": 156,
+      "totalDoctors": 89,
+      "totalNurses": 245,
+      "dailyPatients": {
+        "outpatient": 342,
+        "inpatient": 156,
+        "emergency": 67,
+        "surgery": 23
+      }
+    }
+  },
+  "patients": [
+    {
+      "id": "PAT_00001",
+      "tcNo": "12345678901",
+      "firstName": "Ayşe",
+      "lastName": "Demir",
+      "birthDate": "1985-06-15",
+      "gender": "Kadın",
+      "bloodType": "A+",
+      "contact": {
+        "phone": "+905321111111",
+        "email": "ayse.demir@example.com",
+        "address": "Levent, İstanbul",
+        "emergencyContact": {
+          "name": "Mehmet Demir",
+          "relation": "Eş",
+          "phone": "+905322222222"
+        }
+      },
+      "insurance": {
+        "company": "Anadolu Sigorta",
+        "policyNumber": "AS-2025-001234",
+        "coverage": ["tamamlayıcı", "yatak"],
+        "validUntil": "2025-12-31"
+      },
+      "medicalHistory": [
+        {
+          "date": "2024-03-15",
+          "diagnosis": "Hipertansiyon",
+          "treatment": "Tansiyon ilacı tedavisi",
+          "doctor": "Dr. Ahmet Yılmaz"
+        },
+        {
+          "date": "2024-09-20",
+          "diagnosis": "Tip 2 Diyabet",
+          "treatment": "Insülin tedavisi başlandı",
+          "doctor": "Dr. Fatma Öztürk"
+        }
+      ],
+      "allergies": ["Penisilin", "Fındık"],
+      "currentMedications": [
+        {
+          "name": "Losartan 50mg",
+          "dosage": "1x1",
+          "startDate": "2024-03-15",
+          "prescribedBy": "Dr. Ahmet Yılmaz"
+        },
+        {
+          "name": "Metformin 1000mg",
+          "dosage": "1x2",
+          "startDate": "2024-09-20",
+          "prescribedBy": "Dr. Fatma Öztürk"
+        }
+      ],
+      "visits": [
+        {
+          "id": "VISIT_001",
+          "date": "2025-11-10T09:00:00Z",
+          "department": "Kardiyoloji",
+          "doctor": "Dr. Ahmet Yılmaz",
+          "complaint": "Göğüs ağrısı ve nefes darlığı",
+          "vitalSigns": {
+            "bloodPressure": "160/95",
+            "heartRate": 92,
+            "temperature": 36.8,
+            "oxygenSaturation": 97,
+            "respiratoryRate": 18
+          },
+          "diagnosis": "Hipertansif kriz",
+          "treatment": "IV antihipertansif tedavi",
+          "status": "taburcu edildi",
+          "notes": "İlaç dozu ayarlandı, kontrole çağrıldı"
+        }
+      ],
+      "labResults": [
+        {
+          "date": "2025-11-10T09:30:00Z",
+          "tests": [
+            {
+              "name": "Kolesterol Total",
+              "value": 245,
+              "unit": "mg/dL",
+              "referenceRange": "0-200",
+              "status": "Yüksek"
+            },
+            {
+              "name": "HDL Kolesterol",
+              "value": 35,
+              "unit": "mg/dL",
+              "referenceRange": "40-60",
+              "status": "Düşük"
+            },
+            {
+              "name": "LDL Kolesterol",
+              "value": 165,
+              "unit": "mg/dL",
+              "referenceRange": "0-130",
+              "status": "Yüksek"
+            },
+            {
+              "name": "Açlık Kan Şekeri",
+              "value": 145,
+              "unit": "mg/dL",
+              "referenceRange": "70-100",
+              "status": "Yüksek"
+            },
+            {
+              "name": "HbA1c",
+              "value": 7.8,
+              "unit": "%",
+              "referenceRange": "4.0-5.6",
+              "status": "Yüksek"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PAT_00002",
+      "tcNo": "98765432109",
+      "firstName": "Mustafa",
+      "lastName": "Çelik",
+      "birthDate": "1972-09-22",
+      "gender": "Erkek",
+      "bloodType": "O+",
+      "contact": {
+        "phone": "+905533333333",
+        "email": "mustafa.celik@example.com",
+        "address": "Kadıköy, İstanbul",
+        "emergencyContact": {
+          "name": "Zeynep Çelik",
+          "relation": "Kız",
+          "phone": "+905534444444"
+        }
+      },
+      "insurance": {
+        "company": "Allianz Türkiye",
+        "policyNumber": "AT-2025-005678",
+        "coverage": ["tam", "yatarak"],
+        "validUntil": "2026-03-31"
+      },
+      "medicalHistory": [
+        {
+          "date": "2023-12-10",
+          "diagnosis": "Kalp krizi (Myokard infarktüs)",
+          "treatment": "Stent uygulaması",
+          "doctor": "Prof. Dr. Ali Kaya"
+        }
+      ],
+      "allergies": [],
+      "currentMedications": [
+        {
+          "name": "Aspirin 100mg",
+          "dosage": "1x1",
+          "startDate": "2023-12-10",
+          "prescribedBy": "Prof. Dr. Ali Kaya"
+        },
+        {
+          "name": "Atorvastatin 40mg",
+          "dosage": "1x1",
+          "startDate": "2023-12-10",
+          "prescribedBy": "Prof. Dr. Ali Kaya"
+        },
+        {
+          "name": "Bisoprolol 5mg",
+          "dosage": "1x1",
+          "startDate": "2023-12-15",
+          "prescribedBy": "Prof. Dr. Ali Kaya"
+        }
+      ],
+      "visits": [
+        {
+          "id": "VISIT_002",
+          "date": "2025-11-12T14:30:00Z",
+          "department": "Kardiyoloji",
+          "doctor": "Prof. Dr. Ali Kaya",
+          "complaint": "Düzenli kontrol",
+          "vitalSigns": {
+            "bloodPressure": "125/80",
+            "heartRate": 68,
+            "temperature": 36.5,
+            "oxygenSaturation": 98,
+            "respiratoryRate": 16
+          },
+          "diagnosis": "Koroner arter hastalığı - stabil dönem",
+          "treatment": "Mevcut tedavi devam",
+          "status": "kontrole çağrıldı",
+          "notes": "6 ay sonra ekokardiyografi"
+        }
+      ],
+      "labResults": [
+        {
+          "date": "2025-11-12T15:00:00Z",
+          "tests": [
+            {
+              "name": "Troponin T",
+              "value": 0.015,
+              "unit": "ng/mL",
+              "referenceRange": "0-0.014",
+              "status": "Normal Üstü"
+            },
+            {
+              "name": "CK-MB",
+              "value": 12,
+              "unit": "U/L",
+              "referenceRange": "0-25",
+              "status": "Normal"
+            },
+            {
+              "name": "Kolesterol Total",
+              "value": 165,
+              "unit": "mg/dL",
+              "referenceRange": "0-200",
+              "status": "Normal"
+            },
+            {
+              "name": "LDL Kolesterol",
+              "value": 89,
+              "unit": "mg/dL",
+              "referenceRange": "0-130",
+              "status": "Normal"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "staff": [
+    {
+      "id": "DOC_001",
+      "type": "doctor",
+      "firstName": "Ahmet",
+      "lastName": "Yılmaz",
+      "title": "Dr.",
+      "specialization": "Kardiyoloji",
+      "department": "DEPT_002",
+      "experience": 15,
+      "licenseNumber": "12345",
+      "contact": {
+        "phone": "+905321234567",
+        "email": "ahmet.yilmaz@memorial.com.tr"
+      },
+      "schedule": [
+        {
+          "day": "Pazartesi",
+          "hours": "09:00-17:00",
+          "available": true
+        },
+        {
+          "day": "Salı",
+          "hours": "09:00-17:00",
+          "available": true
+        },
+        {
+          "day": "Çarşamba",
+          "hours": "09:00-12:00",
+          "available": false
+        }
+      ]
+    },
+    {
+      "id": "NUR_001",
+      "type": "nurse",
+      "firstName": "Fatma",
+      "lastName": "Öztürk",
+      "title": "Hemşire",
+      "department": "DEPT_002",
+      "experience": 8,
+      "licenseNumber": "67890",
+      "contact": {
+        "phone": "+905329876543",
+        "email": "fatma.ozturk@memorial.com.tr"
+      },
+      "shifts": [
+        {
+          "date": "2025-11-14",
+          "shift": "Sabah 08:00-16:00",
+          "department": "Kardiyoloji Servisi"
+        },
+        {
+          "date": "2025-11-15",
+          "shift": "Gece 20:00-08:00",
+          "department": "Acil Servis"
+        }
+      ]
+    }
+  ],
+  "appointments": [
+    {
+      "id": "APPT_001",
+      "patientId": "PAT_00001",
+      "doctorId": "DOC_001",
+      "departmentId": "DEPT_002",
+      "date": "2025-11-18T10:30:00Z",
+      "duration": 30,
+      "type": "Kontrol",
+      "status": "scheduled",
+      "notes": "Kan tahlili sonuçları değerlendirilecek"
+    },
+    {
+      "id": "APPT_002",
+      "patientId": "PAT_00002",
+      "doctorId": "DOC_001",
+      "departmentId": "DEPT_002",
+      "date": "2025-11-25T14:00:00Z",
+      "duration": 45,
+      "type": "Ekokardiyografi",
+      "status": "scheduled",
+      "notes": "6 aylık ekokardiyografi kontrolü"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "INV_001",
+      "category": "İlaç",
+      "name": "Losartan 50mg Tablet",
+      "brand": "Cozaar",
+      "stock": 1250,
+      "unit": "kutu",
+      "expiryDate": "2026-12-31",
+      "supplier": "Devra İlaç",
+      "price": {
+        "purchase": 45.50,
+        "sell": 67.25,
+        "currency": "TRY"
+      },
+      "storage": {
+        "location": "Eczane Deposu A",
+        "temperature": "Oda sıcaklığında",
+        "humidity": "<60%"
+      }
+    },
+    {
+      "id": "INV_002",
+      "category": "Tıbbi Cihaz",
+      "name": "Tansiyon Aleti",
+      "brand": "Omron",
+      "model": "M3 Comfort",
+      "stock": 45,
+      "unit": "adet",
+      "expiryDate": null,
+      "supplier": "Medikal Market",
+      "price": {
+        "purchase": 850.00,
+        "sell": 1250.00,
+        "currency": "TRY"
+      },
+      "storage": {
+        "location": "Tıbbi Malzeme Deposu",
+        "temperature": "Oda sıcaklığında",
+        "humidity": "Normal"
+      }
+    },
+    {
+      "id": "INV_003",
+      "category": "Sarf Malzeme",
+      "name": "Steril Eldiven",
+      "brand": "Mikropat",
+      "size": "L",
+      "stock": 15000,
+      "unit": "çift",
+      "expiryDate": "2028-06-30",
+      "supplier": "Medikal Sarf",
+      "price": {
+        "purchase": 0.85,
+        "sell": 1.25,
+        "currency": "TRY"
+      },
+      "storage": {
+        "location": "Sarf Malzeme Deposu",
+        "temperature": "Oda sıcaklığında",
+        "humidity": "<50%"
+      }
+    }
+  ],
+  "billing": {
+    "invoices": [
+      {
+        "id": "INV_2025_001",
+        "patientId": "PAT_00001",
+        "date": "2025-11-10T16:00:00Z",
+        "services": [
+          {
+            "name": "Kardiyoloji Muayene",
+            "code": "K001",
+            "quantity": 1,
+            "unitPrice": 850.00,
+            "total": 850.00,
+            "covered": 680.00,
+            "patientPayment": 170.00
+          },
+          {
+            "name": "EKG",
+            "code": "E001",
+            "quantity": 1,
+            "unitPrice": 250.00,
+            "total": 250.00,
+            "covered": 200.00,
+            "patientPayment": 50.00
+          },
+          {
+            "name": "Kan Tahlili Paneli",
+            "code": "L001",
+            "quantity": 1,
+            "unitPrice": 450.00,
+            "total": 450.00,
+            "covered": 360.00,
+            "patientPayment": 90.00
+          }
+        ],
+        "totalAmount": 1550.00,
+        "insuranceCoverage": 1240.00,
+        "patientResponsibility": 310.00,
+        "status": "Ödendi",
+        "paymentDate": "2025-11-10T18:30:00Z",
+        "paymentMethod": "Kredi Kartı"
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+#version 1.0
+root{actions,lastLogin,stats,user}:
+  actions[3]: login,view_profile,edit_settings
+  lastLogin: "2025-11-14T10:30:00Z"
+  stats{loginCount,sessionDuration}: loginCount: 156 sessionDuration: 45.2
+  user{age,email,id,name,preferences,premium}:
+    age: 28
+    email: ahmet@example.com
+    id: 1
+    name: Ahmet Yılmaz
+    preferences{language,notifications,theme}: language: tr notifications: true theme: dark
+    premium: true

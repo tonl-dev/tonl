@@ -1,0 +1,45 @@
+# Application Configuration
+app:
+  name: "MyWebApp"
+  version: "2.1.0"
+  environment: "production"
+  debug: false
+
+# Database Configuration
+database:
+  host: "localhost"
+  port: 5432
+  name: "myapp_prod"
+  user: "admin"
+  password: "secure_password"
+  pool:
+    min: 5
+    max: 20
+    timeout: 30
+
+# Server Settings
+server:
+  host: "0.0.0.0"
+  port: 8080
+  ssl: true
+  timeout: 30
+  cors:
+    enabled: true
+    origins:
+      - "https://example.com"
+      - "https://app.example.com"
+
+# Features
+features:
+  authentication: true
+  rate_limiting: true
+  analytics: true
+  logging: true
+
+# Logging
+logging:
+  level: "info"
+  format: "json"
+  outputs:
+    - "console"
+    - "file"

@@ -1,0 +1,270 @@
+{
+  "catalog": {
+    "id": "catalog_001",
+    "name": "Electronics Store",
+    "version": "2.1",
+    "lastUpdated": "2025-11-14T09:15:00Z",
+    "categories": [
+      {
+        "id": "cat_001",
+        "name": "Smartphones",
+        "slug": "smartphones",
+        "productCount": 156,
+        "subcategories": [
+          {
+            "id": "sub_001",
+            "name": "iOS Phones",
+            "productCount": 89
+          },
+          {
+            "id": "sub_002",
+            "name": "Android Phones",
+            "productCount": 67
+          }
+        ]
+      },
+      {
+        "id": "cat_002",
+        "name": "Computers",
+        "slug": "computers",
+        "productCount": 203,
+        "subcategories": [
+          {
+            "id": "sub_003",
+            "name": "Laptops",
+            "productCount": 124
+          },
+          {
+            "id": "sub_004",
+            "name": "Desktop Computers",
+            "productCount": 79
+          }
+        ]
+      }
+    ]
+  },
+  "products": [
+    {
+      "id": "prod_001",
+      "name": "iPhone 15 Pro",
+      "sku": "APL-IP15P-128-BLK",
+      "categoryId": "sub_001",
+      "brand": "Apple",
+      "price": {
+        "regular": 1499.99,
+        "discount": 1349.99,
+        "currency": "USD"
+      },
+      "stock": {
+        "available": 45,
+        "reserved": 8,
+        "warehouse": "New York Central"
+      },
+      "specifications": {
+        "screen": "6.1 inch",
+        "storage": "128GB",
+        "ram": "8GB",
+        "camera": "48MP",
+        "battery": "3274mAh",
+        "processor": "A17 Pro"
+      },
+      "images": [
+        {
+          "url": "https://example.com/images/iphone15pro-front.jpg",
+          "alt": "iPhone 15 Pro Front",
+          "isPrimary": true
+        },
+        {
+          "url": "https://example.com/images/iphone15pro-back.jpg",
+          "alt": "iPhone 15 Pro Back",
+          "isPrimary": false
+        }
+      ],
+      "features": [
+        "5G Support",
+        "Water Resistant (IP68)",
+        "Wireless Charging",
+        "Face ID",
+        "ProMotion Display"
+      ],
+      "rating": {
+        "average": 4.8,
+        "count": 234,
+        "distribution": {
+          "5": 189,
+          "4": 31,
+          "3": 9,
+          "2": 4,
+          "1": 1
+        }
+      },
+      "seo": {
+        "title": "iPhone 15 Pro 128GB Black - Best Price",
+        "description": "Apple iPhone 15 Pro 128GB black color with installment payment option.",
+        "keywords": ["iphone", "apple", "smartphone", "5g"]
+      },
+      "availability": true,
+      "createdAt": "2025-09-15T10:00:00Z",
+      "updatedAt": "2025-11-10T15:30:00Z"
+    },
+    {
+      "id": "prod_002",
+      "name": "Samsung Galaxy S24 Ultra",
+      "sku": "SAM-GS24U-256-TIT",
+      "categoryId": "sub_001",
+      "brand": "Samsung",
+      "price": {
+        "regular": 1749.99,
+        "discount": 1599.99,
+        "currency": "USD"
+      },
+      "stock": {
+        "available": 23,
+        "reserved": 5,
+        "warehouse": "Los Angeles West"
+      },
+      "specifications": {
+        "screen": "6.8 inch",
+        "storage": "256GB",
+        "ram": "12GB",
+        "camera": "200MP",
+        "battery": "5000mAh",
+        "processor": "Snapdragon 8 Gen 3"
+      },
+      "images": [
+        {
+          "url": "https://example.com/images/gs24u-titanium.jpg",
+          "alt": "Galaxy S24 Ultra Titanium",
+          "isPrimary": true
+        }
+      ],
+      "features": [
+        "S-Pen Included",
+        "5G Support",
+        "45W Fast Charging",
+        "Corning Gorilla Armor",
+        "DeX Support"
+      ],
+      "rating": {
+        "average": 4.7,
+        "count": 189,
+        "distribution": {
+          "5": 145,
+          "4": 32,
+          "3": 8,
+          "2": 3,
+          "1": 1
+        }
+      },
+      "availability": true,
+      "createdAt": "2025-09-20T14:00:00Z",
+      "updatedAt": "2025-11-12T11:15:00Z"
+    },
+    {
+      "id": "prod_003",
+      "name": "MacBook Air M3",
+      "sku": "APL-MBA-M3-512-SLV",
+      "categoryId": "sub_003",
+      "brand": "Apple",
+      "price": {
+        "regular": 1299.99,
+        "discount": 1199.99,
+        "currency": "USD"
+      },
+      "stock": {
+        "available": 12,
+        "reserved": 3,
+        "warehouse": "Chicago North"
+      },
+      "specifications": {
+        "screen": "13.6 inch",
+        "storage": "512GB SSD",
+        "ram": "8GB",
+        "processor": "Apple M3",
+        "graphics": "8-core GPU",
+        "weight": "1.24kg"
+      },
+      "images": [
+        {
+          "url": "https://example.com/images/macbook-air-m3.jpg",
+          "alt": "MacBook Air M3 Silver",
+          "isPrimary": true
+        }
+      ],
+      "features": [
+        "18 Hour Battery Life",
+        "Liquid Retina Display",
+        "MagSafe 3",
+        "Thunderbolt 4",
+        "Silicon Keyboard"
+      ],
+      "rating": {
+        "average": 4.9,
+        "count": 567,
+        "distribution": {
+          "5": 489,
+          "4": 65,
+          "3": 11,
+          "2": 2,
+          "1": 0
+        }
+      },
+      "availability": true,
+      "createdAt": "2025-08-10T09:00:00Z",
+      "updatedAt": "2025-11-13T16:45:00Z"
+    }
+  ],
+  "customers": [
+    {
+      "id": "cust_001",
+      "firstName": "Michael",
+      "lastName": "Johnson",
+      "email": "michael.j@example.com",
+      "phone": "+12125551234",
+      "address": {
+        "street": "123 Main St",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001",
+        "country": "USA"
+      },
+      "orders": [
+        {
+          "id": "order_001",
+          "date": "2025-10-28T14:30:00Z",
+          "items": [
+            {
+              "productId": "prod_001",
+              "quantity": 1,
+              "price": 1349.99
+            }
+          ],
+          "total": 1349.99,
+          "status": "delivered"
+        }
+      ],
+      "loyaltyPoints": 1250,
+      "memberSince": "2023-03-15T00:00:00Z"
+    }
+  ],
+  "analytics": {
+    "dailyStats": {
+      "date": "2025-11-14",
+      "pageViews": 15420,
+      "uniqueVisitors": 8932,
+      "conversions": 234,
+      "revenue": 189999.95,
+      "averageOrderValue": 812.39
+    },
+    "topProducts": [
+      {"productId": "prod_001", "views": 3421, "sales": 89},
+      {"productId": "prod_002", "views": 2897, "sales": 67},
+      {"productId": "prod_003", "views": 2134, "sales": 45}
+    ],
+    "searchTerms": [
+      {"term": "iphone 15", "count": 1243},
+      {"term": "macbook", "count": 987},
+      {"term": "samsung", "count": 756}
+    ]
+  }
+}

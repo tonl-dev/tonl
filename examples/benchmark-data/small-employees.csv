@@ -1,0 +1,9 @@
+ID,FirstName,LastName,Email,Department,Position,Salary,HireDate,Active
+1,Ahmet,Yılmaz,ahmet@company.com,IT,Software Engineer,85000,2022-01-15,true
+2,Ayşe,Demir,ayse@company.com,HR,HR Manager,95000,2021-06-01,true
+3,Mehmet,Kaya,mehmet@company.com,Sales,Sales Representative,65000,2023-03-20,true
+4,Fatma,Öztürk,fatma@company.com,Finance,Financial Analyst,78000,2022-09-10,true
+5,Mustafa,Çelik,mustafa@company.com,IT,DevOps Engineer,92000,2021-11-05,true
+6,Zeynep,Polat,zeynep@company.com,Marketing,Marketing Specialist,62000,2023-01-12,false
+7,Can,Erdoğan,can@company.com,IT,Frontend Developer,80000,2022-07-18,true
+8,Elif,Şahin,elif@company.com,Finance,Accountant,70000,2023-02-28,true

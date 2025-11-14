@@ -1,0 +1,197 @@
+#version 1.0
+root{appointments,billing,hospital,inventory,patients,staff}:
+  appointments[2]{date,departmentId,doctorId,duration,id,notes,patientId,status,type}:
+    "2025-11-18T10:30:00Z",DEPT_002,DOC_001,30,APPT_001,Kan tahlili sonuçları değerlendirilecek,PAT_00001,scheduled,Kontrol
+    "2025-11-25T14:00:00Z",DEPT_002,DOC_001,45,APPT_002,6 aylık ekokardiyografi kontrolü,PAT_00002,scheduled,Ekokardiyografi
+  billing{invoices}:
+    invoices[1]:
+      [0]{date,id,insuranceCoverage,patientId,patientResponsibility,paymentDate,paymentMethod,services,status,totalAmount}:
+        date: "2025-11-10T16:00:00Z"
+        id: INV_2025_001
+        insuranceCoverage: 1240
+        patientId: PAT_00001
+        patientResponsibility: 310
+        paymentDate: "2025-11-10T18:30:00Z"
+        paymentMethod: Kredi Kartı
+        services[3]{code,covered,name,patientPayment,quantity,total,unitPrice}:
+          K001,680,Kardiyoloji Muayene,170,1,850,850
+          E001,200,EKG,50,1,250,250
+          L001,360,Kan Tahlili Paneli,90,1,450,450
+        status: Ödendi
+        totalAmount: 1550
+  hospital{departments,id,location,name,statistics}:
+    departments[4]{capacity,currentPatients,doctors,id,name,nurses}:
+      25,18,12,DEPT_001,Acil Servis,35
+      40,32,18,DEPT_002,Kardiyoloji,42
+      30,24,14,DEPT_003,Nöroloji,38
+      35,28,16,DEPT_004,Ortopedi,40
+    id: HOSP_001
+    location{address,coordinates,email,phone}:
+      address: "Şişli, Halaskargazi Cd. No:7, 34371 İstanbul"
+      coordinates{latitude,longitude}: latitude: 41.0536 longitude: 28.9893
+      email: info@memorial.com.tr
+      phone: +902123144000
+    name: İstanbul Memorial Hastanesi
+    statistics{dailyPatients,occupiedBeds,totalBeds,totalDoctors,totalNurses}:
+      dailyPatients{emergency,inpatient,outpatient,surgery}: emergency: 67 inpatient: 156 outpatient: 342 surgery: 23
+      occupiedBeds: 156
+      totalBeds: 200
+      totalDoctors: 89
+      totalNurses: 245
+  inventory[3]:
+    [0]{brand,category,expiryDate,id,name,price,stock,storage,supplier,unit}:
+      brand: Cozaar
+      category: İlaç
+      expiryDate: 2026-12-31
+      id: INV_001
+      name: Losartan 50mg Tablet
+      price{currency,purchase,sell}: currency: TRY purchase: 45.5 sell: 67.25
+      stock: 1250
+      storage{humidity,location,temperature}: humidity: <60% location: Eczane Deposu A temperature: Oda sıcaklığında
+      supplier: Devra İlaç
+      unit: kutu
+    [1]{brand,category,expiryDate,id,model,name,price,stock,storage,supplier,unit}:
+      brand: Omron
+      category: Tıbbi Cihaz
+      expiryDate: null
+      id: INV_002
+      model: M3 Comfort
+      name: Tansiyon Aleti
+      price{currency,purchase,sell}: currency: TRY purchase: 850 sell: 1250
+      stock: 45
+      storage{humidity,location,temperature}: humidity: Normal location: Tıbbi Malzeme Deposu temperature: Oda sıcaklığında
+      supplier: Medikal Market
+      unit: adet
+    [2]{brand,category,expiryDate,id,name,price,size,stock,storage,supplier,unit}:
+      brand: Mikropat
+      category: Sarf Malzeme
+      expiryDate: 2028-06-30
+      id: INV_003
+      name: Steril Eldiven
+      price{currency,purchase,sell}: currency: TRY purchase: 0.85 sell: 1.25
+      size: L
+      stock: 15000
+      storage{humidity,location,temperature}: humidity: <50% location: Sarf Malzeme Deposu temperature: Oda sıcaklığında
+      supplier: Medikal Sarf
+      unit: çift
+  patients[2]:
+    [0]{allergies,birthDate,bloodType,contact,currentMedications,firstName,gender,id,insurance,labResults,lastName,medicalHistory,tcNo,visits}:
+      allergies[2]: Penisilin,Fındık
+      birthDate: 1985-06-15
+      bloodType: A+
+      contact{address,email,emergencyContact,phone}:
+        address: "Levent, İstanbul"
+        email: ayse.demir@example.com
+        emergencyContact{name,phone,relation}: name: Mehmet Demir phone: +905322222222 relation: Eş
+        phone: +905321111111
+      currentMedications[2]{dosage,name,prescribedBy,startDate}:
+        1x1,Losartan 50mg,Dr. Ahmet Yılmaz,2024-03-15
+        1x2,Metformin 1000mg,Dr. Fatma Öztürk,2024-09-20
+      firstName: Ayşe
+      gender: Kadın
+      id: PAT_00001
+      insurance{company,coverage,policyNumber,validUntil}:
+        company: Anadolu Sigorta
+        coverage[2]: tamamlayıcı,yatak
+        policyNumber: AS-2025-001234
+        validUntil: 2025-12-31
+      labResults[1]:
+        [0]{date,tests}:
+          date: "2025-11-10T09:30:00Z"
+          tests[5]{name,referenceRange,status,unit,value}:
+            Kolesterol Total,0-200,Yüksek,mg/dL,245
+            HDL Kolesterol,40-60,Düşük,mg/dL,35
+            LDL Kolesterol,0-130,Yüksek,mg/dL,165
+            Açlık Kan Şekeri,70-100,Yüksek,mg/dL,145
+            HbA1c,4.0-5.6,Yüksek,%,7.8
+      lastName: Demir
+      medicalHistory[2]{date,diagnosis,doctor,treatment}:
+        2024-03-15,Hipertansiyon,Dr. Ahmet Yılmaz,Tansiyon ilacı tedavisi
+        2024-09-20,Tip 2 Diyabet,Dr. Fatma Öztürk,Insülin tedavisi başlandı
+      tcNo: "12345678901"
+      visits[1]:
+        [0]{complaint,date,department,diagnosis,doctor,id,notes,status,treatment,vitalSigns}:
+          complaint: Göğüs ağrısı ve nefes darlığı
+          date: "2025-11-10T09:00:00Z"
+          department: Kardiyoloji
+          diagnosis: Hipertansif kriz
+          doctor: Dr. Ahmet Yılmaz
+          id: VISIT_001
+          notes: "İlaç dozu ayarlandı, kontrole çağrıldı"
+          status: taburcu edildi
+          treatment: IV antihipertansif tedavi
+          vitalSigns{bloodPressure,heartRate,oxygenSaturation,respiratoryRate,temperature}: bloodPressure: 160/95 heartRate: 92 oxygenSaturation: 97 respiratoryRate: 18 temperature: 36.8
+    [1]{allergies,birthDate,bloodType,contact,currentMedications,firstName,gender,id,insurance,labResults,lastName,medicalHistory,tcNo,visits}:
+      allergies[0]:
+      birthDate: 1972-09-22
+      bloodType: O+
+      contact{address,email,emergencyContact,phone}:
+        address: "Kadıköy, İstanbul"
+        email: mustafa.celik@example.com
+        emergencyContact{name,phone,relation}: name: Zeynep Çelik phone: +905534444444 relation: Kız
+        phone: +905533333333
+      currentMedications[3]{dosage,name,prescribedBy,startDate}:
+        1x1,Aspirin 100mg,Prof. Dr. Ali Kaya,2023-12-10
+        1x1,Atorvastatin 40mg,Prof. Dr. Ali Kaya,2023-12-10
+        1x1,Bisoprolol 5mg,Prof. Dr. Ali Kaya,2023-12-15
+      firstName: Mustafa
+      gender: Erkek
+      id: PAT_00002
+      insurance{company,coverage,policyNumber,validUntil}:
+        company: Allianz Türkiye
+        coverage[2]: tam,yatarak
+        policyNumber: AT-2025-005678
+        validUntil: 2026-03-31
+      labResults[1]:
+        [0]{date,tests}:
+          date: "2025-11-12T15:00:00Z"
+          tests[4]{name,referenceRange,status,unit,value}:
+            Troponin T,0-0.014,Normal Üstü,ng/mL,0.015
+            CK-MB,0-25,Normal,U/L,12
+            Kolesterol Total,0-200,Normal,mg/dL,165
+            LDL Kolesterol,0-130,Normal,mg/dL,89
+      lastName: Çelik
+      medicalHistory[1]{date,diagnosis,doctor,treatment}:
+        2023-12-10,Kalp krizi (Myokard infarktüs),Prof. Dr. Ali Kaya,Stent uygulaması
+      tcNo: "98765432109"
+      visits[1]:
+        [0]{complaint,date,department,diagnosis,doctor,id,notes,status,treatment,vitalSigns}:
+          complaint: Düzenli kontrol
+          date: "2025-11-12T14:30:00Z"
+          department: Kardiyoloji
+          diagnosis: Koroner arter hastalığı - stabil dönem
+          doctor: Prof. Dr. Ali Kaya
+          id: VISIT_002
+          notes: 6 ay sonra ekokardiyografi
+          status: kontrole çağrıldı
+          treatment: Mevcut tedavi devam
+          vitalSigns{bloodPressure,heartRate,oxygenSaturation,respiratoryRate,temperature}: bloodPressure: 125/80 heartRate: 68 oxygenSaturation: 98 respiratoryRate: 16 temperature: 36.5
+  staff[2]:
+    [0]{contact,department,experience,firstName,id,lastName,licenseNumber,schedule,specialization,title,type}:
+      contact{email,phone}: email: ahmet.yilmaz@memorial.com.tr phone: +905321234567
+      department: DEPT_002
+      experience: 15
+      firstName: Ahmet
+      id: DOC_001
+      lastName: Yılmaz
+      licenseNumber: "12345"
+      schedule[3]{available,day,hours}:
+        true,Pazartesi,"09:00-17:00"
+        true,Salı,"09:00-17:00"
+        false,Çarşamba,"09:00-12:00"
+      specialization: Kardiyoloji
+      title: Dr.
+      type: doctor
+    [1]{contact,department,experience,firstName,id,lastName,licenseNumber,shifts,title,type}:
+      contact{email,phone}: email: fatma.ozturk@memorial.com.tr phone: +905329876543
+      department: DEPT_002
+      experience: 8
+      firstName: Fatma
+      id: NUR_001
+      lastName: Öztürk
+      licenseNumber: "67890"
+      shifts[2]{date,department,shift}:
+        2025-11-14,Kardiyoloji Servisi,"Sabah 08:00-16:00"
+        2025-11-15,Acil Servis,"Gece 20:00-08:00"
+      title: Hemşire
+      type: nurse
