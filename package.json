@@ -1,6 +1,6 @@
 {
   "name": "tonl",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Token-Optimized Notation Language - A text-first, LLM-friendly serialization format with schema validation, streaming, and browser support (Security Hardened)",
   "homepage": "https://github.com/ersinkoc/tonl",
   "repository": {
@@ -68,9 +68,11 @@
     "dev": "tsc --watch",
     "bench": "npm run build && node bench/bench-bytes.js",
     "bench-tokens": "npm run build && node bench/bench-tokens.js",
-    "bench-comprehensive": "npm run build && node bench/comprehensive-bench.js",
-    "bench-query": "npm run build && node bench/query-performance.ts",
+    "bench-comprehensive": "npm run build && node dist/bench/comprehensive-bench.js",
+    "bench-query": "npm run build && node dist/bench/query-performance.js",
     "link": "npm run build && npm link",
+    "test:coverage": "npm run build && c8 node --test test/*.test.ts",
+    "test:coverage:report": "npm run test:coverage -- --reporter=html --reporter=text",
     "clean": "rimraf dist"
   },
   "keywords": [
@@ -102,6 +104,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.25",
+    "c8": "^10.1.3",
     "rimraf": "^6.0.1",
     "stream-browserify": "^3.0.0",
     "terser": "^5.44.0",

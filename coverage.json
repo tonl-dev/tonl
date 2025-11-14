@@ -1,0 +1,5252 @@
+
+> tonl@1.0.11 test:coverage
+> npm run build && c8 node --test test/*.test.ts --reporter=json
+
+
+> tonl@1.0.11 build
+> tsc
+
+TAP version 13
+# NaN - 5 = NaN
+# NaN comparison breaks ordering logic!
+# Index created with NaN value
+# Query result: [ { id: 1, score: 100 }, { id: 2, score: NaN }, { id: 3, score: 50 } ]
+# Index created with Infinity values
+# Subtest: Bug \#4: BTree NaN comparison
+    # Subtest: should verify NaN comparison issue in JavaScript
+    ok 1 - should verify NaN comparison issue in JavaScript
+      ---
+      duration_ms: 5.0157
+      type: 'test'
+      ...
+    # Subtest: should handle NaN values in indexed data
+    ok 2 - should handle NaN values in indexed data
+      ---
+      duration_ms: 5.7655
+      type: 'test'
+      ...
+    # Subtest: should handle Infinity in indexed values
+    ok 3 - should handle Infinity in indexed values
+      ---
+      duration_ms: 0.7403
+      type: 'test'
+      ...
+    1..3
+ok 1 - Bug \#4: BTree NaN comparison
+  ---
+  duration_ms: 13.267
+  type: 'suite'
+  ...
+# Output with NaN indent:
+# \#version 1.0
+# root:
+#   nested{a,b}: a: 1 b: 2
+# Nested line:   nested{a,b}: a: 1 b: 2
+# A line:   nested{a,b}: a: 1 b: 2
+# TONL with NaN indent: \#version 1.0
+# root:
+#   outer:
+#     inner:
+#       value: 123
+# Subtest: Bug \#2: CLI parseInt NaN validation
+    # Subtest: should detect when indent option becomes NaN
+    ok 1 - should detect when indent option becomes NaN
+      ---
+      duration_ms: 2.8383
+      type: 'test'
+      ...
+    # Subtest: should use default indent when NaN is provided
+    ok 2 - should use default indent when NaN is provided
+      ---
+      duration_ms: 0.3881
+      type: 'test'
+      ...
+    # Subtest: verifies " ".repeat(NaN) returns empty string
+    ok 3 - verifies " ".repeat(NaN) returns empty string
+      ---
+      duration_ms: 0.2037
+      type: 'test'
+      ...
+    1..3
+ok 2 - Bug \#2: CLI parseInt NaN validation
+  ---
+  duration_ms: 5.0206
+  type: 'suite'
+  ...
+# Error (might be expected): Command failed: node dist/cli.js encode test-cli-indent.json --indent
+# ❌ Error: Invalid indent value: undefined. Must be a positive integer.
+# Error with invalid indent (might be expected): ❌ Error: Invalid indent value: abc. Must be a positive integer.
+# Subtest: Bug \#2: CLI parseInt NaN validation
+    # Subtest: should handle missing --indent value
+    ok 1 - should handle missing --indent value
+      ---
+      duration_ms: 307.2915
+      type: 'test'
+      ...
+    # Subtest: should handle invalid --indent value
+    ok 2 - should handle invalid --indent value
+      ---
+      duration_ms: 328.4517
+      type: 'test'
+      ...
+    1..2
+ok 3 - Bug \#2: CLI parseInt NaN validation
+  ---
+  duration_ms: 637.1286
+  type: 'suite'
+  ...
+# Index stats: {
+#   size: 3,
+#   memoryUsage: 336,
+#   type: 'hash',
+#   unique: false,
+#   collisions: 0
+# }
+# Alice paths: [ 'users[0]' ]
+# Bob paths: [ 'users[1]' ]
+# Charlie paths: [ 'users[2]' ]
+# Nested path index stats: {
+#   size: 3,
+#   memoryUsage: 336,
+#   type: 'hash',
+#   unique: false,
+#   collisions: 0
+# }
+# Subtest: BUG-002: Compound index uses root document instead of current object
+ok 4 - BUG-002: Compound index uses root document instead of current object
+  ---
+  duration_ms: 9.5135
+  type: 'test'
+  ...
+# Subtest: BUG-002: Compound index with nested paths
+ok 5 - BUG-002: Compound index with nested paths
+  ---
+  duration_ms: 0.5688
+  type: 'test'
+  ...
+# Subtest: BUG-002: Verify different compound keys are stored
+ok 6 - BUG-002: Verify different compound keys are stored
+  ---
+  duration_ms: 0.292
+  type: 'test'
+  ...
+# Subtest: BUG-002: Compound index should use object-local values
+ok 7 - BUG-002: Compound index should use object-local values
+  ---
+  duration_ms: 0.2323
+  type: 'test'
+  ...
+# Result with zero columns: { 'items[3]': {} }
+# Math.floor(3 / 0) = Infinity
+# Math.floor(0 / 0) = NaN
+# Result with empty columns: { arr: [ 1, 2 ] }
+# Parsed as: array
+# Content: [1,2]
+# Subtest: Bug \#3: Division by zero in array parsing
+    # Subtest: should handle array with zero columns gracefully
+    ok 1 - should handle array with zero columns gracefully
+      ---
+      duration_ms: 3.1335
+      type: 'test'
+      ...
+    # Subtest: should verify division by zero behavior in JavaScript
+    ok 2 - should verify division by zero behavior in JavaScript
+      ---
+      duration_ms: 0.5661
+      type: 'test'
+      ...
+    # Subtest: should handle empty columns array
+    ok 3 - should handle empty columns array
+      ---
+      duration_ms: 1.9877
+      type: 'test'
+      ...
+    1..3
+ok 8 - Bug \#3: Division by zero in array parsing
+  ---
+  duration_ms: 7.1303
+  type: 'suite'
+  ...
+# Subtest: Slice Evaluator Bug
+    # Subtest: BUG: Line 435 safety check is illogical (result.length > length)
+    ok 1 - BUG: Line 435 safety check is illogical (result.length > length)
+      ---
+      duration_ms: 4.7559
+      type: 'test'
+      ...
+    # Subtest: Demonstrates that result.length never exceeds source array length
+    ok 2 - Demonstrates that result.length never exceeds source array length
+      ---
+      duration_ms: 0.3572
+      type: 'test'
+      ...
+    1..2
+ok 9 - Slice Evaluator Bug
+  ---
+  duration_ms: 6.67
+  type: 'suite'
+  ...
+# Subtest: BUG-F001: Invalid array length should throw error
+ok 10 - BUG-F001: Invalid array length should throw error
+  ---
+  duration_ms: 5.0375
+  type: 'test'
+  ...
+# Subtest: BUG-F001: Negative array length should throw error
+ok 11 - BUG-F001: Negative array length should throw error
+  ---
+  duration_ms: 0.416
+  type: 'test'
+  ...
+# Subtest: BUG-F001: Valid array length should work
+ok 12 - BUG-F001: Valid array length should work
+  ---
+  duration_ms: 1.564
+  type: 'test'
+  ...
+# Subtest: BUG-F002: Extremely large integer should be handled safely
+ok 13 - BUG-F002: Extremely large integer should be handled safely
+  ---
+  duration_ms: 0.336
+  type: 'test'
+  ...
+# Subtest: BUG-F002: Valid numbers parse correctly
+ok 14 - BUG-F002: Valid numbers parse correctly
+  ---
+  duration_ms: 0.2851
+  type: 'test'
+  ...
+# Subtest: BUG-F003: Query with extremely large number should handle safely
+ok 15 - BUG-F003: Query with extremely large number should handle safely
+  ---
+  duration_ms: 3.9031
+  type: 'test'
+  ...
+# Subtest: BUG-F003: Query with normal numbers works correctly
+ok 16 - BUG-F003: Query with normal numbers works correctly
+  ---
+  duration_ms: 0.4198
+  type: 'test'
+  ...
+# Subtest: Number validation: Zero is valid
+ok 17 - Number validation: Zero is valid
+  ---
+  duration_ms: 0.143
+  type: 'test'
+  ...
+# Subtest: Number validation: Negative zero is handled
+ok 18 - Number validation: Negative zero is handled
+  ---
+  duration_ms: 0.2339
+  type: 'test'
+  ...
+# Subtest: Bug \#1: Negative Array Index Handling in Setter
+    # Subtest: should throw error for large negative index that normalizes to negative
+    ok 1 - should throw error for large negative index that normalizes to negative
+      ---
+      duration_ms: 4.4799
+      type: 'test'
+      ...
+    # Subtest: should throw error for large negative index with createPath enabled
+    ok 2 - should throw error for large negative index with createPath enabled
+      ---
+      duration_ms: 0.3709
+      type: 'test'
+      ...
+    # Subtest: should handle valid negative indices correctly
+    ok 3 - should handle valid negative indices correctly
+      ---
+      duration_ms: 0.476
+      type: 'test'
+      ...
+    # Subtest: should throw for negative index that is one past bounds
+    ok 4 - should throw for negative index that is one past bounds
+      ---
+      duration_ms: 0.2024
+      type: 'test'
+      ...
+    1..4
+ok 19 - Bug \#1: Negative Array Index Handling in Setter
+  ---
+  duration_ms: 7.1931
+  type: 'suite'
+  ...
+# TONL output: \#version 1.0
+# root:
+#   "te:st": test1
+# Decoded: {
+#   "te:st": "test1"
+# }
+# TONL output: \#version 1.0
+# root: """test
+# test"""
+# Decoded: "test\\ntest"
+# TONL output: \#version 1.0
+# root:
+#   users[2]{age,department,email,firstName,id,lastLogin,lastName,role,username,verified}:
+#     30,Engineering,"\\"alice@company.com",Alice,1,"2025-11-04T10:30:00Z",Smith,admin,alice_smith,true
+#     28,Marketing,bob@company.com,Bob,2,"2025-11-03T15:22:00Z",Jones,user,bob_jones,true
+# Decoded: {
+#   "users": [
+#     {
+#       "age": 30,
+#       "department": "Engineering",
+#       "email": "\\"alice@company.com",
+#       "firstName": "Alice",
+#       "id": 1,
+#       "lastLogin": "2025-11-04T10:30:00Z",
+#       "lastName": "Smith",
+#       "role": "admin",
+#       "username": "alice_smith",
+#       "verified": true
+#     },
+#     {
+#       "age": 28,
+#       "department": "Marketing",
+#       "email": "bob@company.com",
+#       "firstName": "Bob",
+#       "id": 2,
+#       "lastLogin": "2025-11-03T15:22:00Z",
+#       "lastName": "Jones",
+#       "role": "user",
+#       "username": "bob_jones",
+#       "verified": true
+#     }
+#   ]
+# }
+# Subtest: Bug: Object keys containing colons should be properly escaped
+ok 20 - Bug: Object keys containing colons should be properly escaped
+  ---
+  duration_ms: 6.9658
+  type: 'test'
+  ...
+# Subtest: Bug: Multiline strings with newlines should handle triple quotes correctly
+ok 21 - Bug: Multiline strings with newlines should handle triple quotes correctly
+  ---
+  duration_ms: 0.872
+  type: 'test'
+  ...
+# Subtest: Bug: Strings starting with double quotes should be handled correctly
+ok 22 - Bug: Strings starting with double quotes should be handled correctly
+  ---
+  duration_ms: 2.3108
+  type: 'test'
+  ...
+# inferTypeFromString("9999999999999") = "f64"
+# inferTypeFromString("-9999999999999") = "f64"
+# inferTypeFromString("3000000000") = "u32"
+# Consistency check: inferPrimitiveType(9999999999999) = "f64"
+#                    inferTypeFromString("9999999999999") = "f64"
+# Subtest: Bug \#1 FIXED: inferTypeFromString bounds checking
+    # Subtest: should return f64 for integers that exceed u32 max (4294967295)
+    ok 1 - should return f64 for integers that exceed u32 max (4294967295)
+      ---
+      duration_ms: 7.9765
+      type: 'test'
+      ...
+    # Subtest: should return f64 for integers that exceed i32 min (-2147483648)
+    ok 2 - should return f64 for integers that exceed i32 min (-2147483648)
+      ---
+      duration_ms: 1.2244
+      type: 'test'
+      ...
+    # Subtest: should return u32 for integers within u32 range
+    ok 3 - should return u32 for integers within u32 range
+      ---
+      duration_ms: 0.3789
+      type: 'test'
+      ...
+    # Subtest: should be consistent with inferPrimitiveType
+    ok 4 - should be consistent with inferPrimitiveType
+      ---
+      duration_ms: 0.3942
+      type: 'test'
+      ...
+    1..4
+ok 23 - Bug \#1 FIXED: inferTypeFromString bounds checking
+  ---
+  duration_ms: 25.514
+  type: 'suite'
+  ...
+# Encoded TONL:
+# \#version 1.0
+# root:
+#   items[3]{name,status}:
+#     Alice,-
+#     Bob,active
+#     Charlie,
+# Decoded data:
+# {
+#   "items": [
+#     {
+#       "name": "Alice",
+#       "status": "-"
+#     },
+#     {
+#       "name": "Bob",
+#       "status": "active"
+#     },
+#     {
+#       "name": "Charlie"
+#     }
+#   ]
+# }
+# Subtest: BUG-001: MISSING_FIELD_MARKER collision with user data "-"
+ok 24 - BUG-001: MISSING_FIELD_MARKER collision with user data "-"
+  ---
+  duration_ms: 11.7318
+  type: 'test'
+  ...
+# Subtest: BUG-001: Multiple fields with "-" value
+ok 25 - BUG-001: Multiple fields with "-" value
+  ---
+  duration_ms: 0.9837
+  type: 'test'
+  ...
+# Subtest: BUG-001: Distinguish "-" from missing fields
+ok 26 - BUG-001: Distinguish "-" from missing fields
+  ---
+  duration_ms: 0.4474
+  type: 'test'
+  ...
+# Subtest: BUG-001: "-" in different delimiters
+ok 27 - BUG-001: "-" in different delimiters
+  ---
+  duration_ms: 0.4576
+  type: 'test'
+  ...
+# Subtest: BUG-001: Edge case - array of all "-" values
+ok 28 - BUG-001: Edge case - array of all "-" values
+  ---
+  duration_ms: 0.2721
+  type: 'test'
+  ...
+# Throws error (expected): Invalid array length: "abc". Array length must be a positive integer.
+# Result: {
+#   "items": [
+#     "[xyz]{}:"
+#   ]
+# }
+# Throws error (might be expected): Invalid array length: 999999999999999999999. Must be a safe integer >= 0.
+# Throws error (might be expected): Invalid array length: "-5". Array length must be a positive integer.
+# Subtest: Bug \#2: Missing NaN validation after parseInt
+    # Subtest: should handle malformed array length gracefully
+    ok 1 - should handle malformed array length gracefully
+      ---
+      duration_ms: 6.3184
+      type: 'test'
+      ...
+    # Subtest: should handle malformed array index in nested structure
+    ok 2 - should handle malformed array index in nested structure
+      ---
+      duration_ms: 2.5489
+      type: 'test'
+      ...
+    # Subtest: should handle very large array length
+    ok 3 - should handle very large array length
+      ---
+      duration_ms: 0.4747
+      type: 'test'
+      ...
+    # Subtest: should handle negative array length
+    ok 4 - should handle negative array length
+      ---
+      duration_ms: 0.3135
+      type: 'test'
+      ...
+    1..4
+ok 29 - Bug \#2: Missing NaN validation after parseInt
+  ---
+  duration_ms: 12.427
+  type: 'suite'
+  ...
+# items[9:0:-1]: [
+#   9, 8, 7, 6, 5,
+#   4, 3, 2, 1
+# ]
+# items[::-1]: [
+#   9, 8, 7, 6, 5,
+#   4, 3, 2, 1, 0
+# ]
+# items[5:2:-1]: [ 5, 4, 3 ]
+# items[1:4:-1]: []
+# Subtest: Negative Step Slice Bug Test
+    # Subtest: should handle negative step correctly
+    ok 1 - should handle negative step correctly
+      ---
+      duration_ms: 8.9993
+      type: 'test'
+      ...
+    # Subtest: should handle edge cases with negative step
+    ok 2 - should handle edge cases with negative step
+      ---
+      duration_ms: 0.6039
+      type: 'test'
+      ...
+    1..2
+ok 30 - Negative Step Slice Bug Test
+  ---
+  duration_ms: 11.6418
+  type: 'suite'
+  ...
+# Subtest: BUG-S001: Filter evaluator blocks prototype access with SecurityError
+ok 31 - BUG-S001: Filter evaluator blocks prototype access with SecurityError
+  ---
+  duration_ms: 6.9311
+  type: 'test'
+  ...
+# Subtest: BUG-S001: Filter evaluator allows safe property access
+ok 32 - BUG-S001: Filter evaluator allows safe property access
+  ---
+  duration_ms: 1.1507
+  type: 'test'
+  ...
+# Subtest: BUG-S001: Nested property paths work correctly
+ok 33 - BUG-S001: Nested property paths work correctly
+  ---
+  duration_ms: 0.3501
+  type: 'test'
+  ...
+# Subtest: BUG-S001: Security fix provides defense-in-depth
+ok 34 - BUG-S001: Security fix provides defense-in-depth
+  ---
+  duration_ms: 0.2754
+  type: 'test'
+  ...
+# Result: {
+#   "items[0]": {}
+# }
+# Zero-length array result: { items: [] }
+# Subtest: Bug \#2: Single-line array notation parsing
+    # Subtest: should parse single-line array with data correctly
+    ok 1 - should parse single-line array with data correctly
+      ---
+      duration_ms: 3.2911
+      type: 'test'
+      ...
+    # Subtest: should NOT support items[N]{cols}: data format on single line
+    ok 2 - should NOT support items[N]{cols}: data format on single line
+      ---
+      duration_ms: 1.3192
+      type: 'test'
+      ...
+    # Subtest: should parse zero-length array correctly in multi-line format
+    ok 3 - should parse zero-length array correctly in multi-line format
+      ---
+      duration_ms: 0.5716
+      type: 'test'
+      ...
+    1..3
+ok 35 - Bug \#2: Single-line array notation parsing
+  ---
+  duration_ms: 7.1598
+  type: 'suite'
+  ...
+# Validating "$[5:-2]": { valid: true, errors: [], warnings: [] }
+# Validating "$[2:-2]": { valid: true, errors: [], warnings: [] }
+# Validating "$[-5:-2]": { valid: true, errors: [], warnings: [] }
+# Validating "$[5:2]": {
+#   valid: false,
+#   errors: [ 'Slice start (5) is greater than end (2)' ],
+#   warnings: []
+# }
+# Validating "$[5:2:-1]": { valid: true, errors: [], warnings: [] }
+# Subtest: Bug \#3 FIXED: Slice validation with negative indices
+    # Subtest: should validate slice [5:-2] as valid
+    ok 1 - should validate slice [5:-2] as valid
+      ---
+      duration_ms: 13.81
+      type: 'test'
+      ...
+    # Subtest: should validate slice [2:-2] as valid
+    ok 2 - should validate slice [2:-2] as valid
+      ---
+      duration_ms: 0.5297
+      type: 'test'
+      ...
+    # Subtest: should validate slice [-5:-2] as valid
+    ok 3 - should validate slice [-5:-2] as valid
+      ---
+      duration_ms: 0.3079
+      type: 'test'
+      ...
+    # Subtest: should correctly reject invalid slice [5:2] (without step)
+    ok 4 - should correctly reject invalid slice [5:2] (without step)
+      ---
+      duration_ms: 0.3814
+      type: 'test'
+      ...
+    # Subtest: should allow slice [5:2:-1] with negative step
+    ok 5 - should allow slice [5:2:-1] with negative step
+      ---
+      duration_ms: 0.2674
+      type: 'test'
+      ...
+    1..5
+ok 36 - Bug \#3 FIXED: Slice validation with negative indices
+  ---
+  duration_ms: 16.9074
+  type: 'suite'
+  ...
+# byteSavings with originalBytes=0 (before fix): -Infinity
+# byteSavings with originalBytes=0 (after fix): 0.0
+# byteSavings with both zero: NaN
+# With all zeros (after fix):
+#   byteSavings: 0.0
+#   tokenSavings: 0.0
+# Subtest: Bug \#3: Stats division by zero
+    # Subtest: should verify division by zero produces Infinity before fix
+    ok 1 - should verify division by zero produces Infinity before fix
+      ---
+      duration_ms: 5.055
+      type: 'test'
+      ...
+    # Subtest: should verify negative savings also possible
+    ok 2 - should verify negative savings also possible
+      ---
+      duration_ms: 0.3669
+      type: 'test'
+      ...
+    # Subtest: should handle empty file edge case after fix
+    ok 3 - should handle empty file edge case after fix
+      ---
+      duration_ms: 0.3761
+      type: 'test'
+      ...
+    1..3
+ok 37 - Bug \#3: Stats division by zero
+  ---
+  duration_ms: 7.465
+  type: 'suite'
+  ...
+# Result for 5 quotes: 
+# Type: string
+# Length: 0
+# Result for 4 quotes: 
+# Subtest: Potential Bug \#2: Triple-quoted string length validation
+    # Subtest: should handle minimum valid triple-quoted string (6 chars)
+    ok 1 - should handle minimum valid triple-quoted string (6 chars)
+      ---
+      duration_ms: 2.6448
+      type: 'test'
+      ...
+    # Subtest: should handle 5 quotes correctly
+    ok 2 - should handle 5 quotes correctly
+      ---
+      duration_ms: 4.0767
+      type: 'test'
+      ...
+    # Subtest: should handle triple-quoted string with content
+    ok 3 - should handle triple-quoted string with content
+      ---
+      duration_ms: 0.2559
+      type: 'test'
+      ...
+    # Subtest: should handle regular quoted string with quotes inside
+    ok 4 - should handle regular quoted string with quotes inside
+      ---
+      duration_ms: 0.2146
+      type: 'test'
+      ...
+    1..4
+ok 38 - Potential Bug \#2: Triple-quoted string length validation
+  ---
+  duration_ms: 8.7343
+  type: 'suite'
+  ...
+# Subtest: Bug Verification Tests
+    # Subtest: BUG \#1: Slice with large step should not be incorrectly limited
+    ok 1 - BUG \#1: Slice with large step should not be incorrectly limited
+      ---
+      duration_ms: 4.6782
+      type: 'test'
+      ...
+    # Subtest: BUG \#2: Zero-length arrays should use declared length, not calculate from fields
+    ok 2 - BUG \#2: Zero-length arrays should use declared length, not calculate from fields
+      ---
+      duration_ms: 6.8618
+      type: 'test'
+      ...
+    # Subtest: BUG \#3: Negative index slices should validate correctly
+    ok 3 - BUG \#3: Negative index slices should validate correctly
+      ---
+      duration_ms: 0.4796
+      type: 'test'
+      ...
+    # Subtest: BUG \#4: CLI should handle missing options gracefully
+    ok 4 - BUG \#4: CLI should handle missing options gracefully
+      ---
+      duration_ms: 0.3366
+      type: 'test'
+      ...
+    1..4
+ok 39 - Bug Verification Tests
+  ---
+  duration_ms: 14.076
+  type: 'suite'
+  ...
+# Encoded TONL:
+# \#version 1.0
+# root:
+#   emptyUsers[0]:
+# Decoded: { emptyUsers: [] }
+# Decoded from manual TONL: { emptyUsers: [] }
+# Bug case result: { 'items[0]': {} }
+# Subtest: Bug \#2: Zero-length array with || operator
+    # Subtest: should correctly handle zero-length array with columns (edge case)
+    ok 1 - should correctly handle zero-length array with columns (edge case)
+      ---
+      duration_ms: 7.8777
+      type: 'test'
+      ...
+    # Subtest: demonstrates the bug with single-line format (if used)
+    ok 2 - demonstrates the bug with single-line format (if used)
+      ---
+      duration_ms: 0.7474
+      type: 'test'
+      ...
+    # Subtest: demonstrates the bug would affect non-empty single-line with length mismatch
+    ok 3 - demonstrates the bug would affect non-empty single-line with length mismatch
+      ---
+      duration_ms: 0.677
+      type: 'test'
+      ...
+    1..3
+ok 40 - Bug \#2: Zero-length array with || operator
+  ---
+  duration_ms: 10.7107
+  type: 'suite'
+  ...
+# Encoded TONL: \#version 1.0
+# root:
+#   emptyArray[0]:
+# Decoded: { emptyArray: [] }
+# Encoded TONL with types: \#version 1.0
+# root:
+#   users[0]:
+# Decoded: { users: [] }
+# Decoded from manual TONL: { items: [] }
+# Subtest: Zero-Length Array Bug Test
+    # Subtest: should handle zero-length array correctly
+    ok 1 - should handle zero-length array correctly
+      ---
+      duration_ms: 8.5082
+      type: 'test'
+      ...
+    # Subtest: should handle zero-length object array correctly
+    ok 2 - should handle zero-length object array correctly
+      ---
+      duration_ms: 0.8789
+      type: 'test'
+      ...
+    # Subtest: should test the specific bug scenario - single-line array with length 0
+    ok 3 - should test the specific bug scenario - single-line array with length 0
+      ---
+      duration_ms: 12.3525
+      type: 'test'
+      ...
+    1..3
+ok 41 - Zero-Length Array Bug Test
+  ---
+  duration_ms: 23.7004
+  type: 'suite'
+  ...
+# Subtest: Bug Fix: i32 overflow validation
+    # Subtest: should reject negative i32 values with leading zeros
+    ok 1 - should reject negative i32 values with leading zeros
+      ---
+      duration_ms: 7.2888
+      type: 'test'
+      ...
+    # Subtest: should reject negative i32 values with extra minus signs
+    ok 2 - should reject negative i32 values with extra minus signs
+      ---
+      duration_ms: 0.3656
+      type: 'test'
+      ...
+    # Subtest: should accept valid negative i32 values without leading zeros
+    ok 3 - should accept valid negative i32 values without leading zeros
+      ---
+      duration_ms: 0.2141
+      type: 'test'
+      ...
+    # Subtest: should reject i32 values that have wrong format after parsing
+    ok 4 - should reject i32 values that have wrong format after parsing
+      ---
+      duration_ms: 0.229
+      type: 'test'
+      ...
+    # Subtest: should handle edge cases for i32 range
+    ok 5 - should handle edge cases for i32 range
+      ---
+      duration_ms: 0.297
+      type: 'test'
+      ...
+    # Subtest: should match u32 behavior for leading zeros
+    ok 6 - should match u32 behavior for leading zeros
+      ---
+      duration_ms: 0.2098
+      type: 'test'
+      ...
+    1..6
+ok 42 - Bug Fix: i32 overflow validation
+  ---
+  duration_ms: 13.2319
+  type: 'suite'
+  ...
+# Subtest: Comprehensive Integration Tests - ALL FEATURES
+    # Subtest: Query API - Complete Workflow
+        # Subtest: should handle complex real-world query scenario
+        ok 1 - should handle complex real-world query scenario
+          ---
+          duration_ms: 9.9314
+          type: 'test'
+          ...
+        1..1
+    ok 1 - Query API - Complete Workflow
+      ---
+      duration_ms: 11.2109
+      type: 'suite'
+      ...
+    # Subtest: Modification API - Complete Workflow
+        # Subtest: should handle complex modification scenario
+        ok 1 - should handle complex modification scenario
+          ---
+          duration_ms: 2.4625
+          type: 'test'
+          ...
+        1..1
+    ok 2 - Modification API - Complete Workflow
+      ---
+      duration_ms: 2.6801
+      type: 'suite'
+      ...
+    # Subtest: Indexing System - Complete Workflow
+        # Subtest: should handle indexing and lookups
+        ok 1 - should handle indexing and lookups
+          ---
+          duration_ms: 1.491
+          type: 'test'
+          ...
+        1..1
+    ok 3 - Indexing System - Complete Workflow
+      ---
+      duration_ms: 1.6183
+      type: 'suite'
+      ...
+    # Subtest: Change Tracking - Complete Workflow
+        # Subtest: should track changes accurately
+        ok 1 - should track changes accurately
+          ---
+          duration_ms: 1.6324
+          type: 'test'
+          ...
+        1..1
+    ok 4 - Change Tracking - Complete Workflow
+      ---
+      duration_ms: 1.8176
+      type: 'suite'
+      ...
+    # Subtest: File Operations - Complete Workflow
+        # Subtest: should handle encode/decode round-trip
+        ok 1 - should handle encode/decode round-trip
+          ---
+          duration_ms: 6.3747
+          type: 'test'
+          ...
+        # Subtest: should handle TONLDocument round-trip
+        ok 2 - should handle TONLDocument round-trip
+          ---
+          duration_ms: 1.1305
+          type: 'test'
+          ...
+        1..2
+    ok 5 - File Operations - Complete Workflow
+      ---
+      duration_ms: 7.7257
+      type: 'suite'
+      ...
+    # Subtest: All APIs Together - Real-World Scenario
+        # Subtest: should handle complete application workflow
+        ok 1 - should handle complete application workflow
+          ---
+          duration_ms: 1.3377
+          type: 'test'
+          ...
+        1..1
+    ok 6 - All APIs Together - Real-World Scenario
+      ---
+      duration_ms: 1.4723
+      type: 'suite'
+      ...
+    # Subtest: Performance - All Operations Fast
+        # Subtest: should perform all operations within time limits
+        ok 1 - should perform all operations within time limits
+          ---
+          duration_ms: 1.7672
+          type: 'test'
+          ...
+        1..1
+    ok 7 - Performance - All Operations Fast
+      ---
+      duration_ms: 1.8837
+      type: 'suite'
+      ...
+    1..7
+ok 43 - Comprehensive Integration Tests - ALL FEATURES
+  ---
+  duration_ms: 29.8914
+  type: 'suite'
+  ...
+# Subtest: ✅ CORE FUNCTIONALITY TEST RESULTS
+    # Subtest: ALL CORE FEATURES WORKING - 100%
+    ok 1 - ALL CORE FEATURES WORKING - 100%
+      ---
+      duration_ms: 0.201
+      type: 'test'
+      ...
+    1..1
+ok 44 - ✅ CORE FUNCTIONALITY TEST RESULTS
+  ---
+  duration_ms: 0.3185
+  type: 'suite'
+  ...
+# Subtest: Edge Cases - Empty and Special Strings
+    # Subtest: should handle empty strings correctly
+    ok 1 - should handle empty strings correctly
+      ---
+      duration_ms: 9.1868
+      type: 'test'
+      ...
+    # Subtest: should preserve whitespace characters
+    ok 2 - should preserve whitespace characters
+      ---
+      duration_ms: 1.8554
+      type: 'test'
+      ...
+    # Subtest: should handle triple quotes in content
+    ok 3 - should handle triple quotes in content
+      ---
+      duration_ms: 0.3679
+      type: 'test'
+      ...
+    1..3
+ok 45 - Edge Cases - Empty and Special Strings
+  ---
+  duration_ms: 13.7113
+  type: 'suite'
+  ...
+# Subtest: Edge Cases - Boolean and Null Strings
+    # Subtest: should distinguish boolean strings from booleans
+    ok 1 - should distinguish boolean strings from booleans
+      ---
+      duration_ms: 0.4337
+      type: 'test'
+      ...
+    # Subtest: should distinguish null strings from null values
+    ok 2 - should distinguish null strings from null values
+      ---
+      duration_ms: 0.2644
+      type: 'test'
+      ...
+    1..2
+ok 46 - Edge Cases - Boolean and Null Strings
+  ---
+  duration_ms: 0.8902
+  type: 'suite'
+  ...
+# Subtest: Edge Cases - Numeric Types
+    # Subtest: should handle scientific notation
+    ok 1 - should handle scientific notation
+      ---
+      duration_ms: 0.3379
+      type: 'test'
+      ...
+    # Subtest: should handle Infinity and NaN
+    ok 2 - should handle Infinity and NaN
+      ---
+      duration_ms: 0.5273
+      type: 'test'
+      ...
+    # Subtest: should distinguish Infinity/NaN strings from values
+    ok 3 - should distinguish Infinity/NaN strings from values
+      ---
+      duration_ms: 2.2406
+      type: 'test'
+      ...
+    # Subtest: should infer correct types for number bounds
+    ok 4 - should infer correct types for number bounds
+      ---
+      duration_ms: 1.0764
+      type: 'test'
+      ...
+    1..4
+ok 47 - Edge Cases - Numeric Types
+  ---
+  duration_ms: 4.4918
+  type: 'suite'
+  ...
+# Subtest: Edge Cases - Objects and Arrays
+    # Subtest: should handle root-level primitive arrays
+    ok 1 - should handle root-level primitive arrays
+      ---
+      duration_ms: 2.7127
+      type: 'test'
+      ...
+    # Subtest: should handle objects with numeric keys
+    ok 2 - should handle objects with numeric keys
+      ---
+      duration_ms: 0.3358
+      type: 'test'
+      ...
+    # Subtest: should detect circular references in objects
+    ok 3 - should detect circular references in objects
+      ---
+      duration_ms: 0.6637
+      type: 'test'
+      ...
+    # Subtest: should detect circular references in arrays
+    ok 4 - should detect circular references in arrays
+      ---
+      duration_ms: 0.241
+      type: 'test'
+      ...
+    1..4
+ok 48 - Edge Cases - Objects and Arrays
+  ---
+  duration_ms: 4.2414
+  type: 'suite'
+  ...
+# Subtest: Edge Cases - Comments and Directives
+    # Subtest: should handle @ directive lines
+    ok 1 - should handle @ directive lines
+      ---
+      duration_ms: 0.3285
+      type: 'test'
+      ...
+    # Subtest: should handle \# comment lines
+    ok 2 - should handle \# comment lines
+      ---
+      duration_ms: 0.1958
+      type: 'test'
+      ...
+    1..2
+ok 49 - Edge Cases - Comments and Directives
+  ---
+  duration_ms: 0.671
+  type: 'suite'
+  ...
+# Subtest: encode/decode round-trip
+    # Subtest: should round-trip simple object
+    ok 1 - should round-trip simple object
+      ---
+      duration_ms: 4.7916
+      type: 'test'
+      ...
+    # Subtest: should round-trip array of objects
+    ok 2 - should round-trip array of objects
+      ---
+      duration_ms: 3.3404
+      type: 'test'
+      ...
+    # Subtest: should round-trip nested structures
+    ok 3 - should round-trip nested structures
+      ---
+      duration_ms: 1.9919
+      type: 'test'
+      ...
+    # Subtest: should round-trip complex nested arrays
+    ok 4 - should round-trip complex nested arrays
+      ---
+      duration_ms: 0.9263
+      type: 'test'
+      ...
+    # Subtest: should handle special characters in values
+    ok 5 - should handle special characters in values
+      ---
+      duration_ms: 0.8056
+      type: 'test'
+      ...
+    # Subtest: should handle null and undefined values
+    ok 6 - should handle null and undefined values
+      ---
+      duration_ms: 0.4406
+      type: 'test'
+      ...
+    # Subtest: should handle different delimiters
+    ok 7 - should handle different delimiters
+      ---
+      duration_ms: 0.4404
+      type: 'test'
+      ...
+    # Subtest: should handle empty arrays and objects
+    ok 8 - should handle empty arrays and objects
+      ---
+      duration_ms: 0.6022
+      type: 'test'
+      ...
+    # Subtest: should handle numeric values correctly
+    ok 9 - should handle numeric values correctly
+      ---
+      duration_ms: 0.3177
+      type: 'test'
+      ...
+    # Subtest: should encodeSmart correctly
+    ok 10 - should encodeSmart correctly
+      ---
+      duration_ms: 0.679
+      type: 'test'
+      ...
+    1..10
+ok 50 - encode/decode round-trip
+  ---
+  duration_ms: 16.2082
+  type: 'suite'
+  ...
+# Subtest: error handling
+    # Subtest: should handle malformed headers gracefully
+    ok 1 - should handle malformed headers gracefully
+      ---
+      duration_ms: 0.3963
+      type: 'test'
+      ...
+    # Subtest: should enforce strict mode
+    ok 2 - should enforce strict mode
+      ---
+      duration_ms: 0.3507
+      type: 'test'
+      ...
+    # Subtest: should handle empty input
+    ok 3 - should handle empty input
+      ---
+      duration_ms: 0.1123
+      type: 'test'
+      ...
+    # Subtest: should handle headers only
+    ok 4 - should handle headers only
+      ---
+      duration_ms: 0.1174
+      type: 'test'
+      ...
+    1..4
+ok 51 - error handling
+  ---
+  duration_ms: 1.1846
+  type: 'suite'
+  ...
+# ❌ Error: Format command requires a .tonl file
+# ❌ Security Error: File not found
+# ❌ Access denied to: D:\\Codebox\\PROJECTS\\Tonl\\test\\format-test-files\\nonexistent.tonl
+# Subtest: format command - basic functionality
+    # Subtest: should format simple TONL file to stdout
+    ok 1 - should format simple TONL file to stdout
+      ---
+      duration_ms: 277.5941
+      type: 'test'
+      ...
+    # Subtest: should format and write to output file
+    ok 2 - should format and write to output file
+      ---
+      duration_ms: 184.3793
+      type: 'test'
+      ...
+    # Subtest: should preserve data integrity after format
+    ok 3 - should preserve data integrity after format
+      ---
+      duration_ms: 143.2526
+      type: 'test'
+      ...
+    1..3
+ok 52 - format command - basic functionality
+  ---
+  duration_ms: 606.7695
+  type: 'suite'
+  ...
+# Subtest: format command - indentation options
+    # Subtest: should use default 2-space indentation
+    ok 1 - should use default 2-space indentation
+      ---
+      duration_ms: 133.8973
+      type: 'test'
+      ...
+    # Subtest: should use custom 4-space indentation
+    ok 2 - should use custom 4-space indentation
+      ---
+      duration_ms: 147.6998
+      type: 'test'
+      ...
+    # Subtest: should handle nested structures with proper indentation
+    ok 3 - should handle nested structures with proper indentation
+      ---
+      duration_ms: 140.0428
+      type: 'test'
+      ...
+    1..3
+ok 53 - format command - indentation options
+  ---
+  duration_ms: 421.8226
+  type: 'suite'
+  ...
+# Subtest: format command - delimiter options
+    # Subtest: should preserve comma delimiter
+    ok 1 - should preserve comma delimiter
+      ---
+      duration_ms: 131.6334
+      type: 'test'
+      ...
+    # Subtest: should preserve pipe delimiter
+    ok 2 - should preserve pipe delimiter
+      ---
+      duration_ms: 145.1636
+      type: 'test'
+      ...
+    # Subtest: should handle tab delimiter
+    ok 3 - should handle tab delimiter
+      ---
+      duration_ms: 139.7687
+      type: 'test'
+      ...
+    1..3
+ok 54 - format command - delimiter options
+  ---
+  duration_ms: 416.7624
+  type: 'suite'
+  ...
+# Subtest: format command - type hints
+    # Subtest: should add type hints when --include-types is specified
+    ok 1 - should add type hints when --include-types is specified
+      ---
+      duration_ms: 146.5012
+      type: 'test'
+      ...
+    1..1
+ok 55 - format command - type hints
+  ---
+  duration_ms: 146.6948
+  type: 'suite'
+  ...
+# Subtest: format command - edge cases
+    # Subtest: should handle empty arrays
+    ok 1 - should handle empty arrays
+      ---
+      duration_ms: 139.1692
+      type: 'test'
+      ...
+    # Subtest: should handle null values
+    ok 2 - should handle null values
+      ---
+      duration_ms: 126.7727
+      type: 'test'
+      ...
+    # Subtest: should handle special characters in strings
+    ok 3 - should handle special characters in strings
+      ---
+      duration_ms: 139.2249
+      type: 'test'
+      ...
+    # Subtest: should handle multiline strings
+    ok 4 - should handle multiline strings
+      ---
+      duration_ms: 126.6979
+      type: 'test'
+      ...
+    # Subtest: should handle large arrays
+    ok 5 - should handle large arrays
+      ---
+      duration_ms: 129.7258
+      type: 'test'
+      ...
+    1..5
+ok 56 - format command - edge cases
+  ---
+  duration_ms: 661.8767
+  type: 'suite'
+  ...
+# Subtest: format command - error handling
+    # Subtest: should reject non-.tonl files
+    ok 1 - should reject non-.tonl files
+      ---
+      duration_ms: 125.1699
+      type: 'test'
+      ...
+    # Subtest: should handle non-existent files
+    ok 2 - should handle non-existent files
+      ---
+      duration_ms: 121.6914
+      type: 'test'
+      ...
+    # Subtest: should handle malformed TONL data
+    ok 3 - should handle malformed TONL data
+      ---
+      duration_ms: 124.7963
+      type: 'test'
+      ...
+    1..3
+ok 57 - format command - error handling
+  ---
+  duration_ms: 371.8668
+  type: 'suite'
+  ...
+# Subtest: format command - version preservation
+    # Subtest: should preserve TONL version
+    ok 1 - should preserve TONL version
+      ---
+      duration_ms: 127.5803
+      type: 'test'
+      ...
+    # Subtest: should allow version override
+    ok 2 - should allow version override
+      ---
+      duration_ms: 142.3858
+      type: 'test'
+      ...
+    1..2
+ok 58 - format command - version preservation
+  ---
+  duration_ms: 270.1065
+  type: 'suite'
+  ...
+# Subtest: format command - complex real-world scenarios
+    # Subtest: should format e-commerce product catalog
+    ok 1 - should format e-commerce product catalog
+      ---
+      duration_ms: 141.8835
+      type: 'test'
+      ...
+    # Subtest: should format user management system
+    ok 2 - should format user management system
+      ---
+      duration_ms: 133.537
+      type: 'test'
+      ...
+    1..2
+ok 59 - format command - complex real-world scenarios
+  ---
+  duration_ms: 275.5478
+  type: 'suite'
+  ...
+# Subtest: BULLETPROOF: Type Inference
+    # Subtest: inferPrimitiveType - All Paths
+        # Subtest: should handle all null/undefined cases
+        ok 1 - should handle all null/undefined cases
+          ---
+          duration_ms: 1.0603
+          type: 'test'
+          ...
+        # Subtest: should handle all boolean cases
+        ok 2 - should handle all boolean cases
+          ---
+          duration_ms: 0.1836
+          type: 'test'
+          ...
+        # Subtest: should handle u32 boundary cases
+        ok 3 - should handle u32 boundary cases
+          ---
+          duration_ms: 0.1363
+          type: 'test'
+          ...
+        # Subtest: should handle i32 boundary cases
+        ok 4 - should handle i32 boundary cases
+          ---
+          duration_ms: 0.1081
+          type: 'test'
+          ...
+        # Subtest: should handle f64 for large integers
+        ok 5 - should handle f64 for large integers
+          ---
+          duration_ms: 0.1091
+          type: 'test'
+          ...
+        # Subtest: should handle f64 for floats
+        ok 6 - should handle f64 for floats
+          ---
+          duration_ms: 0.098
+          type: 'test'
+          ...
+        # Subtest: should handle f64 for special values
+        ok 7 - should handle f64 for special values
+          ---
+          duration_ms: 0.0957
+          type: 'test'
+          ...
+        # Subtest: should handle strings
+        ok 8 - should handle strings
+          ---
+          duration_ms: 0.095
+          type: 'test'
+          ...
+        # Subtest: should handle arrays
+        ok 9 - should handle arrays
+          ---
+          duration_ms: 0.2019
+          type: 'test'
+          ...
+        # Subtest: should handle objects
+        ok 10 - should handle objects
+          ---
+          duration_ms: 0.1254
+          type: 'test'
+          ...
+        1..10
+    ok 1 - inferPrimitiveType - All Paths
+      ---
+      duration_ms: 3.4183
+      type: 'suite'
+      ...
+    # Subtest: coerceValue - COMPLETE Coverage
+        # Subtest: null type
+            # Subtest: should always return null
+            ok 1 - should always return null
+              ---
+              duration_ms: 0.4239
+              type: 'test'
+              ...
+            1..1
+        ok 1 - null type
+          ---
+          duration_ms: 0.556
+          type: 'suite'
+          ...
+        # Subtest: bool type
+            # Subtest: should coerce boolean values
+            ok 1 - should coerce boolean values
+              ---
+              duration_ms: 0.2041
+              type: 'test'
+              ...
+            # Subtest: should treat anything else as false
+            ok 2 - should treat anything else as false
+              ---
+              duration_ms: 0.1521
+              type: 'test'
+              ...
+            1..2
+        ok 2 - bool type
+          ---
+          duration_ms: 0.5047
+          type: 'suite'
+          ...
+        # Subtest: u32 type - ALL validation paths
+            # Subtest: should accept valid u32 values
+            ok 1 - should accept valid u32 values
+              ---
+              duration_ms: 0.3167
+              type: 'test'
+              ...
+            # Subtest: should reject non-decimal formats
+            ok 2 - should reject non-decimal formats
+              ---
+              duration_ms: 0.8353
+              type: 'test'
+              ...
+            # Subtest: should reject negative numbers
+            ok 3 - should reject negative numbers
+              ---
+              duration_ms: 0.1956
+              type: 'test'
+              ...
+            # Subtest: should reject floats
+            ok 4 - should reject floats
+              ---
+              duration_ms: 0.1789
+              type: 'test'
+              ...
+            # Subtest: should reject out of range
+            ok 5 - should reject out of range
+              ---
+              duration_ms: 0.1903
+              type: 'test'
+              ...
+            # Subtest: should reject leading zeros (overflow detection)
+            ok 6 - should reject leading zeros (overflow detection)
+              ---
+              duration_ms: 1.3581
+              type: 'test'
+              ...
+            # Subtest: should reject invalid characters
+            ok 7 - should reject invalid characters
+              ---
+              duration_ms: 0.1733
+              type: 'test'
+              ...
+            1..7
+        ok 3 - u32 type - ALL validation paths
+          ---
+          duration_ms: 3.6724
+          type: 'suite'
+          ...
+        # Subtest: i32 type - ALL validation paths
+            # Subtest: should accept valid i32 values
+            ok 1 - should accept valid i32 values
+              ---
+              duration_ms: 0.3366
+              type: 'test'
+              ...
+            # Subtest: should reject non-decimal formats
+            ok 2 - should reject non-decimal formats
+              ---
+              duration_ms: 0.1898
+              type: 'test'
+              ...
+            # Subtest: should reject floats
+            ok 3 - should reject floats
+              ---
+              duration_ms: 0.1654
+              type: 'test'
+              ...
+            # Subtest: should reject out of range positive
+            ok 4 - should reject out of range positive
+              ---
+              duration_ms: 0.1621
+              type: 'test'
+              ...
+            # Subtest: should reject out of range negative
+            ok 5 - should reject out of range negative
+              ---
+              duration_ms: 0.1561
+              type: 'test'
+              ...
+            # Subtest: should reject leading zeros (BUGFIX VERIFICATION)
+            ok 6 - should reject leading zeros (BUGFIX VERIFICATION)
+              ---
+              duration_ms: 0.1976
+              type: 'test'
+              ...
+            1..6
+        ok 4 - i32 type - ALL validation paths
+          ---
+          duration_ms: 1.52
+          type: 'suite'
+          ...
+        # Subtest: f64 type - ALL validation paths
+            # Subtest: should accept valid f64 values
+            ok 1 - should accept valid f64 values
+              ---
+              duration_ms: 0.2059
+              type: 'test'
+              ...
+            # Subtest: should reject NaN
+            ok 2 - should reject NaN
+              ---
+              duration_ms: 0.1896
+              type: 'test'
+              ...
+            # Subtest: should reject Infinity
+            ok 3 - should reject Infinity
+              ---
+              duration_ms: 0.1583
+              type: 'test'
+              ...
+            # Subtest: should handle edge cases
+            ok 4 - should handle edge cases
+              ---
+              duration_ms: 0.2036
+              type: 'test'
+              ...
+            1..4
+        ok 5 - f64 type - ALL validation paths
+          ---
+          duration_ms: 0.9604
+          type: 'suite'
+          ...
+        # Subtest: str type
+            # Subtest: should handle unquoted strings
+            ok 1 - should handle unquoted strings
+              ---
+              duration_ms: 0.2551
+              type: 'test'
+              ...
+            # Subtest: should handle quoted strings with doubled quotes
+            ok 2 - should handle quoted strings with doubled quotes
+              ---
+              duration_ms: 0.1508
+              type: 'test'
+              ...
+            # Subtest: should handle null string
+            ok 3 - should handle null string
+              ---
+              duration_ms: 0.121
+              type: 'test'
+              ...
+            # Subtest: should handle empty string
+            ok 4 - should handle empty string
+              ---
+              duration_ms: 0.1198
+              type: 'test'
+              ...
+            1..4
+        ok 6 - str type
+          ---
+          duration_ms: 0.8367
+          type: 'suite'
+          ...
+        # Subtest: unknown types
+            # Subtest: should default to unquoted string
+            ok 1 - should default to unquoted string
+              ---
+              duration_ms: 0.1478
+              type: 'test'
+              ...
+            1..1
+        ok 7 - unknown types
+          ---
+          duration_ms: 0.2386
+          type: 'suite'
+          ...
+        1..7
+    ok 2 - coerceValue - COMPLETE Coverage
+      ---
+      duration_ms: 8.7982
+      type: 'suite'
+      ...
+    # Subtest: isUniformObjectArray - COMPLETE Coverage
+        # Subtest: should handle empty array
+        ok 1 - should handle empty array
+          ---
+          duration_ms: 0.3316
+          type: 'test'
+          ...
+        # Subtest: should accept uniform objects
+        ok 2 - should accept uniform objects
+          ---
+          duration_ms: 0.4466
+          type: 'test'
+          ...
+        # Subtest: should accept single object
+        ok 3 - should accept single object
+          ---
+          duration_ms: 0.4186
+          type: 'test'
+          ...
+        # Subtest: should reject arrays with non-objects
+        ok 4 - should reject arrays with non-objects
+          ---
+          duration_ms: 0.1713
+          type: 'test'
+          ...
+        # Subtest: should reject arrays with null
+        ok 5 - should reject arrays with null
+          ---
+          duration_ms: 0.2467
+          type: 'test'
+          ...
+        # Subtest: should reject nested arrays
+        ok 6 - should reject nested arrays
+          ---
+          duration_ms: 0.8313
+          type: 'test'
+          ...
+        # Subtest: should reject objects with different keys
+        ok 7 - should reject objects with different keys
+          ---
+          duration_ms: 0.1932
+          type: 'test'
+          ...
+        # Subtest: should reject objects with different key counts
+        ok 8 - should reject objects with different key counts
+          ---
+          duration_ms: 0.144
+          type: 'test'
+          ...
+        # Subtest: should reject objects with same keys in different order (should still be uniform due to sort)
+        ok 9 - should reject objects with same keys in different order (should still be uniform due to sort)
+          ---
+          duration_ms: 0.222
+          type: 'test'
+          ...
+        1..9
+    ok 3 - isUniformObjectArray - COMPLETE Coverage
+      ---
+      duration_ms: 3.5206
+      type: 'suite'
+      ...
+    # Subtest: getUniformColumns - COMPLETE Coverage
+        # Subtest: should handle empty array
+        ok 1 - should handle empty array
+          ---
+          duration_ms: 1.2072
+          type: 'test'
+          ...
+        # Subtest: should return sorted column names
+        ok 2 - should return sorted column names
+          ---
+          duration_ms: 0.3383
+          type: 'test'
+          ...
+        # Subtest: should use first object keys
+        ok 3 - should use first object keys
+          ---
+          duration_ms: 0.138
+          type: 'test'
+          ...
+        # Subtest: should handle single key
+        ok 4 - should handle single key
+          ---
+          duration_ms: 0.1232
+          type: 'test'
+          ...
+        1..4
+    ok 4 - getUniformColumns - COMPLETE Coverage
+      ---
+      duration_ms: 2.0868
+      type: 'suite'
+      ...
+    # Subtest: inferTypeFromString - COMPLETE Coverage
+        # Subtest: should infer null
+        ok 1 - should infer null
+          ---
+          duration_ms: 0.3486
+          type: 'test'
+          ...
+        # Subtest: should infer bool
+        ok 2 - should infer bool
+          ---
+          duration_ms: 0.1163
+          type: 'test'
+          ...
+        # Subtest: should infer u32 for positive integers
+        ok 3 - should infer u32 for positive integers
+          ---
+          duration_ms: 0.1894
+          type: 'test'
+          ...
+        # Subtest: should infer i32 for negative integers
+        ok 4 - should infer i32 for negative integers
+          ---
+          duration_ms: 0.1085
+          type: 'test'
+          ...
+        # Subtest: should infer f64 for decimals
+        ok 5 - should infer f64 for decimals
+          ---
+          duration_ms: 0.1453
+          type: 'test'
+          ...
+        # Subtest: should infer str for quoted strings
+        ok 6 - should infer str for quoted strings
+          ---
+          duration_ms: 0.1029
+          type: 'test'
+          ...
+        # Subtest: should default to str for unrecognized
+        ok 7 - should default to str for unrecognized
+          ---
+          duration_ms: 0.0922
+          type: 'test'
+          ...
+        1..7
+    ok 5 - inferTypeFromString - COMPLETE Coverage
+      ---
+      duration_ms: 1.3601
+      type: 'suite'
+      ...
+    1..5
+ok 60 - BULLETPROOF: Type Inference
+  ---
+  duration_ms: 24.8581
+  type: 'suite'
+  ...
+# Subtest: Integration - Complete workflow
+    # Subtest: should handle encode → validate → decode workflow
+    ok 1 - should handle encode → validate → decode workflow
+      ---
+      duration_ms: 14.3324
+      type: 'test'
+      ...
+    # Subtest: should generate types and validate data
+    ok 2 - should generate types and validate data
+      ---
+      duration_ms: 0.9409
+      type: 'test'
+      ...
+    # Subtest: should handle smart encoding with schema validation
+    ok 3 - should handle smart encoding with schema validation
+      ---
+      duration_ms: 3.7794
+      type: 'test'
+      ...
+    1..3
+ok 61 - Integration - Complete workflow
+  ---
+  duration_ms: 20.9648
+  type: 'suite'
+  ...
+# Subtest: Integration - Edge cases
+    # Subtest: should handle deeply nested validation
+    ok 1 - should handle deeply nested validation
+      ---
+      duration_ms: 1.8175
+      type: 'test'
+      ...
+    # Subtest: should preserve all data types in full round-trip
+    ok 2 - should preserve all data types in full round-trip
+      ---
+      duration_ms: 0.9456
+      type: 'test'
+      ...
+    # Subtest: should handle all features together in complex scenario
+    ok 3 - should handle all features together in complex scenario
+      ---
+      duration_ms: 1.2975
+      type: 'test'
+      ...
+    1..3
+ok 62 - Integration - Edge cases
+  ---
+  duration_ms: 4.3653
+  type: 'suite'
+  ...
+# Subtest: Token Metrics
+    # Subtest: estimateTokens
+        # Subtest: should estimate tokens for simple text
+        ok 1 - should estimate tokens for simple text
+          ---
+          duration_ms: 1.7616
+          type: 'test'
+          ...
+        # Subtest: should estimate tokens for JSON
+        ok 2 - should estimate tokens for JSON
+          ---
+          duration_ms: 0.5052
+          type: 'test'
+          ...
+        # Subtest: should handle empty string
+        ok 3 - should handle empty string
+          ---
+          duration_ms: 2.8268
+          type: 'test'
+          ...
+        # Subtest: should estimate different tokenizers
+        ok 4 - should estimate different tokenizers
+          ---
+          duration_ms: 2.9166
+          type: 'test'
+          ...
+        # Subtest: should estimate tokens for code
+        ok 5 - should estimate tokens for code
+          ---
+          duration_ms: 0.3179
+          type: 'test'
+          ...
+        # Subtest: should estimate tokens for special characters
+        ok 6 - should estimate tokens for special characters
+          ---
+          duration_ms: 0.3438
+          type: 'test'
+          ...
+        # Subtest: should estimate tokens for multiline text
+        ok 7 - should estimate tokens for multiline text
+          ---
+          duration_ms: 0.1743
+          type: 'test'
+          ...
+        # Subtest: should estimate tokens for unicode
+        ok 8 - should estimate tokens for unicode
+          ---
+          duration_ms: 0.5347
+          type: 'test'
+          ...
+        # Subtest: should handle large text
+        ok 9 - should handle large text
+          ---
+          duration_ms: 0.3766
+          type: 'test'
+          ...
+        # Subtest: should estimate different for different models
+        ok 10 - should estimate different for different models
+          ---
+          duration_ms: 0.5515
+          type: 'test'
+          ...
+        1..10
+    ok 1 - estimateTokens
+      ---
+      duration_ms: 11.8493
+      type: 'suite'
+      ...
+    # Subtest: Edge cases
+        # Subtest: should handle only whitespace
+        ok 1 - should handle only whitespace
+          ---
+          duration_ms: 0.1873
+          type: 'test'
+          ...
+        # Subtest: should handle very long word
+        ok 2 - should handle very long word
+          ---
+          duration_ms: 1.3627
+          type: 'test'
+          ...
+        # Subtest: should handle numbers
+        ok 3 - should handle numbers
+          ---
+          duration_ms: 0.1602
+          type: 'test'
+          ...
+        # Subtest: should handle mixed content
+        ok 4 - should handle mixed content
+          ---
+          duration_ms: 0.1288
+          type: 'test'
+          ...
+        1..4
+    ok 2 - Edge cases
+      ---
+      duration_ms: 2.0614
+      type: 'suite'
+      ...
+    1..2
+ok 63 - Token Metrics
+  ---
+  duration_ms: 14.6901
+  type: 'suite'
+  ...
+# Subtest: Modification API Complete
+    # Subtest: Set & Delete
+        # Subtest: should set and get value
+        ok 1 - should set and get value
+          ---
+          duration_ms: 3.9893
+          type: 'test'
+          ...
+        # Subtest: should delete property
+        ok 2 - should delete property
+          ---
+          duration_ms: 0.9752
+          type: 'test'
+          ...
+        # Subtest: should delete array element
+        ok 3 - should delete array element
+          ---
+          duration_ms: 1.822
+          type: 'test'
+          ...
+        1..3
+    ok 1 - Set & Delete
+      ---
+      duration_ms: 8.7306
+      type: 'suite'
+      ...
+    # Subtest: Array Operations
+        # Subtest: should push to array
+        ok 1 - should push to array
+          ---
+          duration_ms: 0.5791
+          type: 'test'
+          ...
+        # Subtest: should pop from array
+        ok 2 - should pop from array
+          ---
+          duration_ms: 0.3325
+          type: 'test'
+          ...
+        1..2
+    ok 2 - Array Operations
+      ---
+      duration_ms: 1.1058
+      type: 'suite'
+      ...
+    # Subtest: Chaining
+        # Subtest: should chain modifications
+        ok 1 - should chain modifications
+          ---
+          duration_ms: 0.4786
+          type: 'test'
+          ...
+        1..1
+    ok 3 - Chaining
+      ---
+      duration_ms: 0.7025
+      type: 'suite'
+      ...
+    1..3
+ok 64 - Modification API Complete
+  ---
+  duration_ms: 12.9879
+  type: 'suite'
+  ...
+# Subtest: Core Setter - T011
+    # Subtest: Basic Set Operations
+        # Subtest: should set simple property
+        ok 1 - should set simple property
+          ---
+          duration_ms: 7.4282
+          type: 'test'
+          ...
+        # Subtest: should set nested property
+        ok 2 - should set nested property
+          ---
+          duration_ms: 0.3966
+          type: 'test'
+          ...
+        # Subtest: should set array element
+        ok 3 - should set array element
+          ---
+          duration_ms: 0.7964
+          type: 'test'
+          ...
+        # Subtest: should set array element property
+        ok 4 - should set array element property
+          ---
+          duration_ms: 0.2548
+          type: 'test'
+          ...
+        # Subtest: should support method chaining
+        ok 5 - should support method chaining
+          ---
+          duration_ms: 0.229
+          type: 'test'
+          ...
+        1..5
+    ok 1 - Basic Set Operations
+      ---
+      duration_ms: 10.2245
+      type: 'suite'
+      ...
+    # Subtest: Create Intermediate Paths
+        # Subtest: should create intermediate objects
+        ok 1 - should create intermediate objects
+          ---
+          duration_ms: 0.2749
+          type: 'test'
+          ...
+        # Subtest: should create intermediate arrays
+        ok 2 - should create intermediate arrays
+          ---
+          duration_ms: 0.3171
+          type: 'test'
+          ...
+        # Subtest: should create deep nested structure
+        ok 3 - should create deep nested structure
+          ---
+          duration_ms: 0.4294
+          type: 'test'
+          ...
+        1..3
+    ok 2 - Create Intermediate Paths
+      ---
+      duration_ms: 1.2188
+      type: 'suite'
+      ...
+    # Subtest: Edge Cases
+        # Subtest: should handle negative array index
+        ok 1 - should handle negative array index
+          ---
+          duration_ms: 0.3095
+          type: 'test'
+          ...
+        # Subtest: should update existing value
+        ok 2 - should update existing value
+          ---
+          duration_ms: 0.1907
+          type: 'test'
+          ...
+        # Subtest: should set null value
+        ok 3 - should set null value
+          ---
+          duration_ms: 0.9848
+          type: 'test'
+          ...
+        # Subtest: should set boolean value
+        ok 4 - should set boolean value
+          ---
+          duration_ms: 0.2711
+          type: 'test'
+          ...
+        # Subtest: should set object value
+        ok 5 - should set object value
+          ---
+          duration_ms: 1.1982
+          type: 'test'
+          ...
+        1..5
+    ok 3 - Edge Cases
+      ---
+      duration_ms: 3.2561
+      type: 'suite'
+      ...
+    1..3
+ok 65 - Core Setter - T011
+  ---
+  duration_ms: 15.4281
+  type: 'suite'
+  ...
+# Subtest: Navigation & Iteration API - T004
+    # Subtest: Basic Iterators
+        # Subtest: should iterate over object entries
+        ok 1 - should iterate over object entries
+          ---
+          duration_ms: 2.0395
+          type: 'test'
+          ...
+        # Subtest: should iterate over object keys
+        ok 2 - should iterate over object keys
+          ---
+          duration_ms: 10.4565
+          type: 'test'
+          ...
+        # Subtest: should iterate over object values
+        ok 3 - should iterate over object values
+          ---
+          duration_ms: 0.3433
+          type: 'test'
+          ...
+        # Subtest: should iterate over array entries
+        ok 4 - should iterate over array entries
+          ---
+          duration_ms: 0.2076
+          type: 'test'
+          ...
+        # Subtest: should iterate over array keys
+        ok 5 - should iterate over array keys
+          ---
+          duration_ms: 0.1493
+          type: 'test'
+          ...
+        # Subtest: should iterate over array values
+        ok 6 - should iterate over array values
+          ---
+          duration_ms: 0.1542
+          type: 'test'
+          ...
+        1..6
+    ok 1 - Basic Iterators
+      ---
+      duration_ms: 15.6436
+      type: 'suite'
+      ...
+    # Subtest: Deep Iterators
+        # Subtest: should iterate all paths recursively
+        ok 1 - should iterate all paths recursively
+          ---
+          duration_ms: 0.5558
+          type: 'test'
+          ...
+        # Subtest: should iterate all entries recursively
+        ok 2 - should iterate all entries recursively
+          ---
+          duration_ms: 0.2566
+          type: 'test'
+          ...
+        # Subtest: should iterate all values recursively
+        ok 3 - should iterate all values recursively
+          ---
+          duration_ms: 0.3557
+          type: 'test'
+          ...
+        1..3
+    ok 2 - Deep Iterators
+      ---
+      duration_ms: 1.3563
+      type: 'suite'
+      ...
+    # Subtest: Walker
+        # Subtest: should walk tree with callback
+        ok 1 - should walk tree with callback
+          ---
+          duration_ms: 0.5292
+          type: 'test'
+          ...
+        # Subtest: should support early termination
+        ok 2 - should support early termination
+          ---
+          duration_ms: 0.1528
+          type: 'test'
+          ...
+        # Subtest: should provide depth information
+        ok 3 - should provide depth information
+          ---
+          duration_ms: 0.1477
+          type: 'test'
+          ...
+        # Subtest: should count all nodes
+        ok 4 - should count all nodes
+          ---
+          duration_ms: 0.1646
+          type: 'test'
+          ...
+        # Subtest: should find value by predicate
+        ok 5 - should find value by predicate
+          ---
+          duration_ms: 0.1522
+          type: 'test'
+          ...
+        # Subtest: should find all matching values
+        ok 6 - should find all matching values
+          ---
+          duration_ms: 0.1782
+          type: 'test'
+          ...
+        # Subtest: should check if some value matches
+        ok 7 - should check if some value matches
+          ---
+          duration_ms: 0.1215
+          type: 'test'
+          ...
+        # Subtest: should check if every value matches
+        ok 8 - should check if every value matches
+          ---
+          duration_ms: 0.211
+          type: 'test'
+          ...
+        1..8
+    ok 3 - Walker
+      ---
+      duration_ms: 1.9718
+      type: 'suite'
+      ...
+    1..3
+ok 66 - Navigation & Iteration API - T004
+  ---
+  duration_ms: 19.933
+  type: 'suite'
+  ...
+# Subtest: parseTONLLine
+    # Subtest: should parse simple comma-separated values
+    ok 1 - should parse simple comma-separated values
+      ---
+      duration_ms: 4.5007
+      type: 'test'
+      ...
+    # Subtest: should handle quoted values containing delimiter
+    ok 2 - should handle quoted values containing delimiter
+      ---
+      duration_ms: 0.2202
+      type: 'test'
+      ...
+    # Subtest: should handle doubled quotes inside quoted strings
+    ok 3 - should handle doubled quotes inside quoted strings
+      ---
+      duration_ms: 0.1537
+      type: 'test'
+      ...
+    # Subtest: should handle custom delimiter
+    ok 4 - should handle custom delimiter
+      ---
+      duration_ms: 0.1208
+      type: 'test'
+      ...
+    # Subtest: should handle escaped delimiter in plain mode
+    ok 5 - should handle escaped delimiter in plain mode
+      ---
+      duration_ms: 0.2434
+      type: 'test'
+      ...
+    # Subtest: should handle empty fields
+    ok 6 - should handle empty fields
+      ---
+      duration_ms: 0.2936
+      type: 'test'
+      ...
+    # Subtest: should handle trailing whitespace
+    ok 7 - should handle trailing whitespace
+      ---
+      duration_ms: 0.3437
+      type: 'test'
+      ...
+    # Subtest: should return empty array for empty line
+    ok 8 - should return empty array for empty line
+      ---
+      duration_ms: 0.1339
+      type: 'test'
+      ...
+    # Subtest: should return empty array for whitespace-only line
+    ok 9 - should return empty array for whitespace-only line
+      ---
+      duration_ms: 0.2001
+      type: 'test'
+      ...
+    1..9
+ok 67 - parseTONLLine
+  ---
+  duration_ms: 7.8989
+  type: 'suite'
+  ...
+# Subtest: parseHeaderLine
+    # Subtest: should parse version header
+    ok 1 - should parse version header
+      ---
+      duration_ms: 0.314
+      type: 'test'
+      ...
+    # Subtest: should parse delimiter header
+    ok 2 - should parse delimiter header
+      ---
+      duration_ms: 0.1681
+      type: 'test'
+      ...
+    # Subtest: should handle extra whitespace
+    ok 3 - should handle extra whitespace
+      ---
+      duration_ms: 0.1174
+      type: 'test'
+      ...
+    # Subtest: should return null for non-header lines
+    ok 4 - should return null for non-header lines
+      ---
+      duration_ms: 0.4291
+      type: 'test'
+      ...
+    # Subtest: should return null for malformed headers
+    ok 5 - should return null for malformed headers
+      ---
+      duration_ms: 0.261
+      type: 'test'
+      ...
+    1..5
+ok 68 - parseHeaderLine
+  ---
+  duration_ms: 1.6265
+  type: 'suite'
+  ...
+# Subtest: parseObjectHeader
+    # Subtest: should parse simple object header
+    ok 1 - should parse simple object header
+      ---
+      duration_ms: 0.7328
+      type: 'test'
+      ...
+    # Subtest: should parse array header with type hints
+    ok 2 - should parse array header with type hints
+      ---
+      duration_ms: 0.271
+      type: 'test'
+      ...
+    # Subtest: should parse object header with mixed types
+    ok 3 - should parse object header with mixed types
+      ---
+      duration_ms: 0.1815
+      type: 'test'
+      ...
+    # Subtest: should handle empty columns
+    ok 4 - should handle empty columns
+      ---
+      duration_ms: 0.2163
+      type: 'test'
+      ...
+    # Subtest: should return null for non-header lines
+    ok 5 - should return null for non-header lines
+      ---
+      duration_ms: 0.1238
+      type: 'test'
+      ...
+    # Subtest: should return null for lines without trailing colon
+    ok 6 - should return null for lines without trailing colon
+      ---
+      duration_ms: 0.1981
+      type: 'test'
+      ...
+    # Subtest: should handle quoted column names
+    ok 7 - should handle quoted column names
+      ---
+      duration_ms: 0.2239
+      type: 'test'
+      ...
+    1..7
+ok 69 - parseObjectHeader
+  ---
+  duration_ms: 2.2973
+  type: 'suite'
+  ...
+# Subtest: detectDelimiter
+    # Subtest: should detect comma delimiter (default)
+    ok 1 - should detect comma delimiter (default)
+      ---
+      duration_ms: 0.4255
+      type: 'test'
+      ...
+    # Subtest: should detect pipe delimiter
+    ok 2 - should detect pipe delimiter
+      ---
+      duration_ms: 0.2026
+      type: 'test'
+      ...
+    # Subtest: should detect tab delimiter
+    ok 3 - should detect tab delimiter
+      ---
+      duration_ms: 0.2272
+      type: 'test'
+      ...
+    # Subtest: should use explicit delimiter directive
+    ok 4 - should use explicit delimiter directive
+      ---
+      duration_ms: 0.3292
+      type: 'test'
+      ...
+    # Subtest: should fall back to comma when unable to detect
+    ok 5 - should fall back to comma when unable to detect
+      ---
+      duration_ms: 0.1744
+      type: 'test'
+      ...
+    1..5
+ok 70 - detectDelimiter
+  ---
+  duration_ms: 2.4771
+  type: 'suite'
+  ...
+# Subtest: PathValidator Bug Test
+    # Subtest: should handle hidden files (files starting with dot) correctly on Windows
+    ok 1 - should handle hidden files (files starting with dot) correctly on Windows
+      ---
+      duration_ms: 3.8515
+      type: 'test'
+      ...
+    # Subtest: should handle filenames without extensions correctly
+    ok 2 - should handle filenames without extensions correctly
+      ---
+      duration_ms: 0.5834
+      type: 'test'
+      ...
+    1..2
+ok 71 - PathValidator Bug Test
+  ---
+  duration_ms: 6.3087
+  type: 'suite'
+  ...
+# Subtest: BULLETPROOF: PathValidator
+    # Subtest: validate - Core Security Tests
+        # Subtest: should throw on empty path
+        ok 1 - should throw on empty path
+          ---
+          duration_ms: 5.8374
+          type: 'test'
+          ...
+        # Subtest: should throw on null bytes
+        ok 2 - should throw on null bytes
+          ---
+          duration_ms: 0.4871
+          type: 'test'
+          ...
+        # Subtest: should throw on UNC paths (Windows)
+        ok 3 - should throw on UNC paths (Windows)
+          ---
+          duration_ms: 0.2807
+          type: 'test'
+          ...
+        # Subtest: should throw on directory traversal
+        ok 4 - should throw on directory traversal
+          ---
+          duration_ms: 0.3227
+          type: 'test'
+          ...
+        # Subtest: should accept valid relative paths
+        ok 5 - should accept valid relative paths
+          ---
+          duration_ms: 0.4598
+          type: 'test'
+          ...
+        # Subtest: should normalize paths with dots
+        ok 6 - should normalize paths with dots
+          ---
+          duration_ms: 1.2385
+          type: 'test'
+          ...
+        # Subtest: should throw on non-string input
+        ok 7 - should throw on non-string input
+          ---
+          duration_ms: 0.4145
+          type: 'test'
+          ...
+        # Subtest: should throw on whitespace-only path
+        ok 8 - should throw on whitespace-only path
+          ---
+          duration_ms: 0.1792
+          type: 'test'
+          ...
+        1..8
+    ok 1 - validate - Core Security Tests
+      ---
+      duration_ms: 10.7853
+      type: 'suite'
+      ...
+    # Subtest: validateRead - Read-specific Tests
+        # Subtest: should accept valid read paths
+        ok 1 - should accept valid read paths
+          ---
+          duration_ms: 0.6468
+          type: 'test'
+          ...
+        # Subtest: should throw on traversal for reads
+        ok 2 - should throw on traversal for reads
+          ---
+          duration_ms: 0.2095
+          type: 'test'
+          ...
+        # Subtest: should allow nested paths
+        ok 3 - should allow nested paths
+          ---
+          duration_ms: 0.393
+          type: 'test'
+          ...
+        1..3
+    ok 2 - validateRead - Read-specific Tests
+      ---
+      duration_ms: 1.4206
+      type: 'suite'
+      ...
+    # Subtest: validateWrite - Write-specific Tests
+        # Subtest: should accept valid write paths
+        ok 1 - should accept valid write paths
+          ---
+          duration_ms: 0.2905
+          type: 'test'
+          ...
+        # Subtest: should throw on traversal for writes
+        ok 2 - should throw on traversal for writes
+          ---
+          duration_ms: 0.2122
+          type: 'test'
+          ...
+        # Subtest: should allow nested output paths
+        ok 3 - should allow nested output paths
+          ---
+          duration_ms: 0.1898
+          type: 'test'
+          ...
+        1..3
+    ok 3 - validateWrite - Write-specific Tests
+      ---
+      duration_ms: 0.847
+      type: 'suite'
+      ...
+    # Subtest: Security Edge Cases
+        # Subtest: should reject multiple traversal attempts
+        ok 1 - should reject multiple traversal attempts
+          ---
+          duration_ms: 0.2251
+          type: 'test'
+          ...
+        # Subtest: should handle mixed slashes
+        ok 2 - should handle mixed slashes
+          ---
+          duration_ms: 2.6259
+          type: 'test'
+          ...
+        # Subtest: should trim whitespace from paths
+        ok 3 - should trim whitespace from paths
+          ---
+          duration_ms: 0.5674
+          type: 'test'
+          ...
+        1..3
+    ok 4 - Security Edge Cases
+      ---
+      duration_ms: 4.7108
+      type: 'suite'
+      ...
+    1..4
+ok 72 - BULLETPROOF: PathValidator
+  ---
+  duration_ms: 18.7446
+  type: 'suite'
+  ...
+# Subtest: Query Evaluator - T002
+    # Subtest: Simple Property Access
+        # Subtest: should access top-level property
+        ok 1 - should access top-level property
+          ---
+          duration_ms: 4.7033
+          type: 'test'
+          ...
+        # Subtest: should access nested property
+        ok 2 - should access nested property
+          ---
+          duration_ms: 0.5291
+          type: 'test'
+          ...
+        # Subtest: should access deeply nested property
+        ok 3 - should access deeply nested property
+          ---
+          duration_ms: 0.2464
+          type: 'test'
+          ...
+        # Subtest: should return undefined for non-existent property
+        ok 4 - should return undefined for non-existent property
+          ---
+          duration_ms: 0.1708
+          type: 'test'
+          ...
+        # Subtest: should handle accessing property on null
+        ok 5 - should handle accessing property on null
+          ---
+          duration_ms: 0.1605
+          type: 'test'
+          ...
+        # Subtest: should access property starting with $
+        ok 6 - should access property starting with $
+          ---
+          duration_ms: 0.1596
+          type: 'test'
+          ...
+        # Subtest: should access property with root ($)
+        ok 7 - should access property with root ($)
+          ---
+          duration_ms: 0.2867
+          type: 'test'
+          ...
+        # Subtest: should return entire document for root ($)
+        ok 8 - should return entire document for root ($)
+          ---
+          duration_ms: 0.1978
+          type: 'test'
+          ...
+        # Subtest: should return entire document for empty path
+        ok 9 - should return entire document for empty path
+          ---
+          duration_ms: 0.117
+          type: 'test'
+          ...
+        # Subtest: should access multiple levels
+        ok 10 - should access multiple levels
+          ---
+          duration_ms: 0.1127
+          type: 'test'
+          ...
+        # Subtest: should access primitive values
+        ok 11 - should access primitive values
+          ---
+          duration_ms: 0.0918
+          type: 'test'
+          ...
+        # Subtest: should access boolean values
+        ok 12 - should access boolean values
+          ---
+          duration_ms: 0.1438
+          type: 'test'
+          ...
+        # Subtest: should access null values
+        ok 13 - should access null values
+          ---
+          duration_ms: 0.1341
+          type: 'test'
+          ...
+        # Subtest: should access string values
+        ok 14 - should access string values
+          ---
+          duration_ms: 0.1033
+          type: 'test'
+          ...
+        # Subtest: should access array property
+        ok 15 - should access array property
+          ---
+          duration_ms: 0.8488
+          type: 'test'
+          ...
+        1..15
+    ok 1 - Simple Property Access
+      ---
+      duration_ms: 9.613
+      type: 'suite'
+      ...
+    # Subtest: Array Indexing
+        # Subtest: should access array element by index
+        ok 1 - should access array element by index
+          ---
+          duration_ms: 1.0785
+          type: 'test'
+          ...
+        # Subtest: should access array element property
+        ok 2 - should access array element property
+          ---
+          duration_ms: 0.3119
+          type: 'test'
+          ...
+        # Subtest: should handle negative index
+        ok 3 - should handle negative index
+          ---
+          duration_ms: 0.2561
+          type: 'test'
+          ...
+        # Subtest: should handle negative index -2
+        ok 4 - should handle negative index -2
+          ---
+          duration_ms: 0.2265
+          type: 'test'
+          ...
+        # Subtest: should return undefined for out of bounds index
+        ok 5 - should return undefined for out of bounds index
+          ---
+          duration_ms: 0.1898
+          type: 'test'
+          ...
+        # Subtest: should return undefined for negative out of bounds
+        ok 6 - should return undefined for negative out of bounds
+          ---
+          duration_ms: 0.1817
+          type: 'test'
+          ...
+        # Subtest: should handle nested array access
+        ok 7 - should handle nested array access
+          ---
+          duration_ms: 0.1772
+          type: 'test'
+          ...
+        # Subtest: should handle deeply nested array property
+        ok 8 - should handle deeply nested array property
+          ---
+          duration_ms: 0.2305
+          type: 'test'
+          ...
+        # Subtest: should handle array of primitives
+        ok 9 - should handle array of primitives
+          ---
+          duration_ms: 0.196
+          type: 'test'
+          ...
+        # Subtest: should return undefined for index on non-array
+        ok 10 - should return undefined for index on non-array
+          ---
+          duration_ms: 0.1892
+          type: 'test'
+          ...
+        # Subtest: should handle zero index
+        ok 11 - should handle zero index
+          ---
+          duration_ms: 0.2849
+          type: 'test'
+          ...
+        # Subtest: should handle last element access
+        ok 12 - should handle last element access
+          ---
+          duration_ms: 0.2148
+          type: 'test'
+          ...
+        # Subtest: should handle multiple array indices
+        ok 13 - should handle multiple array indices
+          ---
+          duration_ms: 0.2368
+          type: 'test'
+          ...
+        # Subtest: should handle array access on root
+        ok 14 - should handle array access on root
+          ---
+          duration_ms: 0.32
+          type: 'test'
+          ...
+        # Subtest: should handle complex nested array paths
+        ok 15 - should handle complex nested array paths
+          ---
+          duration_ms: 0.2162
+          type: 'test'
+          ...
+        1..15
+    ok 2 - Array Indexing
+      ---
+      duration_ms: 5.025
+      type: 'suite'
+      ...
+    # Subtest: Wildcards
+        # Subtest: should expand wildcard on array
+        ok 1 - should expand wildcard on array
+          ---
+          duration_ms: 0.3937
+          type: 'test'
+          ...
+        # Subtest: should expand wildcard and access property
+        ok 2 - should expand wildcard and access property
+          ---
+          duration_ms: 0.2249
+          type: 'test'
+          ...
+        # Subtest: should expand wildcard on object properties
+        ok 3 - should expand wildcard on object properties
+          ---
+          duration_ms: 0.1885
+          type: 'test'
+          ...
+        # Subtest: should return empty array for wildcard on null
+        ok 4 - should return empty array for wildcard on null
+          ---
+          duration_ms: 0.1412
+          type: 'test'
+          ...
+        # Subtest: should return empty array for wildcard on primitive
+        ok 5 - should return empty array for wildcard on primitive
+          ---
+          duration_ms: 0.138
+          type: 'test'
+          ...
+        # Subtest: should handle wildcard after property
+        ok 6 - should handle wildcard after property
+          ---
+          duration_ms: 0.2879
+          type: 'test'
+          ...
+        # Subtest: should handle multiple wildcards
+        ok 7 - should handle multiple wildcards
+          ---
+          duration_ms: 0.2134
+          type: 'test'
+          ...
+        # Subtest: should handle wildcard on empty array
+        ok 8 - should handle wildcard on empty array
+          ---
+          duration_ms: 0.178
+          type: 'test'
+          ...
+        # Subtest: should handle wildcard on empty object
+        ok 9 - should handle wildcard on empty object
+          ---
+          duration_ms: 0.1763
+          type: 'test'
+          ...
+        # Subtest: should get all user ids with wildcard
+        ok 10 - should get all user ids with wildcard
+          ---
+          duration_ms: 0.4101
+          type: 'test'
+          ...
+        # Subtest: should expand wildcard on nested structure
+        ok 11 - should expand wildcard on nested structure
+          ---
+          duration_ms: 0.2247
+          type: 'test'
+          ...
+        # Subtest: should handle wildcard at root level
+        ok 12 - should handle wildcard at root level
+          ---
+          duration_ms: 0.1674
+          type: 'test'
+          ...
+        # Subtest: should return object values for wildcard
+        ok 13 - should return object values for wildcard
+          ---
+          duration_ms: 0.158
+          type: 'test'
+          ...
+        # Subtest: should handle dot wildcard syntax
+        ok 14 - should handle dot wildcard syntax
+          ---
+          duration_ms: 0.1252
+          type: 'test'
+          ...
+        # Subtest: should handle bracket wildcard syntax
+        ok 15 - should handle bracket wildcard syntax
+          ---
+          duration_ms: 0.2093
+          type: 'test'
+          ...
+        1..15
+    ok 3 - Wildcards
+      ---
+      duration_ms: 6.3585
+      type: 'suite'
+      ...
+    # Subtest: Recursive Descent
+        # Subtest: should find property at any depth
+        ok 1 - should find property at any depth
+          ---
+          duration_ms: 0.6767
+          type: 'test'
+          ...
+        # Subtest: should find all matching properties
+        ok 2 - should find all matching properties
+          ---
+          duration_ms: 0.214
+          type: 'test'
+          ...
+        # Subtest: should handle recursive descent without property name
+        ok 3 - should handle recursive descent without property name
+          ---
+          duration_ms: 0.1823
+          type: 'test'
+          ...
+        # Subtest: should find deeply nested value
+        ok 4 - should find deeply nested value
+          ---
+          duration_ms: 0.1389
+          type: 'test'
+          ...
+        # Subtest: should handle recursive descent on arrays
+        ok 5 - should handle recursive descent on arrays
+          ---
+          duration_ms: 0.1422
+          type: 'test'
+          ...
+        # Subtest: should return empty array if no matches
+        ok 6 - should return empty array if no matches
+          ---
+          duration_ms: 0.1505
+          type: 'test'
+          ...
+        # Subtest: should handle recursive descent from non-root
+        ok 7 - should handle recursive descent from non-root
+          ---
+          duration_ms: 0.123
+          type: 'test'
+          ...
+        # Subtest: should find all values with specific key
+        ok 8 - should find all values with specific key
+          ---
+          duration_ms: 0.1262
+          type: 'test'
+          ...
+        # Subtest: should handle recursive descent on empty object
+        ok 9 - should handle recursive descent on empty object
+          ---
+          duration_ms: 0.1181
+          type: 'test'
+          ...
+        # Subtest: should handle recursive descent with multiple levels
+        ok 10 - should handle recursive descent with multiple levels
+          ---
+          duration_ms: 0.1182
+          type: 'test'
+          ...
+        # Subtest: should find all id fields recursively
+        ok 11 - should find all id fields recursively
+          ---
+          duration_ms: 0.1317
+          type: 'test'
+          ...
+        # Subtest: should handle recursive descent on arrays of objects
+        ok 12 - should handle recursive descent on arrays of objects
+          ---
+          duration_ms: 0.1305
+          type: 'test'
+          ...
+        # Subtest: should not exceed max recursion depth
+        ok 13 - should not exceed max recursion depth
+          ---
+          duration_ms: 0.1981
+          type: 'test'
+          ...
+        # Subtest: should handle recursive with arrays at multiple levels
+        ok 14 - should handle recursive with arrays at multiple levels
+          ---
+          duration_ms: 0.1487
+          type: 'test'
+          ...
+        # Subtest: should find property in mixed structures
+        ok 15 - should find property in mixed structures
+          ---
+          duration_ms: 0.2676
+          type: 'test'
+          ...
+        1..15
+    ok 4 - Recursive Descent
+      ---
+      duration_ms: 3.347
+      type: 'suite'
+      ...
+    # Subtest: Array Slicing
+        # Subtest: should slice array with start and end
+        ok 1 - should slice array with start and end
+          ---
+          duration_ms: 0.6253
+          type: 'test'
+          ...
+        # Subtest: should slice array with only end
+        ok 2 - should slice array with only end
+          ---
+          duration_ms: 0.1699
+          type: 'test'
+          ...
+        # Subtest: should slice array with only start
+        ok 3 - should slice array with only start
+          ---
+          duration_ms: 0.1263
+          type: 'test'
+          ...
+        # Subtest: should slice array with step
+        ok 4 - should slice array with step
+          ---
+          duration_ms: 0.1585
+          type: 'test'
+          ...
+        # Subtest: should slice array with only step
+        ok 5 - should slice array with only step
+          ---
+          duration_ms: 0.1455
+          type: 'test'
+          ...
+        # Subtest: should handle negative slice indices
+        ok 6 - should handle negative slice indices
+          ---
+          duration_ms: 0.1329
+          type: 'test'
+          ...
+        # Subtest: should handle slice with negative start and end
+        ok 7 - should handle slice with negative start and end
+          ---
+          duration_ms: 0.1555
+          type: 'test'
+          ...
+        # Subtest: should return empty array for slice on non-array
+        ok 8 - should return empty array for slice on non-array
+          ---
+          duration_ms: 0.1313
+          type: 'test'
+          ...
+        # Subtest: should handle slice with out of bounds indices
+        ok 9 - should handle slice with out of bounds indices
+          ---
+          duration_ms: 0.1218
+          type: 'test'
+          ...
+        # Subtest: should handle empty slice range
+        ok 10 - should handle empty slice range
+          ---
+          duration_ms: 0.1243
+          type: 'test'
+          ...
+        # Subtest: should handle full array slice
+        ok 11 - should handle full array slice
+          ---
+          duration_ms: 0.3021
+          type: 'test'
+          ...
+        # Subtest: should handle slice on empty array
+        ok 12 - should handle slice on empty array
+          ---
+          duration_ms: 0.1238
+          type: 'test'
+          ...
+        # Subtest: should handle large step
+        ok 13 - should handle large step
+          ---
+          duration_ms: 0.1283
+          type: 'test'
+          ...
+        # Subtest: should handle slice starting from middle
+        ok 14 - should handle slice starting from middle
+          ---
+          duration_ms: 0.1433
+          type: 'test'
+          ...
+        # Subtest: should handle slice on nested array
+        ok 15 - should handle slice on nested array
+          ---
+          duration_ms: 0.1308
+          type: 'test'
+          ...
+        1..15
+    ok 5 - Array Slicing
+      ---
+      duration_ms: 3.2192
+      type: 'suite'
+      ...
+    # Subtest: exists() Helper
+        # Subtest: should return true for existing property
+        ok 1 - should return true for existing property
+          ---
+          duration_ms: 0.2789
+          type: 'test'
+          ...
+        # Subtest: should return false for non-existing property
+        ok 2 - should return false for non-existing property
+          ---
+          duration_ms: 0.1168
+          type: 'test'
+          ...
+        # Subtest: should return true for null value
+        ok 3 - should return true for null value
+          ---
+          duration_ms: 0.1143
+          type: 'test'
+          ...
+        # Subtest: should return true for array element
+        ok 4 - should return true for array element
+          ---
+          duration_ms: 0.1258
+          type: 'test'
+          ...
+        # Subtest: should return false for out of bounds index
+        ok 5 - should return false for out of bounds index
+          ---
+          duration_ms: 0.1381
+          type: 'test'
+          ...
+        # Subtest: should return true for root
+        ok 6 - should return true for root
+          ---
+          duration_ms: 0.1755
+          type: 'test'
+          ...
+        # Subtest: should return true for deeply nested property
+        ok 7 - should return true for deeply nested property
+          ---
+          duration_ms: 0.1461
+          type: 'test'
+          ...
+        # Subtest: should return false for broken path
+        ok 8 - should return false for broken path
+          ---
+          duration_ms: 0.1457
+          type: 'test'
+          ...
+        # Subtest: should return true for wildcard match
+        ok 9 - should return true for wildcard match
+          ---
+          duration_ms: 0.1105
+          type: 'test'
+          ...
+        # Subtest: should return true for recursive descent match
+        ok 10 - should return true for recursive descent match
+          ---
+          duration_ms: 0.128
+          type: 'test'
+          ...
+        1..10
+    ok 6 - exists() Helper
+      ---
+      duration_ms: 1.8006
+      type: 'suite'
+      ...
+    # Subtest: typeOf() Helper
+        # Subtest: should return "string" for string value
+        ok 1 - should return "string" for string value
+          ---
+          duration_ms: 0.3534
+          type: 'test'
+          ...
+        # Subtest: should return "number" for number value
+        ok 2 - should return "number" for number value
+          ---
+          duration_ms: 0.15
+          type: 'test'
+          ...
+        # Subtest: should return "boolean" for boolean value
+        ok 3 - should return "boolean" for boolean value
+          ---
+          duration_ms: 0.1291
+          type: 'test'
+          ...
+        # Subtest: should return "null" for null value
+        ok 4 - should return "null" for null value
+          ---
+          duration_ms: 0.1004
+          type: 'test'
+          ...
+        # Subtest: should return "object" for object value
+        ok 5 - should return "object" for object value
+          ---
+          duration_ms: 0.2925
+          type: 'test'
+          ...
+        # Subtest: should return "array" for array value
+        ok 6 - should return "array" for array value
+          ---
+          duration_ms: 0.2052
+          type: 'test'
+          ...
+        # Subtest: should return undefined for non-existent path
+        ok 7 - should return undefined for non-existent path
+          ---
+          duration_ms: 0.1477
+          type: 'test'
+          ...
+        # Subtest: should return "array" for wildcard result
+        ok 8 - should return "array" for wildcard result
+          ---
+          duration_ms: 0.1319
+          type: 'test'
+          ...
+        # Subtest: should return "array" for slice result
+        ok 9 - should return "array" for slice result
+          ---
+          duration_ms: 0.1539
+          type: 'test'
+          ...
+        # Subtest: should return "array" for recursive descent result
+        ok 10 - should return "array" for recursive descent result
+          ---
+          duration_ms: 0.1454
+          type: 'test'
+          ...
+        # Subtest: should return "number" for array element
+        ok 11 - should return "number" for array element
+          ---
+          duration_ms: 0.1207
+          type: 'test'
+          ...
+        # Subtest: should return "object" for root
+        ok 12 - should return "object" for root
+          ---
+          duration_ms: 0.0996
+          type: 'test'
+          ...
+        # Subtest: should handle typeof for primitive array
+        ok 13 - should handle typeof for primitive array
+          ---
+          duration_ms: 0.1107
+          type: 'test'
+          ...
+        # Subtest: should return "number" for nested number
+        ok 14 - should return "number" for nested number
+          ---
+          duration_ms: 0.1325
+          type: 'test'
+          ...
+        # Subtest: should return "string" for deeply nested string
+        ok 15 - should return "string" for deeply nested string
+          ---
+          duration_ms: 2.074
+          type: 'test'
+          ...
+        1..15
+    ok 7 - typeOf() Helper
+      ---
+      duration_ms: 6.1094
+      type: 'suite'
+      ...
+    # Subtest: QueryEvaluator Class
+        # Subtest: should create evaluator instance
+        ok 1 - should create evaluator instance
+          ---
+          duration_ms: 0.3462
+          type: 'test'
+          ...
+        # Subtest: should evaluate path using evaluator
+        ok 2 - should evaluate path using evaluator
+          ---
+          duration_ms: 0.6382
+          type: 'test'
+          ...
+        # Subtest: should use exists method
+        ok 3 - should use exists method
+          ---
+          duration_ms: 1.238
+          type: 'test'
+          ...
+        # Subtest: should use typeOf method
+        ok 4 - should use typeOf method
+          ---
+          duration_ms: 0.5497
+          type: 'test'
+          ...
+        # Subtest: should handle custom max depth
+        ok 5 - should handle custom max depth
+          ---
+          duration_ms: 0.8162
+          type: 'test'
+          ...
+        # Subtest: should support cache enable/disable
+        ok 6 - should support cache enable/disable
+          ---
+          duration_ms: 0.2078
+          type: 'test'
+          ...
+        # Subtest: should provide cache stats
+        ok 7 - should provide cache stats
+          ---
+          duration_ms: 0.4686
+          type: 'test'
+          ...
+        # Subtest: should clear cache
+        ok 8 - should clear cache
+          ---
+          duration_ms: 0.2809
+          type: 'test'
+          ...
+        # Subtest: should handle multiple evaluations
+        ok 9 - should handle multiple evaluations
+          ---
+          duration_ms: 0.2893
+          type: 'test'
+          ...
+        # Subtest: should reuse evaluator for multiple queries
+        ok 10 - should reuse evaluator for multiple queries
+          ---
+          duration_ms: 0.4559
+          type: 'test'
+          ...
+        1..10
+    ok 8 - QueryEvaluator Class
+      ---
+      duration_ms: 5.8664
+      type: 'suite'
+      ...
+    # Subtest: Cache Behavior
+        # Subtest: should cache query results
+        ok 1 - should cache query results
+          ---
+          duration_ms: 0.3859
+          type: 'test'
+          ...
+        # Subtest: should use custom cache
+        ok 2 - should use custom cache
+          ---
+          duration_ms: 0.4195
+          type: 'test'
+          ...
+        # Subtest: should respect cache size limit
+        ok 3 - should respect cache size limit
+          ---
+          duration_ms: 0.652
+          type: 'test'
+          ...
+        # Subtest: should update LRU on cache hit
+        ok 4 - should update LRU on cache hit
+          ---
+          duration_ms: 0.669
+          type: 'test'
+          ...
+        # Subtest: should clear cache correctly
+        ok 5 - should clear cache correctly
+          ---
+          duration_ms: 0.4532
+          type: 'test'
+          ...
+        # Subtest: should track cache hits
+        ok 6 - should track cache hits
+          ---
+          duration_ms: 0.5256
+          type: 'test'
+          ...
+        # Subtest: should handle cache with disabled caching
+        ok 7 - should handle cache with disabled caching
+          ---
+          duration_ms: 0.2308
+          type: 'test'
+          ...
+        # Subtest: should generate unique cache keys
+        ok 8 - should generate unique cache keys
+          ---
+          duration_ms: 0.2703
+          type: 'test'
+          ...
+        # Subtest: should share cache between evaluators
+        ok 9 - should share cache between evaluators
+          ---
+          duration_ms: 0.1946
+          type: 'test'
+          ...
+        # Subtest: should provide cache statistics
+        ok 10 - should provide cache statistics
+          ---
+          duration_ms: 0.1099
+          type: 'test'
+          ...
+        1..10
+    ok 9 - Cache Behavior
+      ---
+      duration_ms: 4.8035
+      type: 'suite'
+      ...
+    # Subtest: Performance
+        # Subtest: should evaluate simple path in <1ms
+        ok 1 - should evaluate simple path in <1ms
+          ---
+          duration_ms: 0.6664
+          type: 'test'
+          ...
+        # Subtest: should handle 1000 evaluations efficiently
+        ok 2 - should handle 1000 evaluations efficiently
+          ---
+          duration_ms: 6.3977
+          type: 'test'
+          ...
+        # Subtest: should benefit from caching
+        ok 3 - should benefit from caching
+          ---
+          duration_ms: 0.6007
+          type: 'test'
+          ...
+        # Subtest: should handle large result sets
+        ok 4 - should handle large result sets
+          ---
+          duration_ms: 1.6119
+          type: 'test'
+          ...
+        # Subtest: should handle deep recursion efficiently
+        ok 5 - should handle deep recursion efficiently
+          ---
+          duration_ms: 0.3124
+          type: 'test'
+          ...
+        1..5
+    ok 10 - Performance
+      ---
+      duration_ms: 9.8979
+      type: 'suite'
+      ...
+    1..10
+ok 73 - Query Evaluator - T002
+  ---
+  duration_ms: 57.6708
+  type: 'suite'
+  ...
+# Subtest: Filter Expression Engine - T003
+    # Subtest: Equality Operators (==, !=)
+        # Subtest: should filter with == operator on string
+        ok 1 - should filter with == operator on string
+          ---
+          duration_ms: 4.3792
+          type: 'test'
+          ...
+        # Subtest: should filter with == operator on number
+        ok 2 - should filter with == operator on number
+          ---
+          duration_ms: 0.6913
+          type: 'test'
+          ...
+        # Subtest: should filter with == operator on boolean
+        ok 3 - should filter with == operator on boolean
+          ---
+          duration_ms: 0.3435
+          type: 'test'
+          ...
+        # Subtest: should filter with == operator on false
+        ok 4 - should filter with == operator on false
+          ---
+          duration_ms: 0.2121
+          type: 'test'
+          ...
+        # Subtest: should filter with != operator
+        ok 5 - should filter with != operator
+          ---
+          duration_ms: 0.2458
+          type: 'test'
+          ...
+        # Subtest: should filter with != on number
+        ok 6 - should filter with != on number
+          ---
+          duration_ms: 0.2304
+          type: 'test'
+          ...
+        # Subtest: should handle == with non-existent property
+        ok 7 - should handle == with non-existent property
+          ---
+          duration_ms: 1.1335
+          type: 'test'
+          ...
+        # Subtest: should match null with ==
+        ok 8 - should match null with ==
+          ---
+          duration_ms: 0.2491
+          type: 'test'
+          ...
+        # Subtest: should filter with exact string match
+        ok 9 - should filter with exact string match
+          ---
+          duration_ms: 0.196
+          type: 'test'
+          ...
+        # Subtest: should handle case-sensitive equality
+        ok 10 - should handle case-sensitive equality
+          ---
+          duration_ms: 0.1626
+          type: 'test'
+          ...
+        1..10
+    ok 1 - Equality Operators (==, !=)
+      ---
+      duration_ms: 9.1502
+      type: 'suite'
+      ...
+    # Subtest: Comparison Operators (>, <, >=, <=)
+        # Subtest: should filter with > operator
+        ok 1 - should filter with > operator
+          ---
+          duration_ms: 0.8523
+          type: 'test'
+          ...
+        # Subtest: should filter with < operator
+        ok 2 - should filter with < operator
+          ---
+          duration_ms: 0.3501
+          type: 'test'
+          ...
+        # Subtest: should filter with >= operator
+        ok 3 - should filter with >= operator
+          ---
+          duration_ms: 0.244
+          type: 'test'
+          ...
+        # Subtest: should filter with <= operator
+        ok 4 - should filter with <= operator
+          ---
+          duration_ms: 0.2203
+          type: 'test'
+          ...
+        # Subtest: should filter with > on decimal
+        ok 5 - should filter with > on decimal
+          ---
+          duration_ms: 0.275
+          type: 'test'
+          ...
+        # Subtest: should filter with < on negative numbers
+        ok 6 - should filter with < on negative numbers
+          ---
+          duration_ms: 0.2364
+          type: 'test'
+          ...
+        # Subtest: should handle >= with equal value
+        ok 7 - should handle >= with equal value
+          ---
+          duration_ms: 0.2632
+          type: 'test'
+          ...
+        # Subtest: should handle <= with equal value
+        ok 8 - should handle <= with equal value
+          ---
+          duration_ms: 0.2628
+          type: 'test'
+          ...
+        # Subtest: should compare strings alphabetically
+        ok 9 - should compare strings alphabetically
+          ---
+          duration_ms: 0.402
+          type: 'test'
+          ...
+        # Subtest: should filter with multiple comparisons
+        ok 10 - should filter with multiple comparisons
+          ---
+          duration_ms: 0.9538
+          type: 'test'
+          ...
+        # Subtest: should handle > with boundary value
+        ok 11 - should handle > with boundary value
+          ---
+          duration_ms: 0.3181
+          type: 'test'
+          ...
+        # Subtest: should handle >= with maximum value
+        ok 12 - should handle >= with maximum value
+          ---
+          duration_ms: 0.3779
+          type: 'test'
+          ...
+        # Subtest: should compare with id field
+        ok 13 - should compare with id field
+          ---
+          duration_ms: 0.2423
+          type: 'test'
+          ...
+        # Subtest: should handle <= 0
+        ok 14 - should handle <= 0
+          ---
+          duration_ms: 0.2729
+          type: 'test'
+          ...
+        # Subtest: should compare decimals accurately
+        ok 15 - should compare decimals accurately
+          ---
+          duration_ms: 0.2492
+          type: 'test'
+          ...
+        1..15
+    ok 2 - Comparison Operators (>, <, >=, <=)
+      ---
+      duration_ms: 6.291
+      type: 'suite'
+      ...
+    # Subtest: Logical Operators (&&, ||, !)
+        # Subtest: should filter with AND operator
+        ok 1 - should filter with AND operator
+          ---
+          duration_ms: 0.5557
+          type: 'test'
+          ...
+        # Subtest: should filter with OR operator
+        ok 2 - should filter with OR operator
+          ---
+          duration_ms: 0.2424
+          type: 'test'
+          ...
+        # Subtest: should filter with NOT operator
+        ok 3 - should filter with NOT operator
+          ---
+          duration_ms: 0.3473
+          type: 'test'
+          ...
+        # Subtest: should handle complex AND expression
+        ok 4 - should handle complex AND expression
+          ---
+          duration_ms: 0.3287
+          type: 'test'
+          ...
+        # Subtest: should handle complex OR expression
+        ok 5 - should handle complex OR expression
+          ---
+          duration_ms: 0.298
+          type: 'test'
+          ...
+        # Subtest: should handle AND with different properties
+        ok 6 - should handle AND with different properties
+          ---
+          duration_ms: 0.4556
+          type: 'test'
+          ...
+        # Subtest: should handle OR with same property
+        ok 7 - should handle OR with same property
+          ---
+          duration_ms: 0.3297
+          type: 'test'
+          ...
+        # Subtest: should support nested NOT
+        ok 8 - should support nested NOT
+          ---
+          duration_ms: 0.3369
+          type: 'test'
+          ...
+        # Subtest: should handle short-circuit AND evaluation
+        ok 9 - should handle short-circuit AND evaluation
+          ---
+          duration_ms: 0.2888
+          type: 'test'
+          ...
+        # Subtest: should handle short-circuit OR evaluation
+        ok 10 - should handle short-circuit OR evaluation
+          ---
+          duration_ms: 0.2776
+          type: 'test'
+          ...
+        # Subtest: should combine AND and OR
+        ok 11 - should combine AND and OR
+          ---
+          duration_ms: 0.3431
+          type: 'test'
+          ...
+        # Subtest: should handle multiple NOT operators
+        ok 12 - should handle multiple NOT operators
+          ---
+          duration_ms: 1.1769
+          type: 'test'
+          ...
+        # Subtest: should handle NOT with comparison
+        ok 13 - should handle NOT with comparison
+          ---
+          duration_ms: 0.3186
+          type: 'test'
+          ...
+        # Subtest: should handle triple AND
+        ok 14 - should handle triple AND
+          ---
+          duration_ms: 0.402
+          type: 'test'
+          ...
+        # Subtest: should handle alternating AND/OR
+        ok 15 - should handle alternating AND/OR
+          ---
+          duration_ms: 0.4818
+          type: 'test'
+          ...
+        1..15
+    ok 3 - Logical Operators (&&, ||, !)
+      ---
+      duration_ms: 6.912
+      type: 'suite'
+      ...
+    # Subtest: String Operators
+        # Subtest: should use contains operator (binary)
+        ok 1 - should use contains operator (binary)
+          ---
+          duration_ms: 0.4292
+          type: 'test'
+          ...
+        # Subtest: should use startsWith operator
+        ok 2 - should use startsWith operator
+          ---
+          duration_ms: 0.2621
+          type: 'test'
+          ...
+        # Subtest: should use endsWith operator
+        ok 3 - should use endsWith operator
+          ---
+          duration_ms: 0.2652
+          type: 'test'
+          ...
+        # Subtest: should use matches operator (regex)
+        ok 4 - should use matches operator (regex)
+          ---
+          duration_ms: 1.3466
+          type: 'test'
+          ...
+        # Subtest: should handle contains with no matches
+        ok 5 - should handle contains with no matches
+          ---
+          duration_ms: 0.7938
+          type: 'test'
+          ...
+        # Subtest: should handle startsWith case sensitive
+        ok 6 - should handle startsWith case sensitive
+          ---
+          duration_ms: 0.3121
+          type: 'test'
+          ...
+        # Subtest: should handle endsWith with numbers
+        ok 7 - should handle endsWith with numbers
+          ---
+          duration_ms: 0.355
+          type: 'test'
+          ...
+        # Subtest: should handle regex with special characters
+        ok 8 - should handle regex with special characters
+          ---
+          duration_ms: 0.5197
+          type: 'test'
+          ...
+        # Subtest: should combine contains with AND
+        ok 9 - should combine contains with AND
+          ---
+          duration_ms: 0.3909
+          type: 'test'
+          ...
+        # Subtest: should use contains on property path
+        ok 10 - should use contains on property path
+          ---
+          duration_ms: 0.3397
+          type: 'test'
+          ...
+        # Subtest: should handle empty string contains
+        ok 11 - should handle empty string contains
+          ---
+          duration_ms: 0.3097
+          type: 'test'
+          ...
+        # Subtest: should handle startsWith with empty string
+        ok 12 - should handle startsWith with empty string
+          ---
+          duration_ms: 0.3666
+          type: 'test'
+          ...
+        # Subtest: should handle matches with simple pattern
+        ok 13 - should handle matches with simple pattern
+          ---
+          duration_ms: 0.4034
+          type: 'test'
+          ...
+        # Subtest: should combine multiple string operators
+        ok 14 - should combine multiple string operators
+          ---
+          duration_ms: 0.3027
+          type: 'test'
+          ...
+        # Subtest: should handle contains on non-string (coercion)
+        ok 15 - should handle contains on non-string (coercion)
+          ---
+          duration_ms: 0.4107
+          type: 'test'
+          ...
+        1..15
+    ok 4 - String Operators
+      ---
+      duration_ms: 8.2962
+      type: 'suite'
+      ...
+    # Subtest: Complex Nested Filters
+        # Subtest: should handle deeply nested AND/OR
+        ok 1 - should handle deeply nested AND/OR
+          ---
+          duration_ms: 0.7059
+          type: 'test'
+          ...
+        # Subtest: should handle nested property access in filter
+        ok 2 - should handle nested property access in filter
+          ---
+          duration_ms: 0.32
+          type: 'test'
+          ...
+        # Subtest: should filter with multiple conditions
+        ok 3 - should filter with multiple conditions
+          ---
+          duration_ms: 0.3182
+          type: 'test'
+          ...
+        # Subtest: should handle filter after wildcard
+        ok 4 - should handle filter after wildcard
+          ---
+          duration_ms: 0.3099
+          type: 'test'
+          ...
+        # Subtest: should handle NOT with complex expression
+        ok 5 - should handle NOT with complex expression
+          ---
+          duration_ms: 0.2347
+          type: 'test'
+          ...
+        # Subtest: should combine all operator types
+        ok 6 - should combine all operator types
+          ---
+          duration_ms: 0.2997
+          type: 'test'
+          ...
+        # Subtest: should handle parenthesized expressions
+        ok 7 - should handle parenthesized expressions
+          ---
+          duration_ms: 0.3295
+          type: 'test'
+          ...
+        # Subtest: should filter on deep nested property
+        ok 8 - should filter on deep nested property
+          ---
+          duration_ms: 0.3154
+          type: 'test'
+          ...
+        # Subtest: should handle filter with array access
+        ok 9 - should handle filter with array access
+          ---
+          duration_ms: 0.2342
+          type: 'test'
+          ...
+        # Subtest: should handle multiple filters in path
+        ok 10 - should handle multiple filters in path
+          ---
+          duration_ms: 0.3889
+          type: 'test'
+          ...
+        # Subtest: should handle filter on empty array
+        ok 11 - should handle filter on empty array
+          ---
+          duration_ms: 1.1284
+          type: 'test'
+          ...
+        # Subtest: should handle filter that matches nothing
+        ok 12 - should handle filter that matches nothing
+          ---
+          duration_ms: 0.2858
+          type: 'test'
+          ...
+        # Subtest: should handle filter that matches all
+        ok 13 - should handle filter that matches all
+          ---
+          duration_ms: 0.2296
+          type: 'test'
+          ...
+        # Subtest: should handle boolean property directly
+        ok 14 - should handle boolean property directly
+          ---
+          duration_ms: 0.2661
+          type: 'test'
+          ...
+        # Subtest: should handle negated boolean property
+        ok 15 - should handle negated boolean property
+          ---
+          duration_ms: 0.1774
+          type: 'test'
+          ...
+        1..15
+    ok 5 - Complex Nested Filters
+      ---
+      duration_ms: 6.4508
+      type: 'suite'
+      ...
+    # Subtest: Edge Cases
+        # Subtest: should handle filter on non-array
+        ok 1 - should handle filter on non-array
+          ---
+          duration_ms: 0.4494
+          type: 'test'
+          ...
+        # Subtest: should handle filter with undefined property
+        ok 2 - should handle filter with undefined property
+          ---
+          duration_ms: 0.2286
+          type: 'test'
+          ...
+        # Subtest: should handle comparison with null
+        ok 3 - should handle comparison with null
+          ---
+          duration_ms: 0.3447
+          type: 'test'
+          ...
+        # Subtest: should handle string comparison
+        ok 4 - should handle string comparison
+          ---
+          duration_ms: 0.1765
+          type: 'test'
+          ...
+        # Subtest: should handle filter error gracefully
+        ok 5 - should handle filter error gracefully
+          ---
+          duration_ms: 0.157
+          type: 'test'
+          ...
+        # Subtest: should handle zero in comparisons
+        ok 6 - should handle zero in comparisons
+          ---
+          duration_ms: 0.195
+          type: 'test'
+          ...
+        # Subtest: should handle empty string in equality
+        ok 7 - should handle empty string in equality
+          ---
+          duration_ms: 0.2375
+          type: 'test'
+          ...
+        # Subtest: should handle false boolean
+        ok 8 - should handle false boolean
+          ---
+          duration_ms: 1.2859
+          type: 'test'
+          ...
+        # Subtest: should handle multiple properties in filter
+        ok 9 - should handle multiple properties in filter
+          ---
+          duration_ms: 0.2224
+          type: 'test'
+          ...
+        # Subtest: should handle numeric string comparison
+        ok 10 - should handle numeric string comparison
+          ---
+          duration_ms: 0.1628
+          type: 'test'
+          ...
+        # Subtest: should handle mixed types in comparison
+        ok 11 - should handle mixed types in comparison
+          ---
+          duration_ms: 0.1831
+          type: 'test'
+          ...
+        # Subtest: should handle decimal comparisons
+        ok 12 - should handle decimal comparisons
+          ---
+          duration_ms: 0.1556
+          type: 'test'
+          ...
+        # Subtest: should handle negative numbers in filter
+        ok 13 - should handle negative numbers in filter
+          ---
+          duration_ms: 0.144
+          type: 'test'
+          ...
+        # Subtest: should handle scientific notation
+        ok 14 - should handle scientific notation
+          ---
+          duration_ms: 0.181
+          type: 'test'
+          ...
+        # Subtest: should handle boolean in string comparison
+        ok 15 - should handle boolean in string comparison
+          ---
+          duration_ms: 0.1878
+          type: 'test'
+          ...
+        1..15
+    ok 6 - Edge Cases
+      ---
+      duration_ms: 4.843
+      type: 'suite'
+      ...
+    1..6
+ok 74 - Filter Expression Engine - T003
+  ---
+  duration_ms: 42.9043
+  type: 'suite'
+  ...
+# Subtest: Query Path Parser - T001
+    # Subtest: Simple Property Access
+        # Subtest: should parse single property
+        ok 1 - should parse single property
+          ---
+          duration_ms: 3.5433
+          type: 'test'
+          ...
+        # Subtest: should parse dotted property path
+        ok 2 - should parse dotted property path
+          ---
+          duration_ms: 0.6388
+          type: 'test'
+          ...
+        # Subtest: should parse deep nested properties
+        ok 3 - should parse deep nested properties
+          ---
+          duration_ms: 0.4108
+          type: 'test'
+          ...
+        # Subtest: should parse property with underscore
+        ok 4 - should parse property with underscore
+          ---
+          duration_ms: 0.1731
+          type: 'test'
+          ...
+        # Subtest: should parse property with dollar sign
+        ok 5 - should parse property with dollar sign
+          ---
+          duration_ms: 0.1429
+          type: 'test'
+          ...
+        # Subtest: should parse property with numbers
+        ok 6 - should parse property with numbers
+          ---
+          duration_ms: 0.1237
+          type: 'test'
+          ...
+        # Subtest: should parse path starting with root ($)
+        ok 7 - should parse path starting with root ($)
+          ---
+          duration_ms: 0.1562
+          type: 'test'
+          ...
+        # Subtest: should parse single root ($)
+        ok 8 - should parse single root ($)
+          ---
+          duration_ms: 0.1277
+          type: 'test'
+          ...
+        # Subtest: should handle whitespace in path
+        ok 9 - should handle whitespace in path
+          ---
+          duration_ms: 0.1278
+          type: 'test'
+          ...
+        # Subtest: should parse mixed case properties
+        ok 10 - should parse mixed case properties
+          ---
+          duration_ms: 0.149
+          type: 'test'
+          ...
+        1..10
+    ok 1 - Simple Property Access
+      ---
+      duration_ms: 6.9352
+      type: 'suite'
+      ...
+    # Subtest: Array Indexing
+        # Subtest: should parse simple array index
+        ok 1 - should parse simple array index
+          ---
+          duration_ms: 0.6987
+          type: 'test'
+          ...
+        # Subtest: should parse negative array index
+        ok 2 - should parse negative array index
+          ---
+          duration_ms: 0.326
+          type: 'test'
+          ...
+        # Subtest: should parse array index with property access
+        ok 3 - should parse array index with property access
+          ---
+          duration_ms: 0.1853
+          type: 'test'
+          ...
+        # Subtest: should parse nested array indices
+        ok 4 - should parse nested array indices
+          ---
+          duration_ms: 0.1703
+          type: 'test'
+          ...
+        # Subtest: should parse large array index
+        ok 5 - should parse large array index
+          ---
+          duration_ms: 0.1822
+          type: 'test'
+          ...
+        # Subtest: should parse array index at root
+        ok 6 - should parse array index at root
+          ---
+          duration_ms: 0.1602
+          type: 'test'
+          ...
+        # Subtest: should parse complex path with multiple indices
+        ok 7 - should parse complex path with multiple indices
+          ---
+          duration_ms: 0.1713
+          type: 'test'
+          ...
+        # Subtest: should parse array index with zero
+        ok 8 - should parse array index with zero
+          ---
+          duration_ms: 0.1433
+          type: 'test'
+          ...
+        # Subtest: should parse deeply nested array access
+        ok 9 - should parse deeply nested array access
+          ---
+          duration_ms: 0.1886
+          type: 'test'
+          ...
+        # Subtest: should parse path ending with array index
+        ok 10 - should parse path ending with array index
+          ---
+          duration_ms: 0.1379
+          type: 'test'
+          ...
+        1..10
+    ok 2 - Array Indexing
+      ---
+      duration_ms: 2.8154
+      type: 'suite'
+      ...
+    # Subtest: Wildcards
+        # Subtest: should parse wildcard in bracket notation
+        ok 1 - should parse wildcard in bracket notation
+          ---
+          duration_ms: 0.2132
+          type: 'test'
+          ...
+        # Subtest: should parse wildcard with property access
+        ok 2 - should parse wildcard with property access
+          ---
+          duration_ms: 0.1409
+          type: 'test'
+          ...
+        # Subtest: should parse multiple wildcards
+        ok 3 - should parse multiple wildcards
+          ---
+          duration_ms: 0.1614
+          type: 'test'
+          ...
+        # Subtest: should parse wildcard after dot
+        ok 4 - should parse wildcard after dot
+          ---
+          duration_ms: 0.1767
+          type: 'test'
+          ...
+        # Subtest: should parse wildcard at root
+        ok 5 - should parse wildcard at root
+          ---
+          duration_ms: 0.1628
+          type: 'test'
+          ...
+        # Subtest: should parse complex wildcard path
+        ok 6 - should parse complex wildcard path
+          ---
+          duration_ms: 0.2184
+          type: 'test'
+          ...
+        1..6
+    ok 3 - Wildcards
+      ---
+      duration_ms: 1.3388
+      type: 'suite'
+      ...
+    # Subtest: Recursive Descent
+        # Subtest: should parse recursive descent with property
+        ok 1 - should parse recursive descent with property
+          ---
+          duration_ms: 0.3006
+          type: 'test'
+          ...
+        # Subtest: should parse recursive descent without property
+        ok 2 - should parse recursive descent without property
+          ---
+          duration_ms: 0.1612
+          type: 'test'
+          ...
+        # Subtest: should parse multiple recursive descents
+        ok 3 - should parse multiple recursive descents
+          ---
+          duration_ms: 0.1708
+          type: 'test'
+          ...
+        # Subtest: should parse recursive descent with array access
+        ok 4 - should parse recursive descent with array access
+          ---
+          duration_ms: 0.1718
+          type: 'test'
+          ...
+        # Subtest: should parse recursive descent with wildcard
+        ok 5 - should parse recursive descent with wildcard
+          ---
+          duration_ms: 0.3704
+          type: 'test'
+          ...
+        # Subtest: should parse deep recursive path
+        ok 6 - should parse deep recursive path
+          ---
+          duration_ms: 0.2633
+          type: 'test'
+          ...
+        1..6
+    ok 4 - Recursive Descent
+      ---
+      duration_ms: 1.7414
+      type: 'suite'
+      ...
+    # Subtest: Array Slicing
+        # Subtest: should parse basic slice with start and end
+        ok 1 - should parse basic slice with start and end
+          ---
+          duration_ms: 1.6837
+          type: 'test'
+          ...
+        # Subtest: should parse slice with only end
+        ok 2 - should parse slice with only end
+          ---
+          duration_ms: 0.3097
+          type: 'test'
+          ...
+        # Subtest: should parse slice with only start
+        ok 3 - should parse slice with only start
+          ---
+          duration_ms: 0.3586
+          type: 'test'
+          ...
+        # Subtest: should parse slice with step
+        ok 4 - should parse slice with step
+          ---
+          duration_ms: 0.2743
+          type: 'test'
+          ...
+        # Subtest: should parse slice with only step
+        ok 5 - should parse slice with only step
+          ---
+          duration_ms: 0.4296
+          type: 'test'
+          ...
+        # Subtest: should parse negative slice indices
+        ok 6 - should parse negative slice indices
+          ---
+          duration_ms: 0.2183
+          type: 'test'
+          ...
+        # Subtest: should parse slice with property access
+        ok 7 - should parse slice with property access
+          ---
+          duration_ms: 0.3616
+          type: 'test'
+          ...
+        # Subtest: should parse full slice [::]
+        ok 8 - should parse full slice [::]
+          ---
+          duration_ms: 0.4878
+          type: 'test'
+          ...
+        # Subtest: should parse large slice range
+        ok 9 - should parse large slice range
+          ---
+          duration_ms: 0.5748
+          type: 'test'
+          ...
+        # Subtest: should parse slice in nested path
+        ok 10 - should parse slice in nested path
+          ---
+          duration_ms: 0.4645
+          type: 'test'
+          ...
+        1..10
+    ok 5 - Array Slicing
+      ---
+      duration_ms: 6.2402
+      type: 'suite'
+      ...
+    # Subtest: Filter Expressions
+        # Subtest: should parse simple equality filter
+        ok 1 - should parse simple equality filter
+          ---
+          duration_ms: 6.9839
+          type: 'test'
+          ...
+        # Subtest: should parse numeric comparison filter
+        ok 2 - should parse numeric comparison filter
+          ---
+          duration_ms: 0.3172
+          type: 'test'
+          ...
+        # Subtest: should parse filter with AND operator
+        ok 3 - should parse filter with AND operator
+          ---
+          duration_ms: 0.3113
+          type: 'test'
+          ...
+        # Subtest: should parse filter with OR operator
+        ok 4 - should parse filter with OR operator
+          ---
+          duration_ms: 2.3365
+          type: 'test'
+          ...
+        # Subtest: should parse filter with NOT operator
+        ok 5 - should parse filter with NOT operator
+          ---
+          duration_ms: 0.48
+          type: 'test'
+          ...
+        # Subtest: should parse filter with nested property
+        ok 6 - should parse filter with nested property
+          ---
+          duration_ms: 0.2373
+          type: 'test'
+          ...
+        # Subtest: should parse filter with boolean literal
+        ok 7 - should parse filter with boolean literal
+          ---
+          duration_ms: 0.1943
+          type: 'test'
+          ...
+        # Subtest: should parse filter with null literal
+        ok 8 - should parse filter with null literal
+          ---
+          duration_ms: 0.272
+          type: 'test'
+          ...
+        # Subtest: should parse filter with string literal
+        ok 9 - should parse filter with string literal
+          ---
+          duration_ms: 0.1979
+          type: 'test'
+          ...
+        # Subtest: should parse filter with >= operator
+        ok 10 - should parse filter with >= operator
+          ---
+          duration_ms: 0.1822
+          type: 'test'
+          ...
+        # Subtest: should parse filter with <= operator
+        ok 11 - should parse filter with <= operator
+          ---
+          duration_ms: 0.1693
+          type: 'test'
+          ...
+        # Subtest: should parse filter with != operator
+        ok 12 - should parse filter with != operator
+          ---
+          duration_ms: 0.1708
+          type: 'test'
+          ...
+        # Subtest: should parse complex nested filter
+        ok 13 - should parse complex nested filter
+          ---
+          duration_ms: 0.2615
+          type: 'test'
+          ...
+        # Subtest: should parse filter with property access after
+        ok 14 - should parse filter with property access after
+          ---
+          duration_ms: 0.1867
+          type: 'test'
+          ...
+        # Subtest: should parse multiple filters in path
+        ok 15 - should parse multiple filters in path
+          ---
+          duration_ms: 0.3457
+          type: 'test'
+          ...
+        # Subtest: should parse filter with negative number
+        ok 16 - should parse filter with negative number
+          ---
+          duration_ms: 0.304
+          type: 'test'
+          ...
+        # Subtest: should parse filter with decimal number
+        ok 17 - should parse filter with decimal number
+          ---
+          duration_ms: 0.2665
+          type: 'test'
+          ...
+        # Subtest: should parse filter with false literal
+        ok 18 - should parse filter with false literal
+          ---
+          duration_ms: 0.195
+          type: 'test'
+          ...
+        1..18
+    ok 6 - Filter Expressions
+      ---
+      duration_ms: 14.3881
+      type: 'suite'
+      ...
+    # Subtest: Complex Paths
+        # Subtest: should parse very long nested path
+        ok 1 - should parse very long nested path
+          ---
+          duration_ms: 0.637
+          type: 'test'
+          ...
+        # Subtest: should parse mixed syntax path
+        ok 2 - should parse mixed syntax path
+          ---
+          duration_ms: 0.2818
+          type: 'test'
+          ...
+        # Subtest: should parse path with all features
+        ok 3 - should parse path with all features
+          ---
+          duration_ms: 0.3461
+          type: 'test'
+          ...
+        # Subtest: should parse e-commerce style path
+        ok 4 - should parse e-commerce style path
+          ---
+          duration_ms: 0.2525
+          type: 'test'
+          ...
+        # Subtest: should parse social media style path
+        ok 5 - should parse social media style path
+          ---
+          duration_ms: 0.1983
+          type: 'test'
+          ...
+        # Subtest: should parse analytics style path
+        ok 6 - should parse analytics style path
+          ---
+          duration_ms: 0.1648
+          type: 'test'
+          ...
+        # Subtest: should parse deeply nested object access
+        ok 7 - should parse deeply nested object access
+          ---
+          duration_ms: 0.1774
+          type: 'test'
+          ...
+        # Subtest: should parse mixed array and object access
+        ok 8 - should parse mixed array and object access
+          ---
+          duration_ms: 0.1828
+          type: 'test'
+          ...
+        # Subtest: should parse path with multiple wildcards and filters
+        ok 9 - should parse path with multiple wildcards and filters
+          ---
+          duration_ms: 0.1801
+          type: 'test'
+          ...
+        # Subtest: should parse empty brackets not allowed
+        ok 10 - should parse empty brackets not allowed
+          ---
+          duration_ms: 0.2279
+          type: 'test'
+          ...
+        1..10
+    ok 7 - Complex Paths
+      ---
+      duration_ms: 3.0862
+      type: 'suite'
+      ...
+    # Subtest: Tokenizer
+        # Subtest: should tokenize simple path
+        ok 1 - should tokenize simple path
+          ---
+          duration_ms: 0.2243
+          type: 'test'
+          ...
+        # Subtest: should tokenize string literals with quotes
+        ok 2 - should tokenize string literals with quotes
+          ---
+          duration_ms: 0.264
+          type: 'test'
+          ...
+        # Subtest: should tokenize numbers correctly
+        ok 3 - should tokenize numbers correctly
+          ---
+          duration_ms: 0.122
+          type: 'test'
+          ...
+        # Subtest: should tokenize operators
+        ok 4 - should tokenize operators
+          ---
+          duration_ms: 0.1448
+          type: 'test'
+          ...
+        # Subtest: should handle escaped strings
+        ok 5 - should handle escaped strings
+          ---
+          duration_ms: 1.1114
+          type: 'test'
+          ...
+        1..5
+    ok 8 - Tokenizer
+      ---
+      duration_ms: 2.1051
+      type: 'suite'
+      ...
+    # Subtest: Validator
+        # Subtest: should validate correct AST
+        ok 1 - should validate correct AST
+          ---
+          duration_ms: 1.6019
+          type: 'test'
+          ...
+        # Subtest: should analyze AST correctly
+        ok 2 - should analyze AST correctly
+          ---
+          duration_ms: 0.4359
+          type: 'test'
+          ...
+        # Subtest: should convert AST back to string
+        ok 3 - should convert AST back to string
+          ---
+          duration_ms: 0.3267
+          type: 'test'
+          ...
+        # Subtest: should detect recursive descent in analysis
+        ok 4 - should detect recursive descent in analysis
+          ---
+          duration_ms: 0.1708
+          type: 'test'
+          ...
+        # Subtest: should detect filter in analysis
+        ok 5 - should detect filter in analysis
+          ---
+          duration_ms: 0.204
+          type: 'test'
+          ...
+        1..5
+    ok 9 - Validator
+      ---
+      duration_ms: 3.0527
+      type: 'suite'
+      ...
+    # Subtest: Error Handling
+        # Subtest: should fail on invalid character
+        ok 1 - should fail on invalid character
+          ---
+          duration_ms: 0.3305
+          type: 'test'
+          ...
+        # Subtest: should fail on unclosed bracket
+        ok 2 - should fail on unclosed bracket
+          ---
+          duration_ms: 0.1671
+          type: 'test'
+          ...
+        # Subtest: should fail on invalid filter syntax
+        ok 3 - should fail on invalid filter syntax
+          ---
+          duration_ms: 0.1537
+          type: 'test'
+          ...
+        # Subtest: should provide error context
+        ok 4 - should provide error context
+          ---
+          duration_ms: 0.147
+          type: 'test'
+          ...
+        # Subtest: should parse $$ as valid identifier
+        ok 5 - should parse $$ as valid identifier
+          ---
+          duration_ms: 0.1325
+          type: 'test'
+          ...
+        1..5
+    ok 10 - Error Handling
+      ---
+      duration_ms: 1.1804
+      type: 'suite'
+      ...
+    1..10
+ok 75 - Query Path Parser - T001
+  ---
+  duration_ms: 44.2319
+  type: 'suite'
+  ...
+# Subtest: QuerySanitizer
+    # Subtest: sanitize
+        # Subtest: should sanitize basic query
+        ok 1 - should sanitize basic query
+          ---
+          duration_ms: 1.8217
+          type: 'test'
+          ...
+        # Subtest: should throw on eval pattern
+        ok 2 - should throw on eval pattern
+          ---
+          duration_ms: 3.8888
+          type: 'test'
+          ...
+        # Subtest: should throw on require pattern
+        ok 3 - should throw on require pattern
+          ---
+          duration_ms: 0.3481
+          type: 'test'
+          ...
+        # Subtest: should throw on directory traversal
+        ok 4 - should throw on directory traversal
+          ---
+          duration_ms: 0.5001
+          type: 'test'
+          ...
+        # Subtest: should handle empty query
+        ok 5 - should handle empty query
+          ---
+          duration_ms: 0.2266
+          type: 'test'
+          ...
+        # Subtest: should handle complex nested query
+        ok 6 - should handle complex nested query
+          ---
+          duration_ms: 0.1734
+          type: 'test'
+          ...
+        # Subtest: should throw on too long query
+        ok 7 - should throw on too long query
+          ---
+          duration_ms: 2.9726
+          type: 'test'
+          ...
+        # Subtest: should throw on too deep nesting
+        ok 8 - should throw on too deep nesting
+          ---
+          duration_ms: 0.5343
+          type: 'test'
+          ...
+        # Subtest: should throw on null bytes
+        ok 9 - should throw on null bytes
+          ---
+          duration_ms: 0.3494
+          type: 'test'
+          ...
+        # Subtest: should strip ANSI codes by default
+        ok 10 - should strip ANSI codes by default
+          ---
+          duration_ms: 0.3495
+          type: 'test'
+          ...
+        # Subtest: should respect maxLength option
+        ok 11 - should respect maxLength option
+          ---
+          duration_ms: 0.2109
+          type: 'test'
+          ...
+        # Subtest: should throw on non-string query
+        ok 12 - should throw on non-string query
+          ---
+          duration_ms: 0.3507
+          type: 'test'
+          ...
+        1..12
+    ok 1 - sanitize
+      ---
+      duration_ms: 13.4098
+      type: 'suite'
+      ...
+    # Subtest: sanitizeForLogging
+        # Subtest: should truncate long queries
+        ok 1 - should truncate long queries
+          ---
+          duration_ms: 0.389
+          type: 'test'
+          ...
+        # Subtest: should replace newlines
+        ok 2 - should replace newlines
+          ---
+          duration_ms: 0.1481
+          type: 'test'
+          ...
+        # Subtest: should strip ANSI codes
+        ok 3 - should strip ANSI codes
+          ---
+          duration_ms: 0.1536
+          type: 'test'
+          ...
+        1..3
+    ok 2 - sanitizeForLogging
+      ---
+      duration_ms: 0.8648
+      type: 'suite'
+      ...
+    1..2
+ok 76 - QuerySanitizer
+  ---
+  duration_ms: 15.1542
+  type: 'suite'
+  ...
+# Subtest: should validate REPL module exports
+ok 77 - should validate REPL module exports
+  ---
+  duration_ms: 70.0163
+  type: 'test'
+  ...
+# Subtest: should handle REPL module initialization
+ok 78 - should handle REPL module initialization
+  ---
+  duration_ms: 0.3224
+  type: 'test'
+  ...
+# Subtest: Schema constraints - unique
+    # Subtest: should detect duplicate values in array
+    ok 1 - should detect duplicate values in array
+      ---
+      duration_ms: 5.6054
+      type: 'test'
+      ...
+    1..1
+ok 79 - Schema constraints - unique
+  ---
+  duration_ms: 7.0717
+  type: 'suite'
+  ...
+# Subtest: Schema constraints - nonempty
+    # Subtest: should reject empty arrays
+    ok 1 - should reject empty arrays
+      ---
+      duration_ms: 0.448
+      type: 'test'
+      ...
+    1..1
+ok 80 - Schema constraints - nonempty
+  ---
+  duration_ms: 0.5834
+  type: 'suite'
+  ...
+# Subtest: Schema constraints - numeric
+    # Subtest: should validate positive constraint
+    ok 1 - should validate positive constraint
+      ---
+      duration_ms: 0.2734
+      type: 'test'
+      ...
+    # Subtest: should validate integer constraint
+    ok 2 - should validate integer constraint
+      ---
+      duration_ms: 0.1989
+      type: 'test'
+      ...
+    # Subtest: should validate multipleOf constraint
+    ok 3 - should validate multipleOf constraint
+      ---
+      duration_ms: 0.1869
+      type: 'test'
+      ...
+    1..3
+ok 81 - Schema constraints - numeric
+  ---
+  duration_ms: 0.8372
+  type: 'suite'
+  ...
+# Subtest: Schema constraints - length
+    # Subtest: should validate exact string length
+    ok 1 - should validate exact string length
+      ---
+      duration_ms: 0.2235
+      type: 'test'
+      ...
+    1..1
+ok 82 - Schema constraints - length
+  ---
+  duration_ms: 0.3409
+  type: 'suite'
+  ...
+# Subtest: Schema parser
+    # Subtest: should parse basic schema with primitives
+    ok 1 - should parse basic schema with primitives
+      ---
+      duration_ms: 3.0962
+      type: 'test'
+      ...
+    # Subtest: should parse custom type definition
+    ok 2 - should parse custom type definition
+      ---
+      duration_ms: 0.3885
+      type: 'test'
+      ...
+    1..2
+ok 83 - Schema parser
+  ---
+  duration_ms: 5.0254
+  type: 'suite'
+  ...
+# Subtest: Schema validator
+    # Subtest: should validate valid data
+    ok 1 - should validate valid data
+      ---
+      duration_ms: 1.5806
+      type: 'test'
+      ...
+    # Subtest: should detect missing required field
+    ok 2 - should detect missing required field
+      ---
+      duration_ms: 0.6886
+      type: 'test'
+      ...
+    # Subtest: should validate string constraints
+    ok 3 - should validate string constraints
+      ---
+      duration_ms: 0.3994
+      type: 'test'
+      ...
+    # Subtest: should validate numeric constraints
+    ok 4 - should validate numeric constraints
+      ---
+      duration_ms: 0.5812
+      type: 'test'
+      ...
+    # Subtest: should validate list types
+    ok 5 - should validate list types
+      ---
+      duration_ms: 0.2937
+      type: 'test'
+      ...
+    # Subtest: should validate custom types
+    ok 6 - should validate custom types
+      ---
+      duration_ms: 0.2344
+      type: 'test'
+      ...
+    1..6
+ok 84 - Schema validator
+  ---
+  duration_ms: 4.3463
+  type: 'suite'
+  ...
+# Subtest: Streaming - createEncodeStream
+    # Subtest: should encode NDJSON stream to TONL
+    ok 1 - should encode NDJSON stream to TONL
+      ---
+      duration_ms: 5.9834
+      type: 'test'
+      ...
+    1..1
+ok 85 - Streaming - createEncodeStream
+  ---
+  duration_ms: 7.4267
+  type: 'suite'
+  ...
+# Subtest: Streaming - createDecodeStream
+    # Subtest: should decode TONL stream to JSON objects
+    ok 1 - should decode TONL stream to JSON objects
+      ---
+      duration_ms: 2.7473
+      type: 'test'
+      ...
+    1..1
+ok 86 - Streaming - createDecodeStream
+  ---
+  duration_ms: 2.8945
+  type: 'suite'
+  ...
+# Subtest: Streaming - async iterators
+    # Subtest: should encode using async iterator
+    ok 1 - should encode using async iterator
+      ---
+      duration_ms: 0.5099
+      type: 'test'
+      ...
+    # Subtest: should decode using async iterator
+    ok 2 - should decode using async iterator
+      ---
+      duration_ms: 0.4057
+      type: 'test'
+      ...
+    # Subtest: should handle empty data
+    ok 3 - should handle empty data
+      ---
+      duration_ms: 0.1685
+      type: 'test'
+      ...
+    # Subtest: should handle special characters in stream
+    ok 4 - should handle special characters in stream
+      ---
+      duration_ms: 1.8379
+      type: 'test'
+      ...
+    1..4
+ok 87 - Streaming - async iterators
+  ---
+  duration_ms: 3.1889
+  type: 'suite'
+  ...
+# Subtest: Streaming - round-trip
+    # Subtest: should preserve data integrity in stream round-trip
+    ok 1 - should preserve data integrity in stream round-trip
+      ---
+      duration_ms: 3.4642
+      type: 'test'
+      ...
+    # Subtest: should handle nested structures in stream
+    ok 2 - should handle nested structures in stream
+      ---
+      duration_ms: 1.1046
+      type: 'test'
+      ...
+    # Subtest: should handle large arrays in stream
+    ok 3 - should handle large arrays in stream
+      ---
+      duration_ms: 17.3022
+      type: 'test'
+      ...
+    1..3
+ok 88 - Streaming - round-trip
+  ---
+  duration_ms: 22.1308
+  type: 'suite'
+  ...
+# Subtest: Streaming - error handling
+    # Subtest: should handle invalid JSON gracefully in encode stream
+    ok 1 - should handle invalid JSON gracefully in encode stream
+      ---
+      duration_ms: 1.1465
+      type: 'test'
+      ...
+    # Subtest: should handle empty chunks
+    ok 2 - should handle empty chunks
+      ---
+      duration_ms: 0.6232
+      type: 'test'
+      ...
+    1..2
+ok 89 - Streaming - error handling
+  ---
+  duration_ms: 1.953
+  type: 'suite'
+  ...
+# Subtest: Streaming - memory efficiency
+    # Subtest: should handle multiple small chunks efficiently
+    ok 1 - should handle multiple small chunks efficiently
+      ---
+      duration_ms: 4.7612
+      type: 'test'
+      ...
+    1..1
+ok 90 - Streaming - memory efficiency
+  ---
+  duration_ms: 4.8927
+  type: 'suite'
+  ...
+# Subtest: Streaming - data types
+    # Subtest: should handle null values in stream
+    ok 1 - should handle null values in stream
+      ---
+      duration_ms: 0.6484
+      type: 'test'
+      ...
+    # Subtest: should handle boolean values in stream
+    ok 2 - should handle boolean values in stream
+      ---
+      duration_ms: 0.4389
+      type: 'test'
+      ...
+    # Subtest: should handle different number types in stream
+    ok 3 - should handle different number types in stream
+      ---
+      duration_ms: 0.3606
+      type: 'test'
+      ...
+    # Subtest: should handle empty objects and arrays in stream
+    ok 4 - should handle empty objects and arrays in stream
+      ---
+      duration_ms: 0.5212
+      type: 'test'
+      ...
+    1..4
+ok 91 - Streaming - data types
+  ---
+  duration_ms: 2.2051
+  type: 'suite'
+  ...
+# Subtest: Streaming - delimiter options
+    # Subtest: should respect delimiter option in stream encoding
+    ok 1 - should respect delimiter option in stream encoding
+      ---
+      duration_ms: 0.2836
+      type: 'test'
+      ...
+    # Subtest: should handle smart encoding in stream
+    ok 2 - should handle smart encoding in stream
+      ---
+      duration_ms: 0.2687
+      type: 'test'
+      ...
+    1..2
+ok 92 - Streaming - delimiter options
+  ---
+  duration_ms: 0.6744
+  type: 'suite'
+  ...
+# Subtest: TONLDocument Class - T005
+    # Subtest: Construction & Parsing
+        # Subtest: should parse TONL string
+        ok 1 - should parse TONL string
+          ---
+          duration_ms: 4.4737
+          type: 'test'
+          ...
+        # Subtest: should create from JSON
+        ok 2 - should create from JSON
+          ---
+          duration_ms: 0.2437
+          type: 'test'
+          ...
+        # Subtest: should handle empty object
+        ok 3 - should handle empty object
+          ---
+          duration_ms: 0.1559
+          type: 'test'
+          ...
+        # Subtest: should handle array at root
+        ok 4 - should handle array at root
+          ---
+          duration_ms: 0.0809
+          type: 'test'
+          ...
+        1..4
+    ok 1 - Construction & Parsing
+      ---
+      duration_ms: 6.0857
+      type: 'suite'
+      ...
+    # Subtest: Query Methods
+        # Subtest: should get simple property
+        ok 1 - should get simple property
+          ---
+          duration_ms: 2.3278
+          type: 'test'
+          ...
+        # Subtest: should get nested property
+        ok 2 - should get nested property
+          ---
+          duration_ms: 0.3573
+          type: 'test'
+          ...
+        # Subtest: should get array element
+        ok 3 - should get array element
+          ---
+          duration_ms: 1.3316
+          type: 'test'
+          ...
+        # Subtest: should get array element property
+        ok 4 - should get array element property
+          ---
+          duration_ms: 0.2711
+          type: 'test'
+          ...
+        # Subtest: should return undefined for non-existent path
+        ok 5 - should return undefined for non-existent path
+          ---
+          duration_ms: 0.201
+          type: 'test'
+          ...
+        # Subtest: should query with wildcard
+        ok 6 - should query with wildcard
+          ---
+          duration_ms: 0.3277
+          type: 'test'
+          ...
+        # Subtest: should query with filter
+        ok 7 - should query with filter
+          ---
+          duration_ms: 1.1287
+          type: 'test'
+          ...
+        # Subtest: should check if path exists
+        ok 8 - should check if path exists
+          ---
+          duration_ms: 0.2847
+          type: 'test'
+          ...
+        # Subtest: should get type of value
+        ok 9 - should get type of value
+          ---
+          duration_ms: 0.2498
+          type: 'test'
+          ...
+        # Subtest: should handle query errors gracefully
+        ok 10 - should handle query errors gracefully
+          ---
+          duration_ms: 0.3648
+          type: 'test'
+          ...
+        1..10
+    ok 2 - Query Methods
+      ---
+      duration_ms: 7.3314
+      type: 'suite'
+      ...
+    # Subtest: Navigation Methods
+        # Subtest: should iterate over entries
+        ok 1 - should iterate over entries
+          ---
+          duration_ms: 0.5229
+          type: 'test'
+          ...
+        # Subtest: should iterate over keys
+        ok 2 - should iterate over keys
+          ---
+          duration_ms: 0.2629
+          type: 'test'
+          ...
+        # Subtest: should iterate over values
+        ok 3 - should iterate over values
+          ---
+          duration_ms: 0.2399
+          type: 'test'
+          ...
+        # Subtest: should iterate recursively with deepEntries
+        ok 4 - should iterate recursively with deepEntries
+          ---
+          duration_ms: 0.4185
+          type: 'test'
+          ...
+        # Subtest: should iterate recursively with deepKeys
+        ok 5 - should iterate recursively with deepKeys
+          ---
+          duration_ms: 0.3729
+          type: 'test'
+          ...
+        # Subtest: should iterate recursively with deepValues
+        ok 6 - should iterate recursively with deepValues
+          ---
+          duration_ms: 0.2569
+          type: 'test'
+          ...
+        # Subtest: should walk tree with callback
+        ok 7 - should walk tree with callback
+          ---
+          duration_ms: 0.6736
+          type: 'test'
+          ...
+        # Subtest: should count nodes
+        ok 8 - should count nodes
+          ---
+          duration_ms: 0.2438
+          type: 'test'
+          ...
+        # Subtest: should find value
+        ok 9 - should find value
+          ---
+          duration_ms: 0.229
+          type: 'test'
+          ...
+        # Subtest: should find all matching values
+        ok 10 - should find all matching values
+          ---
+          duration_ms: 0.2113
+          type: 'test'
+          ...
+        # Subtest: should check if some value matches
+        ok 11 - should check if some value matches
+          ---
+          duration_ms: 0.2784
+          type: 'test'
+          ...
+        # Subtest: should check if every value matches
+        ok 12 - should check if every value matches
+          ---
+          duration_ms: 0.2398
+          type: 'test'
+          ...
+        1..12
+    ok 3 - Navigation Methods
+      ---
+      duration_ms: 4.4976
+      type: 'suite'
+      ...
+    # Subtest: Export Methods
+        # Subtest: should convert to JSON
+        ok 1 - should convert to JSON
+          ---
+          duration_ms: 0.4147
+          type: 'test'
+          ...
+        # Subtest: should convert to TONL
+        ok 2 - should convert to TONL
+          ---
+          duration_ms: 2.9794
+          type: 'test'
+          ...
+        # Subtest: should get size in bytes
+        ok 3 - should get size in bytes
+          ---
+          duration_ms: 0.3563
+          type: 'test'
+          ...
+        # Subtest: should get statistics
+        ok 4 - should get statistics
+          ---
+          duration_ms: 0.3801
+          type: 'test'
+          ...
+        # Subtest: should get raw data
+        ok 5 - should get raw data
+          ---
+          duration_ms: 0.1671
+          type: 'test'
+          ...
+        1..5
+    ok 4 - Export Methods
+      ---
+      duration_ms: 4.614
+      type: 'suite'
+      ...
+    # Subtest: Round-trip
+        # Subtest: should round-trip through TONL
+        ok 1 - should round-trip through TONL
+          ---
+          duration_ms: 1.1111
+          type: 'test'
+          ...
+        # Subtest: should preserve data through query operations
+        ok 2 - should preserve data through query operations
+          ---
+          duration_ms: 0.2372
+          type: 'test'
+          ...
+        1..2
+    ok 5 - Round-trip
+      ---
+      duration_ms: 2.3196
+      type: 'suite'
+      ...
+    1..5
+ok 93 - TONLDocument Class - T005
+  ---
+  duration_ms: 25.8869
+  type: 'suite'
+  ...
+1..93
+# tests 676
+# suites 133
+# pass 676
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3867.9285
+----------------------|---------|----------|---------|---------|------------------------------------
+File                  | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s                  
+----------------------|---------|----------|---------|---------|------------------------------------
+All files             |   74.75 |    79.87 |   70.41 |   74.75 |                                    
+ src                  |   80.26 |    88.25 |   76.31 |   80.26 |                                    
+  cli.ts              |   40.46 |    63.15 |   66.66 |   40.46 | ...464-501,505-507,511-512,517-518 
+  decode.ts           |      92 |    94.11 |     100 |      92 | 57-64                              
+  document.ts         |   86.43 |    90.74 |   69.23 |   86.43 | ...729-749,765-786,825-829,845-854 
+  encode.ts           |   91.36 |    92.35 |     100 |   91.36 | ...307,318-319,321-322,348,356-358 
+  index.ts            |    92.1 |       25 |     100 |    92.1 | 43-45,47-49                        
+  infer.ts            |   97.09 |    95.61 |     100 |   97.09 | 50-53,111,218-219                  
+  parser.ts           |   91.98 |    86.81 |     100 |   91.98 | ...100,111-114,205-206,250-251,307 
+  types.ts            |     100 |      100 |     100 |     100 |                                    
+ src/cli              |   89.18 |    92.53 |     100 |   89.18 |                                    
+  path-validator.ts   |   80.16 |    86.11 |     100 |   80.16 | 111-115,140-169,171-175,194-201    
+  query-sanitizer.ts  |     100 |      100 |     100 |     100 |                                    
+ src/errors           |   42.93 |      100 |   58.33 |   42.93 |                                    
+  index.ts            |   42.93 |      100 |   58.33 |   42.93 | 21-47,66-73,80-113,119-130,161-184 
+ src/indexing         |   74.26 |    73.97 |    42.1 |   74.26 |                                    
+  btree-index.ts      |   54.02 |       50 |   31.25 |   54.02 | ...217-218,224-240,246-249,255-260 
+  compound-index.ts   |   78.15 |       60 |   42.85 |   78.15 | ...5,98-99,106-107,110-111,117-118 
+  hash-index.ts       |   72.54 |    73.33 |      50 |   72.54 | ...105-106,119-121,140-141,147-152 
+  index-manager.ts    |   77.31 |    88.23 |   46.66 |   77.31 | ...176-177,183-187,193-202,208-215 
+  index.ts            |     100 |      100 |     100 |     100 |                                    
+  types.ts            |     100 |      100 |     100 |     100 |                                    
+ src/modification     |   53.64 |    64.94 |      56 |   53.64 |                                    
+  array-ops.ts        |   56.57 |    33.33 |      50 |   56.57 | ...5,19-20,32-33,37-38,47-59,65-76 
+  change-tracker.ts   |   53.27 |    80.76 |      50 |   53.27 | ...124-128,144,146,197-200,206-229 
+  deleter.ts          |   76.92 |    52.94 |     100 |   76.92 | ...50-51,55-56,74-76,79-80,102-104 
+  file-editor.ts      |   17.33 |      100 |       0 |   17.33 | 19-69,104-300                      
+  index.ts            |     100 |      100 |     100 |     100 |                                    
+  setter.ts           |   83.33 |    64.58 |     100 |   83.33 | ...184-185,213-214,227-228,250-261 
+  transaction.ts      |   33.33 |      100 |       0 |   33.33 | 15-42                              
+  transform.ts        |   39.13 |      100 |       0 |   39.13 | 18-39,50-66,76-92                  
+  types.ts            |     100 |      100 |     100 |     100 |                                    
+ src/navigation       |   80.87 |    79.45 |   93.33 |   80.87 |                                    
+  index.ts            |     100 |      100 |     100 |     100 |                                    
+  iterator.ts         |    93.4 |       80 |     100 |    93.4 | ...0,73-74,116-117,120-121,136-137 
+  walker.ts           |   73.13 |    78.94 |   88.88 |   73.13 | ...151-152,165-171,188-266,355-357 
+ src/parser           |   87.67 |     79.6 |     100 |   87.67 |                                    
+  block-parser.ts     |   88.78 |    74.75 |     100 |   88.78 | ...288,330-331,344-350,389,406-407 
+  content-parser.ts   |    90.5 |    87.87 |     100 |    90.5 | 31-33,55-66,166-167                
+  line-parser.ts      |   90.42 |    89.74 |     100 |   90.42 | 23-24,65-67,77-78,87-88            
+  utils.ts            |   89.74 |    70.58 |     100 |   89.74 | 29-33,65-67                        
+  value-parser.ts     |   69.33 |    77.77 |     100 |   69.33 | 19-20,23-43                        
+ src/query            |   81.95 |    78.72 |   83.33 |   81.95 |                                    
+  cache.ts            |   93.89 |    88.88 |      80 |   93.89 | 98-100,107-113,167-169             
+  context.ts          |   83.43 |    85.71 |      50 |   83.43 | ...127-134,140-147,153-156,162-163 
+  evaluator.ts        |   94.88 |    89.93 |     100 |   94.88 | ...406-407,409-410,412-413,489-491 
+  filter-evaluator.ts |   58.12 |     64.7 |   85.71 |   58.12 | ...332-333,336-337,352-353,356-357 
+  index.ts            |     100 |      100 |     100 |     100 |                                    
+  path-parser.ts      |   87.88 |    84.92 |   95.65 |   87.88 | ...594-595,597-598,612,631-634,642 
+  regex-executor.ts   |   56.66 |       25 |      50 |   56.66 | ...104-109,114-123,133-134,142-180 
+  regex-validator.ts  |   71.18 |    51.85 |   85.71 |   71.18 | ...218-222,252-253,255-260,286-294 
+  tokenizer.ts        |   89.88 |    82.02 |   81.81 |   89.88 | ...216-222,344-351,464-465,471-480 
+  types.ts            |   97.66 |      100 |   66.66 |   97.66 | 286-293                            
+  validator.ts        |   65.01 |     58.2 |   66.66 |   65.01 | ...410-414,417-425,428-429,439-463 
+ src/repl             |   11.48 |      100 |       0 |   11.48 |                                    
+  index.ts            |   11.48 |      100 |       0 |   11.48 | 28-235                             
+ src/schema           |   77.13 |    71.16 |   83.33 |   77.13 |                                    
+  generator.ts        |   78.36 |    56.81 |   83.33 |   78.36 | ...171-172,176-178,189-190,198-208 
+  index.ts            |     100 |      100 |     100 |     100 |                                    
+  parser.ts           |   94.64 |    88.09 |   83.33 |   94.64 | ...2,88-89,114-115,117-118,221-224 
+  types.ts            |     100 |      100 |     100 |     100 |                                    
+  validator.ts        |   62.13 |    70.12 |   83.33 |   62.13 | ...326-337,384-392,414-420,446-478 
+ src/stream           |   55.82 |    62.96 |   61.53 |   55.82 |                                    
+  decode-stream.ts    |   80.39 |    57.14 |     100 |   80.39 | 37-42,57-62,67-68,80-85            
+  encode-stream.ts    |   90.58 |    69.23 |     100 |   90.58 | 55-56,63-66,69-70                  
+  index.ts            |     100 |      100 |     100 |     100 |                                    
+  query.ts            |   29.87 |      100 |       0 |   29.87 | ...146-158,164-174,180-191,197-241 
+ src/utils            |   58.04 |    70.23 |   45.83 |   58.04 |                                    
+  metrics.ts          |   50.58 |    44.73 |   31.57 |   50.58 | ...422-439,444-461,478-502,508-512 
+  strings.ts          |   95.14 |     91.3 |     100 |   95.14 | 69-71,79-80                        
+----------------------|---------|----------|---------|---------|------------------------------------

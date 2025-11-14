@@ -115,7 +115,7 @@ function encodeObject(obj: TONLObject, key: string, context: TONLEncodeContext):
     // Quote column name if it contains special characters (colon, comma, braces, quotes)
     let col = k;
     if (k.includes(':') || k.includes(',') || k.includes('{') || k.includes('}') || k.includes('"')) {
-      col = `"${k.replace(/"/g, '""')}"`;
+      col = `"${k.replace(/"/g, '\\"')}"`;
     }
     if (context.includeTypes) {
       const type = inferPrimitiveType(value);
@@ -126,14 +126,23 @@ function encodeObject(obj: TONLObject, key: string, context: TONLEncodeContext):
     columns.push(col);
   }
 
-  const header = `${key}{${columns.join(",")}}:`;
+  // For single property objects, don't use column notation to avoid parsing confusion
+  let header: string;
+  if (keys.length === 1) {
+    header = `${key}:`;
+  } else {
+    header = `${key}{${columns.join(",")}}:`;
+  }
 
   // If object has nested objects, arrays, multiline strings, or special keys, render as multi-line block
   const hasMultilineStrings = Object.values(obj).some(v =>
-    typeof v === "string" && v.includes("\n")
+    typeof v === "string" && (v.includes("\n") || v.includes(context.delimiter) || v.includes(":"))
   );
 
-  if (hasNestedObjects || Object.values(obj).some(v => Array.isArray(v)) || hasMultilineStrings || hasSpecialKeys) {
+  // Always use multi-line format for single-property objects to avoid parsing confusion
+  const isSinglePropertyObject = keys.length === 1;
+
+  if (hasNestedObjects || Object.values(obj).some(v => Array.isArray(v)) || hasMultilineStrings || hasSpecialKeys || isSinglePropertyObject) {
     const lines: string[] = [header];
     const childContext = { ...context, currentIndent: context.currentIndent + 1 };
 
@@ -223,7 +232,7 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
         // Quote column name if it contains special characters (colon, comma, braces, quotes)
         let colDef = col;
         if (col.includes(':') || col.includes(',') || col.includes('{') || col.includes('}') || col.includes('"')) {
-          colDef = `"${col.replace(/"/g, '""')}"`;
+          colDef = `"${col.replace(/"/g, '\\"')}"`;
         }
         if (context.includeTypes) {
           // Find the first non-null, non-undefined value for this column
@@ -321,16 +330,9 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
 
     const separator = context.prettyDelimiters ? ` ${context.delimiter} ` : context.delimiter;
 
-    if (context.singleLinePrimitiveLists && values.join(separator).length < 80) {
-      // Single line for short primitive arrays
-      return `${key}[${arr.length}]: ${values.join(separator)}`;
-    } else {
-      // Multi-line for longer arrays
-      const lines: string[] = [`${key}[${arr.length}]:`];
-      const childContext = { ...context, currentIndent: context.currentIndent + 1 };
-      lines.push(makeIndent(childContext.currentIndent, childContext.indent) + values.join(separator));
-      return lines.join("\n");
-    }
+    // Always use single line for arrays to avoid parsing issues
+    // This ensures array values are always on the same line as the header
+    return `${key}[${arr.length}]: ${values.join(separator)}`;
   } else {
     // Mixed array - encode as inline JSON-like structure
     const lines: string[] = [`${key}[${arr.length}]:`];

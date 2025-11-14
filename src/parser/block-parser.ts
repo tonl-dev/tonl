@@ -111,28 +111,37 @@ export function parseObjectBlock(
       const columnsStr = singleLineMatch[2].trim();
       const valuePart = singleLineMatch[3].trim();
 
-      const columns: TONLColumnDef[] = [];
-      if (columnsStr) {
-        const colParts = columnsStr.split(',');
-        for (const colPart of colParts) {
-          const trimmedCol = colPart.trim();
-          if (!trimmedCol) continue;
-          const colonIndex = trimmedCol.indexOf(':');
-          if (colonIndex > 0) {
-            columns.push({
-              name: trimmedCol.slice(0, colonIndex).trim(),
-              type: trimmedCol.slice(colonIndex + 1).trim() as any
-            });
-          } else {
-            columns.push({ name: trimmedCol });
+      // Only treat as single-line object if:
+      // 1. There are multiple column definitions (contains comma), OR
+      // 2. The value part looks like tabular data (contains delimiters that aren't in quotes)
+      const hasMultipleColumns = columnsStr.includes(',');
+      const valueHasDelimiter = valuePart.includes(context.delimiter) &&
+                                (valuePart.includes('"') || valuePart.split(context.delimiter).length > 1);
+
+      if (hasMultipleColumns || valueHasDelimiter) {
+        const columns: TONLColumnDef[] = [];
+        if (columnsStr) {
+          const colParts = columnsStr.split(',');
+          for (const colPart of colParts) {
+            const trimmedCol = colPart.trim();
+            if (!trimmedCol) continue;
+            const colonIndex = trimmedCol.indexOf(':');
+            if (colonIndex > 0) {
+              columns.push({
+                name: trimmedCol.slice(0, colonIndex).trim(),
+                type: trimmedCol.slice(colonIndex + 1).trim() as any
+              });
+            } else {
+              columns.push({ name: trimmedCol });
+            }
           }
         }
-      }
 
-      const nestedHeader: TONLObjectHeader = { key, isArray: false, columns };
-      result[key] = parseSingleLineObject(nestedHeader, valuePart, context);
-      lineIndex++;
-      continue;
+        const nestedHeader: TONLObjectHeader = { key, isArray: false, columns };
+        result[key] = parseSingleLineObject(nestedHeader, valuePart, context);
+        lineIndex++;
+        continue;
+      }
     }
 
     // Multi-line nested header
@@ -174,7 +183,9 @@ export function parseObjectBlock(
       }
       const valuePart = arrayMatch[3].trim();
 
-      if (valuePart.includes('{') || valuePart.includes(':')) {
+      // Only treat as object if it contains braces (column definitions)
+      // Colons in string values should not trigger object parsing
+      if (valuePart.includes('{')) {
         const nestedHeader: TONLObjectHeader = { key, isArray: true, arrayLength, columns: [] as TONLColumnDef[] };
         result[key] = parseSingleLineObject(nestedHeader, valuePart, context);
       } else {
@@ -325,9 +336,24 @@ export function parseArrayBlock(
     } else {
       // Primitive array
       if (lines.length > 0) {
-        const values = parseTONLLine(lines[0], context.delimiter);
-        for (const value of values) {
-          result.push(parsePrimitiveValue(value, context));
+        const firstLine = lines[0].trim();
+        // Check if the first line looks like an array header with inline values
+        const arrayWithValuesMatch = firstLine.match(/^(.+)\[([^\]]+)\]:\s*(.+)$/);
+
+        if (arrayWithValuesMatch) {
+          // Parse the inline values from the array header
+          const key = arrayWithValuesMatch[1].trim();
+          const valuePart = arrayWithValuesMatch[3].trim();
+          const values = parseTONLLine(valuePart, context.delimiter);
+          for (const value of values) {
+            result.push(parsePrimitiveValue(value, context));
+          }
+        } else {
+          // Parse as raw values (original behavior)
+          const values = parseTONLLine(lines[0], context.delimiter);
+          for (const value of values) {
+            result.push(parsePrimitiveValue(value, context));
+          }
         }
       }
     }
