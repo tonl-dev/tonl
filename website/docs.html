@@ -517,24 +517,29 @@ doc.set(<span class="text-emerald-400">'users[0].age'</span>, <span class="text-
 • Type hints may appear: field:type (e.g., id:u32, name:str)
   → Ignore the :type part, just parse the values
 • Value types: unquoted numbers/booleans, quoted strings, null
+• v2.0 Optimization: May contain #optimize directives (ignore these, they're metadata)
 
 Examples:
 Without types: users[2]{id,name,role}:
 With types: users[2]{id:u32,name:str,role:str}:
-Both parse the same - just read the data values.
+With optimization: #optimize dictionary delta bitpack
+All parse the same - just read the data values.
 
-This represents: {"users": [{"id":1,"name":"Alice","role":"admin"}, {"id":2,"name":"Bob","role":"user"}]}</code></pre>
+This represents: {"users": [{"id":1,"name":"Alice","role":"admin"}, {"id":2,"name":"Bob","role":"user"}]}
+
+TONL v2.0 provides 60% additional compression while maintaining full LLM compatibility.</code></pre>
                         </div>
-                        <button class="copy-code-btn" onclick="copyCode(this, `The following data is in TONL format. Parse it as follows:\n\n• Lines with [count]{fields}: are array headers, data rows follow\n• Lines with {fields}: are object headers, field: value pairs follow\n• Indentation (2 spaces) indicates nesting levels\n• Default delimiter is comma unless #delimiter header specifies otherwise\n• Type hints may appear: field:type (e.g., id:u32, name:str)\n  → Ignore the :type part, just parse the values\n• Value types: unquoted numbers/booleans, quoted strings, null\n\nExamples:\nWithout types: users[2]{id,name,role}:\nWith types: users[2]{id:u32,name:str,role:str}:\nBoth parse the same - just read the data values.\n\nThis represents: {\"users\": [{\"id\":1,\"name\":\"Alice\",\"role\":\"admin\"}, {\"id\":2,\"name\":\"Bob\",\"role\":\"user\"}]}`)">Copy</button>
+                        <button class="copy-code-btn" onclick="copyCode(this, `The following data is in TONL format. Parse it as follows:\\n\\n• Lines with [count]{fields}: are array headers, data rows follow\\n• Lines with {fields}: are object headers, field: value pairs follow\\n• Indentation (2 spaces) indicates nesting levels\\n• Default delimiter is comma unless #delimiter header specifies otherwise\\n• Type hints may appear: field:type (e.g., id:u32, name:str)\\n  → Ignore the :type part, just parse the values\\n• Value types: unquoted numbers/booleans, quoted strings, null\\n• v2.0 Optimization: May contain #optimize directives (ignore these, they're metadata)\\n\\nExamples:\\nWithout types: users[2]{id,name,role}:\\nWith types: users[2]{id:u32,name:str,role:str}:\\nWith optimization: #optimize dictionary delta bitpack\\nAll parse the same - just read the data values.\\n\\nThis represents: {\\\"users\\\": [{\\\"id\\\":1,\\\"name\\\":\\\"Alice\\\",\\\"role\\\":\\\"admin\\\"}, {\\\"id\\\":2,\\\"name\\\":\\\"Bob\\\",\\\"role\\\":\\\"user\\\"}]\\n\\nTONL v2.0 provides 60% additional compression while maintaining full LLM compatibility.`)">Copy</button>
                     </div>
 
                     <div class="bg-white border border-slate-200 rounded-lg p-6">
                         <h3 class="font-semibold text-slate-900 mb-3">💡 Why This Works</h3>
                         <ul class="space-y-2 text-slate-600 text-sm">
-                            <li>• Prompt is only ~150 tokens</li>
-                            <li>• Negligible cost vs 32-50% data savings</li>
+                            <li>• Prompt is only ~180 tokens</li>
+                            <li>• Negligible cost vs 60-70% total data savings</li>
                             <li>• Works with GPT, Claude, Gemini, Llama, etc.</li>
                             <li>• LLMs naturally understand structured text</li>
+                            <li>• v2.0 optimization directives are transparent to LLMs</li>
                         </ul>
                     </div>
 

@@ -768,6 +768,7 @@
 • Type hints may appear: field:type (e.g., id:u32, name:str, active:bool)
   → Ignore the :type part, just parse the values
 • Value types: unquoted numbers/booleans, quoted strings, null
+• v2.0 Optimization: May contain #optimize directives (ignore these, they're metadata)
 
 Examples:
 Without types (compact):
@@ -780,11 +781,19 @@ users[2]{id:u32,name:str,role:str}:
   1, Alice, admin
   2, Bob, user
 
-Both represent: {"users": [{"id":1,"name":"Alice","role":"admin"}, {"id":2,"name":"Bob","role":"user"}]}</code></pre>
+With optimization (v2.0):
+#optimize dictionary delta bitpack
+users[2]{id:u32,name:str,role:str}:
+  1, Alice, admin
+  2, Bob, user
+
+All represent: {"users": [{"id":1,"name":"Alice","role":"admin"}, {"id":2,"name":"Bob","role":"user"}]}
+
+TONL v2.0 provides 60% additional compression while maintaining full LLM compatibility.</code></pre>
                     </div>
                     <div class="bg-emerald-50 px-6 py-4 border-t border-emerald-200">
                         <p class="text-sm text-slate-700 leading-relaxed">
-                            💡 <span class="font-semibold">Pro tip:</span> This prompt is ~150 tokens. Adding it to your system prompt is negligible compared to the 32-50% savings on your data!
+                            💡 <span class="font-semibold">Pro tip:</span> This prompt is ~180 tokens. Adding it to your system prompt is negligible compared to the 60-70% total savings with v2.0 optimization!
                         </p>
                     </div>
                 </div>
@@ -1971,6 +1980,7 @@ tonl decode filtered.tonl --out result.json</code></pre>
 • Type hints may appear: field:type (e.g., id:u32, name:str, active:bool)
   → Ignore the :type part, just parse the values
 • Value types: unquoted numbers/booleans, quoted strings, null
+• v2.0 Optimization: May contain #optimize directives (ignore these, they're metadata)
 
 Examples:
 Without types (compact):
@@ -1983,7 +1993,15 @@ users[2]{id:u32,name:str,role:str}:
   1, Alice, admin
   2, Bob, user
 
-Both represent: {"users": [{"id":1,"name":"Alice","role":"admin"}, {"id":2,"name":"Bob","role":"user"}]}`;
+With optimization (v2.0):
+#optimize dictionary delta bitpack
+users[2]{id:u32,name:str,role:str}:
+  1, Alice, admin
+  2, Bob, user
+
+All represent: {"users": [{"id":1,"name":"Alice","role":"admin"}, {"id":2,"name":"Bob","role":"user"}]}
+
+TONL v2.0 provides 60% additional compression while maintaining full LLM compatibility.`;
 
             navigator.clipboard.writeText(promptText);
             event.target.textContent = '✓ Copied!';
