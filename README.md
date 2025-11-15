@@ -82,6 +82,21 @@ await doc.save('output.tonl');
 const data = { users: [{ id: 1, name: "Alice" }] };
 const tonlText = encodeTONL(data);
 const restored = decodeTONL(tonlText);
+
+// Advanced Optimization
+import { AdaptiveOptimizer, BitPacker, DeltaEncoder } from 'tonl';
+
+// Automatic optimization
+const optimizer = new AdaptiveOptimizer();
+const result = optimizer.optimize(data);  // Auto-selects best strategies
+
+// Specific optimizers
+const packer = new BitPacker();
+const packed = packer.packBooleans([true, false, true]);
+
+const delta = new DeltaEncoder();
+const timestamps = [1704067200000, 1704067201000, 1704067202000];
+const compressed = delta.encode(timestamps, 'timestamp');
 ```
 
 ### CLI Usage
@@ -193,6 +208,18 @@ user{id:u32,name:str,contact:obj,roles:list}:
 - **Compound Index** - Multi-field indexing
 - **Stream Processing** - Handle multi-GB files with <100MB memory
 - **Pipeline Operations** - Chainable filter/map/reduce transformations
+
+### 🗜️ Advanced Optimization
+- **Dictionary Encoding** - Value compression via lookup tables (30-50% savings)
+- **Delta Encoding** - Sequential data compression (40-60% savings)
+- **Run-Length Encoding** - Repetitive value compression (50-80% savings)
+- **Bit Packing** - Boolean and small integer bit-level compression (87.5% savings)
+- **Numeric Quantization** - Precision reduction for floating-point numbers (20-40% savings)
+- **Schema Inheritance** - Reusable column schemas across data blocks (20-40% savings)
+- **Hierarchical Grouping** - Common field extraction for nested structures (15-30% savings)
+- **Tokenizer-Aware** - LLM tokenizer optimization for minimal token usage (5-15% savings)
+- **Column Reordering** - Entropy-based ordering for better compression
+- **Adaptive Optimizer** - Automatic strategy selection based on data patterns
 
 ### ✅ Schema & Validation
 - **Schema Definition** - `.schema.tonl` files with TSL (TONL Schema Language)

@@ -72,3 +72,52 @@ export { streamQuery, streamAggregate, streamCount, streamCollect, StreamPipelin
 
 // Export REPL (NEW in v0.8.0!)
 export { TONLREPL, type REPLOptions } from './repl/index.js';
+
+// Export Optimization API (NEW in v2.0.0!)
+export {
+  // Phase 1: Core Optimizations
+  DictionaryBuilder,
+  DictionaryDecoder,
+  ColumnReorderer,
+  NumericQuantizer,
+  // Phase 2: Advanced Encodings
+  DeltaEncoder,
+  DeltaDecoder,
+  RunLengthEncoder,
+  RunLengthDecoder,
+  AdaptiveOptimizer,
+  // Phase 3: Advanced Features
+  BitPacker,
+  BitPackDecoder,
+  SchemaInheritance,
+  HierarchicalGrouping,
+  TokenizerAware,
+  // Types
+  type Dictionary,
+  type DictionaryEntry,
+  type DictionaryOptions,
+  type QuantizationOptions,
+  type PrecisionAnalysis,
+  type DeltaOptions,
+  type DeltaAnalysis,
+  type RLEOptions,
+  type RLEAnalysis,
+  type BitPackOptions,
+  type BitPackAnalysis,
+  type SchemaInheritOptions,
+  type Schema,
+  type ColumnSchema,
+  type SchemaAnalysis,
+  type HierarchicalOptions,
+  type HierarchyNode,
+  type HierarchyAnalysis,
+  type TokenizerAwareOptions,
+  type TokenizerAnalysis,
+  type AdaptiveOptions,
+  type ColumnAnalysis,
+  type OptimizationStrategy,
+  type ColumnReorderResult,
+  type Run,
+  type OptimizationAnalysis,
+  type EncodingHints
+} from './optimization/index.js';
