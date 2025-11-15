@@ -88,7 +88,7 @@ console.log('');
 console.log('5. Method Chaining:');
 
 doc
-  .set('app.version', '2.0.0')
+  .set('app.version', '2.0.1')
   .set('app.environment', 'production')
   .set('app.config.cache', true);
 

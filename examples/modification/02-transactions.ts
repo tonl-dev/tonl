@@ -35,7 +35,7 @@ console.log('');
 // MAKE CHANGES
 // ============================================
 console.log('2. Make Changes:');
-doc.set('config.version', '2.0.0');
+doc.set('config.version', '2.0.1');
 doc.set('config.features.darkMode', true);
 doc.set('config.features.newFeature', 'enabled');
 doc.push('users', { id: 3, name: 'Carol', active: true });

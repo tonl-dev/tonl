@@ -73,7 +73,7 @@ export { streamQuery, streamAggregate, streamCount, streamCollect, StreamPipelin
 // Export REPL (NEW in v0.8.0!)
 export { TONLREPL, type REPLOptions } from './repl/index.js';
 
-// Export Optimization API (NEW in v2.0.0!)
+// Export Optimization API (NEW in v2.0.1!)
 export {
   // Phase 1: Core Optimizations
   DictionaryBuilder,

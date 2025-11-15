@@ -177,7 +177,7 @@ describe('Comprehensive Integration Tests - ALL FEATURES', () => {
 
       // 4. Modify data
       const snapshot = doc.snapshot();
-      doc.set('app.version', '2.0.0');
+      doc.set('app.version', '2.0.1');
       doc.set('app.users[0].salary', 80000);
 
       // 5. Track changes
@@ -186,13 +186,13 @@ describe('Comprehensive Integration Tests - ALL FEATURES', () => {
       assert.ok(diff.summary.modified >= 1);
 
       // 6. Verify final state
-      assert.strictEqual(doc.get('app.version'), '2.0.0');
+      assert.strictEqual(doc.get('app.version'), '2.0.1');
       assert.strictEqual(doc.get('app.users[0].salary'), 80000);
 
       // 7. Convert to TONL and back
       const tonl = doc.toTONL();
       const doc2 = TONLDocument.parse(tonl);
-      assert.strictEqual(doc2.get('app.version'), '2.0.0');
+      assert.strictEqual(doc2.get('app.version'), '2.0.1');
     });
   });
 
