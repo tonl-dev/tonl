@@ -159,7 +159,7 @@
                     <a href="#comparison" class="text-slate-600 hover:text-slate-900 font-medium transition">Comparison</a>
                     <a href="docs.html" class="text-slate-600 hover:text-slate-900 font-medium transition">Docs</a>
                     <a href="examples.html" class="text-slate-600 hover:text-slate-900 font-medium transition">Playground</a>
-                    <a href="https://github.com/tonl-dev/tonl" target="_blank" class="text-slate-600 hover:text-slate-900 font-medium transition">GitHub</a>
+                    <a href="https://github.com/ersinkoc/tonl" target="_blank" class="text-slate-600 hover:text-slate-900 font-medium transition">GitHub</a>
                     <a href="https://www.npmjs.com/package/tonl" target="_blank" class="bg-slate-900 text-white px-5 py-2 rounded-lg font-semibold hover:bg-slate-800 transition">
                         Install
                     </a>
@@ -179,7 +179,7 @@
                 <a href="#comparison" class="block py-2 text-slate-600 hover:text-slate-900">Comparison</a>
                 <a href="docs.html" class="block py-2 text-slate-600 hover:text-slate-900">Docs</a>
                 <a href="examples.html" class="block py-2 text-slate-600 hover:text-slate-900">Playground</a>
-                <a href="https://github.com/tonl-dev/tonl" class="block py-2 text-slate-600 hover:text-slate-900">GitHub</a>
+                <a href="https://github.com/ersinkoc/tonl" class="block py-2 text-slate-600 hover:text-slate-900">GitHub</a>
             </div>
         </div>
     </nav>
@@ -248,6 +248,34 @@
                         <div class="text-4xl font-bold text-slate-900 mt-2">8.84</div>
                         <div class="text-xs text-slate-500 mt-1">KB</div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Metrics -->
+    <section class="py-16 bg-gradient-to-b from-white to-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="text-3xl mb-2">🧪</div>
+                    <div class="text-2xl font-bold text-emerald-600 mb-1">791+</div>
+                    <div class="text-sm text-slate-600">Tests Passing</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="text-3xl mb-2">📦</div>
+                    <div class="text-2xl font-bold text-blue-600 mb-1">8.84 KB</div>
+                    <div class="text-sm text-slate-600">Bundle Size (gzipped)</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="text-3xl mb-2">⚡</div>
+                    <div class="text-2xl font-bold text-purple-600 mb-1">O(1)</div>
+                    <div class="text-sm text-slate-600">Index Lookup Time</div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="text-3xl mb-2">🚀</div>
+                    <div class="text-2xl font-bold text-orange-600 mb-1">0 deps</div>
+                    <div class="text-sm text-slate-600">Zero Dependencies</div>
                 </div>
             </div>
         </div>
@@ -1236,7 +1264,7 @@ tonl decode filtered.tonl --out result.json</code></pre>
                             <div class="bg-slate-900 rounded-lg p-5">
                                 <pre class="text-sm leading-relaxed"><code><span class="text-slate-400">&lt;script <span class="text-blue-400">type</span>=<span class="text-emerald-400">"module"</span>&gt;</span>
   <span class="text-purple-400">import</span> <span class="text-slate-300">{</span> <span class="text-cyan-400">encodeTONL</span><span class="text-slate-300">,</span> <span class="text-cyan-400">decodeTONL</span> <span class="text-slate-300">}</span>
-    <span class="text-purple-400">from</span> <span class="text-emerald-400">'https://cdn.jsdelivr.net/npm/tonl@1.0.12/+esm'</span><span class="text-slate-300">;</span>
+    <span class="text-purple-400">from</span> <span class="text-emerald-400">'https://cdn.jsdelivr.net/npm/tonl@2.0.0/+esm'</span><span class="text-slate-300">;</span>
 
   <span class="text-purple-400">const</span> <span class="text-cyan-300">data</span> <span class="text-slate-300">=</span> <span class="text-slate-300">{</span> <span class="text-cyan-300">users</span><span class="text-slate-300">:</span> <span class="text-slate-300">[{</span> <span class="text-cyan-300">id</span><span class="text-slate-300">:</span> <span class="text-orange-400">1</span><span class="text-slate-300">,</span> <span class="text-cyan-300">name</span><span class="text-slate-300">:</span> <span class="text-emerald-400">'Alice'</span> <span class="text-slate-300">}]</span> <span class="text-slate-300">};</span>
   <span class="text-purple-400">const</span> <span class="text-cyan-300">tonl</span> <span class="text-slate-300">=</span> <span class="text-cyan-400">encodeTONL</span><span class="text-slate-300">(</span><span class="text-cyan-300">data</span><span class="text-slate-300">);</span>
@@ -1258,7 +1286,7 @@ tonl decode filtered.tonl --out result.json</code></pre>
                     <div class="p-6">
                         <div class="code-wrapper">
                             <div class="bg-slate-900 rounded-lg p-5">
-                                <pre class="text-sm leading-relaxed"><code><span class="text-slate-400">&lt;script <span class="text-blue-400">src</span>=<span class="text-emerald-400">"https://unpkg.com/tonl@1.0.12/</span></span>
+                                <pre class="text-sm leading-relaxed"><code><span class="text-slate-400">&lt;script <span class="text-blue-400">src</span>=<span class="text-emerald-400">"https://unpkg.com/tonl@2.0.0/</span></span>
 <span class="text-slate-400"><span class="text-emerald-400">  dist/browser/tonl.umd.js"</span>&gt;&lt;/script&gt;</span>
 <span class="text-slate-400">&lt;script&gt;</span>
   <span class="text-purple-400">const</span> <span class="text-cyan-300">tonl</span> <span class="text-slate-300">=</span> <span class="text-cyan-300">TONL</span><span class="text-slate-300">.</span><span class="text-cyan-400">encodeTONL</span><span class="text-slate-300">({</span>
@@ -2077,7 +2105,16 @@ TONL v2.0 provides 60% additional compression while maintaining full LLM compati
                 <div class="flex items-center gap-4 mt-4 md:mt-0">
                     <span>v2.0.0</span>
                     <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                    <span class="text-emerald-600 font-medium">100% Feature Coverage</span>
+                    <span class="text-emerald-600 font-medium">791+ Tests Passing</span>
+                    <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    <span class="text-blue-600 font-medium">8.84 KB gzipped</span>
+                    <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                    <div class="flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                        <a href="https://github.com/ersinkoc/tonl" target="_blank" class="text-purple-600 hover:text-purple-700 font-medium transition">Star Us</a>
+                    </div>
                 </div>
             </div>
         </div>
