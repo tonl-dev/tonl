@@ -32,11 +32,16 @@ export function encodeSmart(input: any, opts?: {
 }): string {
   const jsonStr = JSON.stringify(input);
 
-  // Analyze content
-  const commaCount = (jsonStr.match(/,/g) || []).length;
-  const pipeCount = (jsonStr.match(/\|/g) || []).length;
-  const tabCount = (jsonStr.match(/\t/g) || []).length;
-  const semicolonCount = (jsonStr.match(/;/g) || []).length;
+  // Optimized delimiter counting - single pass through string (O(n) instead of O(4n))
+  let commaCount = 0, pipeCount = 0, tabCount = 0, semicolonCount = 0;
+  for (let i = 0; i < jsonStr.length; i++) {
+    switch (jsonStr[i]) {
+      case ',': commaCount++; break;
+      case '|': pipeCount++; break;
+      case '\t': tabCount++; break;
+      case ';': semicolonCount++; break;
+    }
+  }
 
   let bestDelimiter: "," | "|" | "\t" | ";" = ",";
   let minQuoting = commaCount;

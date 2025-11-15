@@ -5,6 +5,8 @@
 import { Transform } from 'stream';
 import type { StreamEncodeOptions } from './types.js';
 import { encodeTONL } from '../encode.js';
+import { safeJsonParse } from '../utils/strings.js';
+import type { TONLValue } from '../types.js';
 
 /**
  * Create a transform stream that encodes JSON chunks to TONL format
@@ -35,7 +37,7 @@ export function createEncodeStream(options?: StreamEncodeOptions): Transform {
           if (!line.trim()) continue;
 
           try {
-            const jsonData = JSON.parse(line);
+            const jsonData = safeJsonParse(line) as TONLValue;
             const tonlOutput = encodeTONL(jsonData, opts);
 
             // Add newline separator between blocks
@@ -60,7 +62,7 @@ export function createEncodeStream(options?: StreamEncodeOptions): Transform {
       try {
         // Process any remaining data in buffer
         if (buffer.trim()) {
-          const jsonData = JSON.parse(buffer);
+          const jsonData = safeJsonParse(buffer) as TONLValue;
           const tonlOutput = encodeTONL(jsonData, opts);
           this.push(tonlOutput);
         }

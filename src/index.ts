@@ -6,6 +6,7 @@
 
 export type { EncodeOptions, DecodeOptions } from "./types.js";
 export type { TONLValue, TONLObject, TONLArray, TONLTypeHint, TONLDelimiter } from "./types.js";
+import type { TONLValue } from "./types.js";
 
 // Re-export encodeTONL with the original interface for direct use
 import { encodeTONL as _encodeTONL } from "./encode.js";
@@ -16,7 +17,7 @@ import { inferPrimitiveType, coerceValue, isUniformObjectArray } from "./infer.j
 export { _encodeTONL as encodeTONL, _decodeTONL as decodeTONL, parseTONLLine, parseHeaderLine, parseObjectHeader, detectDelimiter, inferPrimitiveType, coerceValue, isUniformObjectArray };
 
 /** Analyze a JSON value and choose the most compact text layout automatically. */
-export function encodeSmart(input: any, opts?: {
+export function encodeSmart(input: TONLValue, opts?: {
   delimiter?: "," | "|" | "\t" | ";";
   includeTypes?: boolean;
   version?: string;
@@ -26,11 +27,16 @@ export function encodeSmart(input: any, opts?: {
   // Smart encoding logic to choose optimal delimiter and formatting
   const jsonStr = JSON.stringify(input);
 
-  // Analyze content to choose best delimiter
-  const commaCount = (jsonStr.match(/,/g) || []).length;
-  const pipeCount = (jsonStr.match(/\|/g) || []).length;
-  const tabCount = (jsonStr.match(/\t/g) || []).length;
-  const semicolonCount = (jsonStr.match(/;/g) || []).length;
+  // Optimized delimiter counting - single pass through string (O(n) instead of O(4n))
+  let commaCount = 0, pipeCount = 0, tabCount = 0, semicolonCount = 0;
+  for (let i = 0; i < jsonStr.length; i++) {
+    switch (jsonStr[i]) {
+      case ',': commaCount++; break;
+      case '|': pipeCount++; break;
+      case '\t': tabCount++; break;
+      case ';': semicolonCount++; break;
+    }
+  }
 
   let bestDelimiter: "," | "|" | "\t" | ";" = ",";
   let minQuoting = commaCount;

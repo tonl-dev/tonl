@@ -10,7 +10,7 @@ import { quoteIfNeeded, tripleQuoteIfNeeded, makeIndent } from "./utils/strings.
 /**
  * Main encode function
  */
-export function encodeTONL(input: any, opts: {
+export function encodeTONL(input: TONLValue, opts: {
   delimiter?: TONLDelimiter;
   includeTypes?: boolean;
   version?: string;

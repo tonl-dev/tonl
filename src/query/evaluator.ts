@@ -444,24 +444,62 @@ export class QueryEvaluator {
     actualEnd = Math.max(0, Math.min(actualEnd, length));
 
     // Handle negative step (reverse iteration)
-    // BUGFIX: Corrected reverse iteration logic
     if (step < 0) {
       step = Math.abs(step);
 
-      // For reverse slicing, determine proper start and end
-      // When start is not specified, begin from the last element
-      // When end is not specified, go to the first element (or before)
-      let reverseStart = start !== undefined ? actualStart : length - 1;
-      let reverseEnd = end !== undefined ? actualEnd : -1;
+      // Python slice semantics for negative step:
+      // [start:end:step] where step < 0
+      // Start from start index, go backwards, stop when index <= end
 
-      // Ensure reverseStart is within bounds
-      if (reverseStart >= length) reverseStart = length - 1;
-      if (reverseStart < 0) reverseStart = -1;
+      let startIndex: number;
+      let endIndex: number;
 
-      // Extract slice with reverse iteration
+      // Handle start index
+      if (start !== undefined) {
+        if (start >= 0) {
+          startIndex = start;
+        } else {
+          // Negative index: count from end (e.g., -1 = length-1)
+          startIndex = length + start;
+        }
+      } else {
+        startIndex = length - 1; // Default to last element
+      }
+
+      // Handle end index - keep original for comparison
+      if (end !== undefined) {
+        endIndex = end;
+      } else {
+        endIndex = -1; // Default to before first element
+      }
+
+      // Adjust out-of-bounds indices
+      if (startIndex >= length) startIndex = length - 1;
+
+      if (startIndex < 0) {
+        // Any negative startIndex (whether from explicit negative start or other) should be clamped
+        // For reverse slices, negative startIndex means start from last element
+        startIndex = length - 1;
+      }
+
+      // Extract slice with reverse iteration following Python semantics
       const result: any[] = [];
-      for (let i = reverseStart; i > reverseEnd && i >= 0; i -= step) {
-        result.push(current[i]);
+
+      // For negative step, we iterate while i > effectiveEnd
+      // where effectiveEnd depends on whether end is negative or not
+      let effectiveEnd: number;
+      if (endIndex < 0) {
+        // Negative end index: convert to position from end
+        effectiveEnd = endIndex;
+      } else {
+        // Non-negative end: use as-is
+        effectiveEnd = endIndex;
+      }
+
+      for (let i = startIndex; i > effectiveEnd; i -= step) {
+        if (i >= 0 && i < length) {
+          result.push(current[i]);
+        }
       }
       return result;
     }

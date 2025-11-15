@@ -8,7 +8,9 @@ import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
 import { parsePath } from '../query/path-parser.js';
 import { evaluate } from '../query/evaluator.js';
+import { safeJsonParse } from '../utils/strings.js';
 import { decodeTONL } from '../decode.js';
+import type { TONLValue } from '../types.js';
 
 export interface StreamQueryOptions {
   /**
@@ -77,7 +79,7 @@ export async function* streamQuery(
 
       // Try to parse line as JSON or TONL
       try {
-        const data = JSON.parse(line);
+        const data = safeJsonParse(line) as TONLValue;
 
         // Apply query
         const result = evaluate(data, parseResult.ast);

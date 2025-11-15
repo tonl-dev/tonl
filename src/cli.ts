@@ -6,8 +6,10 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { encodeTONL, decodeTONL, encodeSmart } from "./index";
 import { estimateTokens } from "./utils/metrics";
+import { safeJsonParse } from "./utils/strings";
 import { parseSchema, validateTONL, generateTypeScript } from "./schema/index";
 import { PathValidator } from "./cli/path-validator";
+import type { TONLValue } from "./types.js";
 import { QuerySanitizer } from "./cli/query-sanitizer";
 import { SecurityError } from "./errors/index";
 
@@ -131,7 +133,7 @@ function parseArgs(args: string[]): { command: string; file: string; options: CL
         break;
       case "--tokenizer":
         if (["gpt-5", "gpt-4.5", "gpt-4o", "claude-3.5", "gemini-2.0", "llama-4", "o200k", "cl100k"].includes(nextArg)) {
-          options.tokenizer = nextArg as any;
+          options.tokenizer = nextArg as typeof options.tokenizer;
         }
         i++;
         break;
@@ -200,7 +202,7 @@ async function main() {
     switch (command) {
       case "encode": {
         let tonlOutput: string;
-        const jsonData = JSON.parse(input);
+        const jsonData = safeJsonParse(input) as TONLValue;
 
         if (options.optimize) {
           // Use optimization
@@ -210,7 +212,7 @@ async function main() {
           const { AdaptiveOptimizer } = await import('./optimization');
           const optimizer = new AdaptiveOptimizer();
 
-          const optimizationResult = optimizer.optimize(jsonData);
+          const optimizationResult = optimizer.optimize(jsonData as any[]);
 
           // Build TONL with directives
           const directives = optimizationResult.directives.join('\n') + '\n';
@@ -291,7 +293,7 @@ async function main() {
       case "stats": {
         if (file.endsWith('.json')) {
           // JSON file - encode and compare
-          const jsonData = JSON.parse(input);
+          const jsonData = safeJsonParse(input) as TONLValue;
           const originalBytes = byteSize(input);
           const originalTokens = estimateTokens(input, options.tokenizer);
 
@@ -433,7 +435,7 @@ async function main() {
         let data: any;
 
         if (file.endsWith('.json')) {
-          data = JSON.parse(input);
+          data = safeJsonParse(input) as TONLValue;
         } else {
           data = decodeTONL(input, { delimiter: options.delimiter });
         }

@@ -5,6 +5,118 @@
 import type { TONLDelimiter, TONLTypeHint } from "../types.js";
 
 /**
+ * Maximum JSON string size to prevent ReDoS attacks (10MB)
+ */
+const MAX_JSON_SIZE = 10 * 1024 * 1024;
+
+/**
+ * Complexity limits for JSON parsing to prevent ReDoS
+ */
+interface ComplexityLimits {
+  maxNesting: number;
+  maxProperties: number;
+  maxArrayLength: number;
+}
+
+const DEFAULT_LIMITS: ComplexityLimits = {
+  maxNesting: 100,
+  maxProperties: 10000,
+  maxArrayLength: 10000
+};
+
+/**
+ * Safely parse JSON with protection against ReDoS attacks and memory exhaustion
+ * @param jsonString - JSON string to parse
+ * @param limits - Optional complexity limits
+ * @returns Parsed JSON object
+ * @throws Error if JSON is invalid or exceeds limits
+ */
+export function safeJsonParse(jsonString: string, limits: Partial<ComplexityLimits> = {}): unknown {
+  const finalLimits = { ...DEFAULT_LIMITS, ...limits };
+
+  // Check input size
+  if (jsonString.length > MAX_JSON_SIZE) {
+    throw new Error(`JSON input too large: ${jsonString.length} bytes (max: ${MAX_JSON_SIZE})`);
+  }
+
+  // Basic structure validation before parsing
+  const trimmed = jsonString.trim();
+  if (!trimmed) {
+    throw new Error('JSON input cannot be empty');
+  }
+
+  // Check for basic JSON structure
+  if (!(trimmed.startsWith('{') || trimmed.startsWith('['))) {
+    throw new Error('Invalid JSON format: must start with { or [');
+  }
+
+  let nesting = 0;
+  let inString = false;
+  let escapeNext = false;
+  let objectCount = 0;
+  let arrayCount = 0;
+
+  // Pre-validate complexity
+  for (let i = 0; i < trimmed.length; i++) {
+    const char = trimmed[i];
+
+    if (escapeNext) {
+      escapeNext = false;
+      continue;
+    }
+
+    if (char === '\\' && inString) {
+      escapeNext = true;
+      continue;
+    }
+
+    if (char === '"' && !escapeNext) {
+      inString = !inString;
+      continue;
+    }
+
+    if (!inString) {
+      switch (char) {
+        case '{':
+          nesting++;
+          objectCount++;
+          if (nesting > finalLimits.maxNesting) {
+            throw new Error(`JSON nesting too deep: ${nesting} (max: ${finalLimits.maxNesting})`);
+          }
+          if (objectCount > finalLimits.maxProperties) {
+            throw new Error(`Too many objects: ${objectCount} (max: ${finalLimits.maxProperties})`);
+          }
+          break;
+        case '[':
+          nesting++;
+          arrayCount++;
+          if (nesting > finalLimits.maxNesting) {
+            throw new Error(`JSON nesting too deep: ${nesting} (max: ${finalLimits.maxNesting})`);
+          }
+          break;
+        case '}':
+        case ']':
+          nesting--;
+          break;
+      }
+    }
+  }
+
+  if (nesting !== 0) {
+    throw new Error('Invalid JSON: unbalanced brackets');
+  }
+
+  try {
+    return JSON.parse(jsonString);
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      throw new Error(`Invalid JSON: ${error.message}`);
+    }
+    throw error;
+  }
+}
+
+/**
  * Check if a value needs quoting based on TONL quoting rules
  */
 export function needsQuoting(value: string, delimiter: TONLDelimiter): boolean {
