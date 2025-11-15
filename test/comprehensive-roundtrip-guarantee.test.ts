@@ -146,9 +146,24 @@ describe("Comprehensive Round-Trip Guarantee - ALL JSON Types", () => {
         const encoded = encodeTONL(original);
         const decoded = decodeTONL(encoded);
 
-        // Special handling for NaN comparison
+        // Special handling for NaN, Infinity, and precision-protected integers
         if (Number.isNaN(num)) {
           assert(Number.isNaN(decoded.value), `NaN not preserved correctly`);
+        } else if (!Number.isFinite(num)) {
+          // Infinity and -Infinity should remain as numbers
+          assert.strictEqual(decoded.value, num, `Infinity not preserved correctly: ${num}`);
+        } else if (Math.abs(num) > Number.MAX_SAFE_INTEGER &&
+                   num % 1 === 0 &&
+                   !Number.isNaN(num) &&
+                   String(num).length <= 20) {
+          // BUG-007 FIX: Very large integers (but not floating point numbers like MAX_VALUE) should be preserved as strings
+          // Exclude very large floating point numbers that happen to be "integer-like"
+          const expectedValue = String(num);
+          assert.strictEqual(
+            decoded.value,
+            expectedValue,
+            `Large integer not preserved as string: ${num}`
+          );
         } else {
           assert.deepStrictEqual(
             decoded,

@@ -131,17 +131,29 @@ describe("encode/decode round-trip", () => {
   });
 
   test("should handle numeric values correctly", () => {
+    // BUG-007 FIX TEST: Test with actual Number.MAX_SAFE_INTEGER + 1
     const original = {
       intPositive: 42,
       intNegative: -17,
       float: 3.14159,
       zero: 0,
-      bigNumber: 9223372036854775807
+      bigNumber: Number.MAX_SAFE_INTEGER + 1
     };
 
     const encoded = encodeTONL(original, { includeTypes: true });
     const decoded = decodeTONL(encoded);
-    assert.deepStrictEqual(decoded, original);
+
+    // BUG-007: Large integers should be preserved as strings to prevent precision loss
+    // We expect the string version because it preserves the exact value
+    const expected = {
+      intPositive: 42,
+      intNegative: -17,
+      float: 3.14159,
+      zero: 0,
+      bigNumber: String(Number.MAX_SAFE_INTEGER + 1)
+    };
+
+    assert.deepStrictEqual(decoded, expected);
   });
 
   test("should encodeSmart correctly", () => {

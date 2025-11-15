@@ -15,10 +15,19 @@ import { SecurityError } from "./errors/index";
 
 /**
  * Safe file read with path validation
+ * BUG-008 FIX: Enhanced error handling and resource cleanup
  */
 function safeReadFile(userPath: string): string {
   try {
     const safePath = PathValidator.validateRead(userPath);
+
+    // BUG-008 FIX: Validate file existence and accessibility before reading
+    if (!existsSync(safePath)) {
+      throw new Error(`File not found: ${userPath}`);
+    }
+
+    // readFileSync in Node.js automatically handles file descriptor cleanup,
+    // but we add explicit error context for better debugging
     return readFileSync(safePath, 'utf8');
   } catch (error) {
     if (error instanceof SecurityError) {
@@ -26,23 +35,60 @@ function safeReadFile(userPath: string): string {
       console.error(`❌ Access denied to: ${userPath}`);
       process.exit(1);
     }
+
+    // BUG-008 FIX: Enhanced error reporting for file operation failures
+    if (error instanceof Error) {
+      console.error(`❌ Error reading file: ${error.message}`);
+      console.error(`❌ File: ${userPath}`);
+    } else {
+      console.error(`❌ Unknown error reading file: ${userPath}`);
+    }
+
     throw error;
   }
 }
 
 /**
  * Safe file write with path validation
+ * BUG-008 FIX: Enhanced error handling and resource cleanup
  */
 function safeWriteFile(userPath: string, content: string): void {
   try {
     const safePath = PathValidator.validateWrite(userPath);
-    writeFileSync(safePath, content);
+
+    // BUG-008 FIX: Validate content before writing
+    if (typeof content !== 'string') {
+      throw new Error(`Invalid content type: expected string, got ${typeof content}`);
+    }
+
+    // writeFileSync in Node.js automatically handles file descriptor cleanup,
+    // but we add validation and enhanced error reporting
+    writeFileSync(safePath, content, 'utf8');
   } catch (error) {
     if (error instanceof SecurityError) {
       console.error(`❌ Security Error: ${error.message}`);
       console.error(`❌ Cannot write to: ${userPath}`);
       process.exit(1);
     }
+
+    // BUG-008 FIX: Enhanced error reporting for file operation failures
+    if (error instanceof Error) {
+      console.error(`❌ Error writing file: ${error.message}`);
+      console.error(`❌ File: ${userPath}`);
+
+      // Additional context for common write errors (Node.js system errors have code property)
+      const nodeError = error as any;
+      if (nodeError.code === 'EACCES') {
+        console.error(`❌ Permission denied. Check file/directory permissions.`);
+      } else if (nodeError.code === 'ENOSPC') {
+        console.error(`❌ No space left on device.`);
+      } else if (nodeError.code === 'EISDIR') {
+        console.error(`❌ Target is a directory, not a file.`);
+      }
+    } else {
+      console.error(`❌ Unknown error writing file: ${userPath}`);
+    }
+
     throw error;
   }
 }

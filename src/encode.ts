@@ -124,11 +124,18 @@ function encodeObject(obj: TONLObject, key: string, context: TONLEncodeContext):
 
   context.seen.add(obj);
 
-  const keys = Object.keys(obj).filter(k => obj[k] !== undefined).sort();
+  // BUG-013 FIX: Use Reflect.ownKeys() to include all properties including __proto__
+  // Object.keys() doesn't include __proto__ as an own property, causing data loss
+  const keys = Reflect.ownKeys(obj)
+    .filter(k => typeof k === 'string') // Only handle string keys
+    .filter(k => obj[k] !== undefined)
+    .sort();
   const columns: string[] = [];
-  const hasNestedObjects = Object.values(obj).some(v =>
-    typeof v === "object" && v !== null && !Array.isArray(v)
-  );
+  // BUG-013 FIX: Use the keys we already collected to check for nested objects
+  const hasNestedObjects = keys.some(k => {
+    const v = obj[k];
+    return typeof v === "object" && v !== null && !Array.isArray(v);
+  });
 
   // Check if any keys contain special characters that require quoting
   const hasSpecialKeys = keys.some(k =>

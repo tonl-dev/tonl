@@ -53,10 +53,10 @@ test('BUG-F002: Extremely large integer should be handled safely', () => {
   // Numbers beyond MAX_SAFE_INTEGER
   const largeTONL = `value: ${Number.MAX_SAFE_INTEGER + 1000}`;
 
-  // Should either parse correctly or throw error, but not produce NaN
+  // BUG-007 FIX: Should be preserved as string to prevent precision loss
   const result = decodeTONL(largeTONL);
-  assert.ok(typeof result.value === 'number');
-  assert.ok(Number.isFinite(result.value), 'Should be finite');
+  assert.ok(typeof result.value === 'string', 'Large integers should be preserved as strings');
+  assert.ok(result.value === String(Number.MAX_SAFE_INTEGER + 1000), 'Value should match original');
 });
 
 test('BUG-F002: Valid numbers parse correctly', () => {

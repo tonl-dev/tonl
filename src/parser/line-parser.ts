@@ -69,8 +69,15 @@ export function parsePrimitiveValue(value: string, context: TONLParseContext): T
       // For truly invalid numbers (Infinity), keep as string
       return trimmed;
     }
-    // For large integers beyond safe range, still return number but with precision loss
-    // This matches the test expectations
+
+    // BUG-007 FIX: Check for precision loss with large integers
+    if (Math.abs(num) > Number.MAX_SAFE_INTEGER) {
+      // For any integer exceeding MAX_SAFE_INTEGER, preserve as string
+      // This prevents silent data corruption since JavaScript cannot represent
+      // these integers precisely without precision loss
+      return trimmed;
+    }
+
     return num;
   }
 

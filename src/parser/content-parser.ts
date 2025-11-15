@@ -26,10 +26,24 @@ export function parseContent(content: string, context: TONLParseContext): TONLOb
     const line = lines[i];
     const trimmed = line.trim();
 
-    // Skip empty lines and comments (# or @)
-    if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('@')) {
+    // Skip empty lines and comments (#)
+    if (!trimmed || trimmed.startsWith('#')) {
       i++;
       continue;
+    }
+
+    // BUG-014 FIX: Only skip real @ directives, not @ symbol keys
+    if (trimmed.startsWith('@')) {
+      const colonIndex = trimmed.indexOf(':');
+      if (colonIndex > 0) {
+        const keyword = trimmed.substring(1, colonIndex).trim();
+        const knownDirectives = ['version', 'delimiter', 'import', 'schema', 'type', 'description'];
+        if (knownDirectives.includes(keyword)) {
+          i++;
+          continue; // Skip real directives
+        }
+      }
+      // Not a known directive, treat as data
     }
 
     // Check for single-line format: key{cols}: val1: val2

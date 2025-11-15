@@ -70,8 +70,21 @@ export function coerceValue(value: string, type: TONLTypeHint): any {
       return unquoted === "true";
     case "u32":
       // SECURITY FIX (BF010): Strict validation - must be decimal integer only
+      // BUG-011 FIX: Enhanced error messages for common notation mistakes
       if (!/^[0-9]+$/.test(unquoted)) {
-        throw new TypeError(`Invalid u32: must be decimal integer, got: ${unquoted}`);
+        if (/^0[xX]/.test(unquoted)) {
+          throw new TypeError(`Invalid u32: hexadecimal notation not supported, use decimal instead: ${unquoted}`);
+        }
+        if (/^0[oO]/.test(unquoted)) {
+          throw new TypeError(`Invalid u32: octal notation not supported, use decimal instead: ${unquoted}`);
+        }
+        if (/^0[bB]/.test(unquoted)) {
+          throw new TypeError(`Invalid u32: binary notation not supported, use decimal instead: ${unquoted}`);
+        }
+        if (/[eE]/.test(unquoted)) {
+          throw new TypeError(`Invalid u32: scientific notation not supported for integers: ${unquoted}`);
+        }
+        throw new TypeError(`Invalid u32: must be decimal integer only, got: ${unquoted}`);
       }
       const u32 = parseInt(unquoted, 10);
       if (!Number.isFinite(u32) || u32 < 0 || u32 > 0xFFFFFFFF) {
@@ -84,8 +97,21 @@ export function coerceValue(value: string, type: TONLTypeHint): any {
       return u32;
     case "i32":
       // SECURITY FIX (BF010): Strict validation
+      // BUG-011 FIX: Enhanced error messages for common notation mistakes
       if (!/^-?[0-9]+$/.test(unquoted)) {
-        throw new TypeError(`Invalid i32: must be decimal integer, got: ${unquoted}`);
+        if (/^0[xX]/.test(unquoted)) {
+          throw new TypeError(`Invalid i32: hexadecimal notation not supported, use decimal instead: ${unquoted}`);
+        }
+        if (/^0[oO]/.test(unquoted)) {
+          throw new TypeError(`Invalid i32: octal notation not supported, use decimal instead: ${unquoted}`);
+        }
+        if (/^0[bB]/.test(unquoted)) {
+          throw new TypeError(`Invalid i32: binary notation not supported, use decimal instead: ${unquoted}`);
+        }
+        if (/[eE]/.test(unquoted)) {
+          throw new TypeError(`Invalid i32: scientific notation not supported for integers: ${unquoted}`);
+        }
+        throw new TypeError(`Invalid i32: must be decimal integer only, got: ${unquoted}`);
       }
       const i32 = parseInt(unquoted, 10);
       if (!Number.isFinite(i32) || i32 < -0x80000000 || i32 > 0x7FFFFFFF) {
@@ -98,9 +124,18 @@ export function coerceValue(value: string, type: TONLTypeHint): any {
       return i32;
     case "f64":
       // SECURITY FIX (BF010): Reject NaN and Infinity
+      // BUG-011 FIX: Enhanced validation for floating point edge cases
       const f64 = parseFloat(unquoted);
       if (!Number.isFinite(f64)) {
         throw new RangeError(`Invalid f64: NaN or Infinity not allowed: ${value}`);
+      }
+      // BUG-011 FIX: Detect potential scientific notation precision issues
+      if (/\d*[eE][+-]?\d+/.test(unquoted) && !Number.isSafeInteger(f64) && f64 !== 0) {
+        // For very large/small scientific notation values, warn about precision
+        const absVal = Math.abs(f64);
+        if (absVal > Number.MAX_SAFE_INTEGER || (absVal < 1 && absVal < Number.EPSILON)) {
+          throw new RangeError(`Invalid f64: scientific notation precision loss detected: ${unquoted}`);
+        }
       }
       return f64;
     case "str":

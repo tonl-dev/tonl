@@ -37,10 +37,30 @@ export function decodeTONL(text: string, opts: {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    // Skip @ directives (schema annotations) and # directives (headers)
+    // BUG-014 FIX: Only skip real @ directives, not @ symbol keys
+    // Real directives are @keyword: value format (with colon)
+    // @ symbol keys are @key: value but should be treated as data
     if (line.startsWith('@')) {
-      dataStartIndex = i + 1;
-      continue;
+      const colonIndex = line.indexOf(':');
+      const spaceIndex = line.indexOf(' ');
+      const tabIndex = line.indexOf('\t');
+
+      // Check if this looks like a real directive (@keyword: value format)
+      // If colon comes first and it's a known directive keyword, skip it
+      // Otherwise, treat it as data
+      if (colonIndex > 0) {
+        const keyword = line.substring(1, colonIndex).trim();
+        const knownDirectives = ['version', 'delimiter', 'import', 'schema', 'type', 'description'];
+        if (knownDirectives.includes(keyword)) {
+          dataStartIndex = i + 1;
+          continue;
+        }
+        // Not a known directive, treat as data (break out of header parsing)
+        break;
+      }
+      // If no colon, this might be a malformed directive or data
+      // For safety, treat as data
+      break;
     }
     if (line.startsWith('#')) {
       const header = parseHeaderLine(line);

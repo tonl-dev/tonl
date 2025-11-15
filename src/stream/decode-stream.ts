@@ -23,7 +23,7 @@ export function createDecodeStream(options?: StreamDecodeOptions): Transform {
 
   let buffer = '';
 
-  return new Transform({
+  const stream = new Transform({
     objectMode: true, // Output as objects
     highWaterMark: opts.highWaterMark,
 
@@ -56,6 +56,8 @@ export function createDecodeStream(options?: StreamDecodeOptions): Transform {
           } catch (err) {
             // Invalid TONL block, skip or emit error
             if (opts.strict) {
+              // BUG-009 FIX: Clear buffer on error to prevent memory leak
+              buffer = '';
               return callback(err);
             }
             continue;
@@ -64,6 +66,8 @@ export function createDecodeStream(options?: StreamDecodeOptions): Transform {
 
         callback();
       } catch (error) {
+        // BUG-009 FIX: Clear buffer on transform error to prevent memory leak
+        buffer = '';
         callback(error);
       }
     },
@@ -75,16 +79,35 @@ export function createDecodeStream(options?: StreamDecodeOptions): Transform {
           const jsonData = decodeTONL(buffer, opts);
           this.push(jsonData);
         }
+
+        // BUG-009 FIX: Clear buffer after successful processing
+        buffer = '';
         callback();
       } catch (error) {
+        // BUG-009 FIX: Clear buffer even on error to prevent memory leak
+        buffer = '';
+
         if (opts.strict) {
           callback(error);
         } else {
+          // In non-strict mode, ignore errors but still clear buffer
           callback();
         }
       }
     }
   });
+
+  // BUG-009 FIX: Add cleanup handler for stream destruction
+  stream.on('destroy', () => {
+    buffer = '';
+  });
+
+  // BUG-009 FIX: Add error handler to ensure cleanup
+  stream.on('error', () => {
+    buffer = '';
+  });
+
+  return stream;
 }
 
 /**

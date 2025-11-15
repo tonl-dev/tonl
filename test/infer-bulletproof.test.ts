@@ -112,9 +112,9 @@ describe('BULLETPROOF: Type Inference', () => {
       });
 
       it('should reject non-decimal formats', () => {
-        assert.throws(() => coerceValue('0x10', 'u32'), /must be decimal/);
-        assert.throws(() => coerceValue('0o10', 'u32'), /must be decimal/);
-        assert.throws(() => coerceValue('0b10', 'u32'), /must be decimal/);
+        assert.throws(() => coerceValue('0x10', 'u32'), /hexadecimal.*not supported/);
+        assert.throws(() => coerceValue('0o10', 'u32'), /octal.*not supported/);
+        assert.throws(() => coerceValue('0b10', 'u32'), /binary.*not supported/);
         assert.throws(() => coerceValue('10n', 'u32'), /must be decimal/);
       });
 
@@ -141,7 +141,7 @@ describe('BULLETPROOF: Type Inference', () => {
 
       it('should reject invalid characters', () => {
         assert.throws(() => coerceValue('12a34', 'u32'), /must be decimal/);
-        assert.throws(() => coerceValue('12.34e10', 'u32'), /must be decimal/);
+        assert.throws(() => coerceValue('12.34e10', 'u32'), /scientific notation.*not supported/);
       });
     });
 
@@ -155,8 +155,8 @@ describe('BULLETPROOF: Type Inference', () => {
       });
 
       it('should reject non-decimal formats', () => {
-        assert.throws(() => coerceValue('0x10', 'i32'), /must be decimal/);
-        assert.throws(() => coerceValue('-0x10', 'i32'), /must be decimal/);
+        assert.throws(() => coerceValue('0x10', 'i32'), /hexadecimal.*not supported/);
+        assert.throws(() => coerceValue('-0x10', 'i32'), /must be decimal.*only/);
       });
 
       it('should reject floats', () => {

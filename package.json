@@ -1,7 +1,7 @@
 {
   "name": "tonl",
-  "version": "2.0.1",
-  "description": "Token-Optimized Notation Language - A text-first, LLM-friendly serialization format with schema validation, streaming, and browser support (Security Hardened)",
+  "version": "2.0.2",
+  "description": "Token-Optimized Notation Language - A text-first, LLM-friendly serialization format with schema validation, streaming, and browser support (Critical Bug Fixes & Security)",
   "homepage": "https://github.com/tonl-dev/tonl",
   "repository": {
     "type": "git",
@@ -109,6 +109,7 @@
   "devDependencies": {
     "@types/node": "^20.19.25",
     "c8": "^10.1.3",
+    "fast-check": "^4.3.0",
     "rimraf": "^6.0.1",
     "stream-browserify": "^3.0.0",
     "terser": "^5.44.0",

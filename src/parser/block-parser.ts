@@ -43,20 +43,49 @@ export function parseBlock(
 
     const currentIndent = line.match(/^(\s*)/)?.[1]?.length || 0;
 
-    // Track multiline strings
+    // Track multiline strings - BUG-012 FIX: Enhanced triple-quote detection
     let justEndedMultiline = false;
     if (trimmed.includes('"""')) {
-      const quoteCount = (trimmed.match(/"""/g) || []).length;
+      // Find all triple-quote positions in the line
+      const tripleQuotePositions: number[] = [];
+      let searchStart = 0;
+      let position = trimmed.indexOf('"""', searchStart);
+
+      while (position !== -1) {
+        tripleQuotePositions.push(position);
+        searchStart = position + 3; // Skip past this triple-quote
+        position = trimmed.indexOf('"""', searchStart);
+      }
 
       if (inMultilineString) {
-        if (trimmed.endsWith('"""')) {
+        // We're inside a multiline string, look for the closing quotes
+        if (trimmed.endsWith('"""') && tripleQuotePositions.length === 1) {
+          inMultilineString = false;
+          justEndedMultiline = true;
+        }
+        // Edge case: if we have multiple triple-quotes, only the last one counts as closing
+        else if (trimmed.endsWith('"""') && tripleQuotePositions.length > 1) {
+          // We have an odd number of triple-quotes, the last one closes
           inMultilineString = false;
           justEndedMultiline = true;
         }
       } else {
-        const afterFirstQuote = trimmed.split('"""')[1];
-        if (afterFirstQuote && !afterFirstQuote.endsWith('"""')) {
-          inMultilineString = true;
+        // We're not in a multiline string, check if this line starts one
+        if (tripleQuotePositions.length >= 2) {
+          // We have both opening and closing quotes on the same line (edge case)
+          // This is a single-line multiline string, so don't change inMultilineString
+          justEndedMultiline = true;
+        } else if (tripleQuotePositions.length === 1) {
+          // We have exactly one triple-quote
+          const afterFirstQuote = trimmed.substring(tripleQuotePositions[0] + 3);
+          // If there's content after the triple-quote and it doesn't end with quotes,
+          // this is an opening triple-quote
+          if (afterFirstQuote.length > 0 || !trimmed.endsWith('"""')) {
+            inMultilineString = true;
+          } else {
+            // This is a closing triple-quote or empty multiline string
+            justEndedMultiline = true;
+          }
         }
       }
     }
@@ -93,16 +122,72 @@ export function parseObjectBlock(
   lines: string[],
   context: TONLParseContext
 ): TONLObject {
-  const result: TONLObject = {};
+  // First pass: check if we have any keys that require special handling
+  const needsSpecialHandling: string[] = [];
+
+  // Collect keys from all lines to determine if special handling is needed
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+
+    // BUG-014 FIX: Only skip real @ directives, not @ symbol keys
+    if (trimmed.startsWith('@')) {
+      const colonIndex = trimmed.indexOf(':');
+      if (colonIndex > 0) {
+        const keyword = trimmed.substring(1, colonIndex).trim();
+        const knownDirectives = ['version', 'delimiter', 'import', 'schema', 'type', 'description'];
+        if (knownDirectives.includes(keyword)) {
+          continue; // Skip real directives
+        }
+      }
+      // Not a known directive, treat as data
+    }
+
+    // Extract key from the line (simplified check)
+    const colonIndex = trimmed.indexOf(':');
+    if (colonIndex > 0) {
+      let key = trimmed.substring(0, colonIndex).trim();
+      // Remove quotes if present
+      if (key.startsWith('"') && key.endsWith('"')) {
+        key = key.slice(1, -1);
+      }
+
+      // Check for dangerous prototype-related keys
+      if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+        needsSpecialHandling.push(key);
+      }
+    }
+  }
+
+  // BUG-013 FIX: Use null prototype only when we have dangerous keys
+  // This prevents __proto__ from being treated as a special setter while
+  // maintaining normal object behavior for all other cases
+  const result: TONLObject = needsSpecialHandling.length > 0
+    ? Object.create(null)
+    : {};
 
   let lineIndex = 0;
   while (lineIndex < lines.length) {
     const line = lines[lineIndex];
     const trimmed = line.trim();
     // Skip empty lines and comments
-    if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('@')) {
+    if (!trimmed || trimmed.startsWith('#')) {
       lineIndex++;
       continue;
+    }
+
+    // BUG-014 FIX: Only skip real @ directives, not @ symbol keys
+    if (trimmed.startsWith('@')) {
+      const colonIndex = trimmed.indexOf(':');
+      if (colonIndex > 0) {
+        const keyword = trimmed.substring(1, colonIndex).trim();
+        const knownDirectives = ['version', 'delimiter', 'import', 'schema', 'type', 'description'];
+        if (knownDirectives.includes(keyword)) {
+          lineIndex++;
+          continue; // Skip real directives
+        }
+      }
+      // Not a known directive, treat as data
     }
 
     // Single-line nested object format - only match if {columns}: is part of key definition, not in quoted value
@@ -295,6 +380,29 @@ export function parseObjectBlock(
       }
       lineIndex++;
     } else {
+      // BUG-010 FIX: Enhanced error handling for malformed lines
+      // In strict mode, report unparseable lines; in non-strict mode, skip with warning context
+      if (context.strict || trimmed.length > 0) {
+        const contextLines = Math.max(0, lineIndex - 1);
+        const surroundingLines = lines.slice(
+          Math.max(0, lineIndex - 2),
+          Math.min(lines.length, lineIndex + 3)
+        ).map((l, i) => `${lineIndex - 2 + i}: ${l}`).join('\n');
+
+        if (context.strict) {
+          throw new TONLParseError(
+            `Unparseable line in object block: "${trimmed.substring(0, 50)}${trimmed.length > 50 ? '...' : ''}"\n` +
+            `Context (line ${(context.currentLine || 0) + lineIndex + 1}):\n${surroundingLines}`,
+            (context.currentLine || 0) + lineIndex,
+            undefined,
+            line
+          );
+        } else {
+          // In non-strict mode, we still want to track parsing issues for debugging
+          // but not throw errors that would break processing
+          console.warn(`⚠️  Skipping unparseable line ${(context.currentLine || 0) + lineIndex + 1}: "${trimmed.substring(0, 50)}${trimmed.length > 50 ? '...' : ''}"`);
+        }
+      }
       lineIndex++;
     }
   }
@@ -330,7 +438,20 @@ export function parseArrayBlock(
         const line = lines[lineIndex];
         const trimmed = line.trim();
         // Skip empty lines and comments
-        if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('@')) continue;
+        if (!trimmed || trimmed.startsWith('#')) continue;
+
+        // BUG-014 FIX: Only skip real @ directives, not @ symbol keys
+        if (trimmed.startsWith('@')) {
+          const colonIndex = trimmed.indexOf(':');
+          if (colonIndex > 0) {
+            const keyword = trimmed.substring(1, colonIndex).trim();
+            const knownDirectives = ['version', 'delimiter', 'import', 'schema', 'type', 'description'];
+            if (knownDirectives.includes(keyword)) {
+              continue; // Skip real directives
+            }
+          }
+          // Not a known directive, treat as data
+        }
 
         // Check for indexed headers like [0]: value first (before object headers)
         if (hasIndexedHeaders) {
@@ -445,7 +566,20 @@ export function parseArrayBlock(
     for (const line of lines) {
       const trimmed = line.trim();
       // Skip empty lines and comments
-      if (!trimmed || trimmed.startsWith('#') || trimmed.startsWith('@')) continue;
+      if (!trimmed || trimmed.startsWith('#')) continue;
+
+      // BUG-014 FIX: Only skip real @ directives, not @ symbol keys
+      if (trimmed.startsWith('@')) {
+        const colonIndex = trimmed.indexOf(':');
+        if (colonIndex > 0) {
+          const keyword = trimmed.substring(1, colonIndex).trim();
+          const knownDirectives = ['version', 'delimiter', 'import', 'schema', 'type', 'description'];
+          if (knownDirectives.includes(keyword)) {
+            continue; // Skip real directives
+          }
+        }
+        // Not a known directive, treat as data
+      }
 
       const values = parseTONLLine(trimmed, context.delimiter);
       if (values.length === 0) continue;
