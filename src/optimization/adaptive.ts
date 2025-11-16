@@ -218,8 +218,11 @@ export class AdaptiveOptimizer {
       }
     }
 
-    // Calculate overall estimated savings
-    const avgSavings = columnAnalyses.reduce((sum, a) => sum + a.estimatedSavings, 0) / columnAnalyses.length;
+    // BUG-NEW-009 FIX: Guard against division by zero when columnAnalyses is empty
+    // This can happen when data contains empty objects: [{}, {}, {}]
+    const avgSavings = columnAnalyses.length > 0
+      ? columnAnalyses.reduce((sum, a) => sum + a.estimatedSavings, 0) / columnAnalyses.length
+      : 0;
 
     // Generate warnings
     const warnings: string[] = [];
