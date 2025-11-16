@@ -213,7 +213,10 @@ export class SchemaInheritance {
     ];
 
     const totalColumns = cols1.size + cols2.size - commonColumns.length;
-    const similarity = commonColumns.length / totalColumns;
+
+    // BUG-NEW-010 FIX: Guard against division by zero when totalColumns = 0
+    // This can happen when both data1[0] and data2[0] are empty objects: {}
+    const similarity = totalColumns === 0 ? 0 : commonColumns.length / totalColumns;
 
     // Guard against division by zero when no common columns
     if (commonColumns.length === 0) {
@@ -444,7 +447,10 @@ export class SchemaInheritance {
       // Calculate match score (Jaccard similarity)
       const intersection = new Set([...dataColumns].filter(c => schemaColumns.has(c)));
       const union = new Set([...dataColumns, ...schemaColumns]);
-      const score = intersection.size / union.size;
+
+      // BUG-NEW-011 FIX: Guard against division by zero when union.size = 0
+      // This can happen when both data[0] and schema have no columns (empty objects)
+      const score = union.size === 0 ? 0 : intersection.size / union.size;
 
       if (!bestMatch || score > bestMatch.score) {
         bestMatch = { name, score };

@@ -205,6 +205,12 @@ export class BitPacker {
       throw new Error('Integer packing is disabled');
     }
 
+    // BUG-NEW-012 FIX: Guard against empty values array
+    // Math.max(...[]) returns -Infinity and Math.min(...[]) returns Infinity
+    if (values.length === 0) {
+      throw new Error('Cannot pack empty array');
+    }
+
     // Validate values
     const maxValue = Math.max(...values);
     const minValue = Math.min(...values);
