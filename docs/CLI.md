@@ -2,7 +2,7 @@
 
 The TONL Command Line Interface provides powerful tools for converting, analyzing, and optimizing TONL data.
 
-## 🎉 v2.0.4 - Dual-Mode System
+## 🎉 v2.0.5 - Dual-Mode System
 
 The CLI now supports **dual-mode encoding** allowing you to choose between:
 

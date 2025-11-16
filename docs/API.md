@@ -1,12 +1,12 @@
-# TONL API Documentation v2.0.4
+# TONL API Documentation v2.0.5
 
-**Version:** 2.0.4
+**Version:** 2.0.5
 **Status:** Stable & Production Ready
 **Last Updated:** 2025-11-16
 
 This document provides detailed API documentation for the TONL TypeScript library.
 
-## 🎉 What's New in v2.0.4
+## 🎉 What's New in v2.0.5
 
 - **Dual-Mode System**: Choose between perfect round-trip (quoting) and clean output (preprocessing)
 - **Enhanced CLI Support**: `--preprocess` flag for handling problematic JSON keys
@@ -607,7 +607,7 @@ const optimized = encodeSmart(data);
 
 ---
 
-## Dual-Mode System v2.0.4 ⭐ **NEW**
+## Dual-Mode System v2.0.5 ⭐ **NEW**
 
 The dual-mode system provides two approaches for handling problematic JSON keys:
 
@@ -1480,7 +1480,7 @@ console.log(tonlWithOptimizations);
 
 ## Version
 
-**Current version: 2.0.4**
+**Current version: 2.0.5**
 
 - ✅ Production ready and stable
 - ✅ Full feature set (query, modify, index, stream, schema, optimize)

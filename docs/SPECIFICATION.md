@@ -1,12 +1,12 @@
-# TONL Format Specification v2.0.4
+# TONL Format Specification v2.0.5
 
-**Version:** 2.0.4
+**Version:** 2.0.5
 **Status:** Stable & Production Ready
 **Last Updated:** 2025-11-16
 
 This document provides the complete technical specification for the Token-Optimized Notation Language (TONL) format.
 
-## 🎉 What's New in v2.0.4
+## 🎉 What's New in v2.0.5
 
 - **Dual-Mode Encoding**: Default quoting vs preprocessing for problematic keys
 - **Enhanced Key Handling**: Support for `#`, `@`, spaces, and special characters
@@ -96,7 +96,7 @@ data[3]{id:u32,name:str}:
   3|Carol
 ```
 
-## Dual-Mode System v2.0.4
+## Dual-Mode System v2.0.5
 
 The TONL format supports dual-mode encoding to handle problematic JSON keys that would otherwise cause parsing or readability issues.
 

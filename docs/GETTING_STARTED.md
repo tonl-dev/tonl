@@ -1,6 +1,6 @@
-# Getting Started with TONL v2.0.4
+# Getting Started with TONL v2.0.5
 
-Welcome to TONL! This guide will help you get started with all the powerful features of TONL v2.0.4, including the revolutionary dual-mode system for handling problematic JSON keys.
+Welcome to TONL! This guide will help you get started with all the powerful features of TONL v2.0.5, including the revolutionary dual-mode system for handling problematic JSON keys.
 
 ---
 
@@ -124,9 +124,9 @@ console.log(diff.summary);         // { added: 1, modified: 1, deleted: 0 }
 console.log(doc.diffString(before)); // Human-readable diff
 ```
 
-### 6. Dual-Mode System (v2.0.4)
+### 6. Dual-Mode System (v2.0.5)
 
-TONL v2.0.4 introduces a revolutionary dual-mode system for handling problematic JSON keys that contain special characters.
+TONL v2.0.5 introduces a revolutionary dual-mode system for handling problematic JSON keys that contain special characters.
 
 #### Problem: Messy JSON Keys
 
@@ -385,7 +385,7 @@ A: TONL is more compact (32-45% smaller) and provides a rich query/modification 
 A: Yes! `TONLDocument.fromJSON(yourData)` - works with any JSON.
 
 ### Q: Is it production-ready?
-A: Yes! v2.0.4 is stable with 100% test pass rate.
+A: Yes! v2.0.5 is stable with 100% test pass rate.
 
 ### Q: How fast is it?
 A: Very fast! Simple queries: 0.005ms, Filters: 0.03ms, 10-1600x faster than targets.

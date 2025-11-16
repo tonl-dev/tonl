@@ -1,6 +1,6 @@
 # TONL Implementation Reference Guide
 
-**Version:** 2.0.4
+**Version:** 2.0.5
 **Target Audience:** Language implementers (Python, Go, Rust, Java, C#, etc.)
 **Purpose:** Complete specification for implementing TONL encoder/decoder in any language
 **Last Updated:** 2025-11-16
