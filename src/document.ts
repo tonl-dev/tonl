@@ -14,6 +14,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { promises as fs } from 'fs';
 import { set as setByPath, deleteValue as deleteByPath, push as pushToArray, pop as popFromArray, merge as mergeAtPath, diff as diffDocuments, formatDiff, type DiffResult } from './modification/index.js';
 import { IndexManager, type IndexOptions, type IIndex } from './indexing/index.js';
+import { parseSchema, validateTONL, type ValidationResult } from './schema/index.js';
 
 /**
  * Document statistics
@@ -825,21 +826,26 @@ export class TONLDocument {
    * Validate document against a schema file
    *
    * @param schemaPath - Path to schema file (.schema.tonl)
-   * @returns True if valid, false otherwise
+   * @returns Validation result with detailed error information
    *
    * @example
    * ```typescript
-   * const isValid = doc.validate('schemas/users.schema.tonl');
-   * if (!isValid) {
-   *   console.error('Validation failed');
+   * const result = doc.validate('schemas/users.schema.tonl');
+   * if (!result.valid) {
+   *   console.error('Validation failed:', result.errors);
    * }
    * ```
    */
-  validate(schemaPath: string): boolean {
-    // TODO: Implement schema validation
-    // For now, return true to allow examples to run
-    console.warn('Schema validation not yet implemented');
-    return true;
+  validate(schemaPath: string): ValidationResult {
+    // BUG-NEW-001 FIX: Implement schema validation using existing validation infrastructure
+    // BUG-NEW-003 FIX: Remove console.warn from library code
+
+    // Load and parse schema
+    const schemaContent = readFileSync(schemaPath, 'utf-8');
+    const schema = parseSchema(schemaContent);
+
+    // Validate document against schema
+    return validateTONL(this.data, schema);
   }
 
   /**

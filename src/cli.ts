@@ -57,7 +57,8 @@ function safeReadFile(userPath: string, preprocess: boolean = false): string {
 
 /**
  * Preprocess JSON to handle special characters in keys
- * BUG-FIX-XXX: Transform problematic keys to safe alternatives
+ * BUG-NEW-005 FIX: Transform problematic keys (like #, @) to safe alternatives
+ * to prevent parsing conflicts with TONL directives and comments
  */
 function preprocessJsonKeys(jsonString: string): string {
   try {

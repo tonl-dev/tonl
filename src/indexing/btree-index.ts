@@ -61,7 +61,8 @@ export class BTreeIndex implements IIndex {
     let right = this.items.length - 1;
 
     while (left <= right) {
-      const mid = Math.floor((left + right) / 2);
+      // BUG-NEW-002 FIX: Use overflow-safe midpoint calculation
+      const mid = Math.floor(left + (right - left) / 2);
       const cmp = this.compareFn(this.items[mid].key, key);
 
       if (cmp === 0) {
