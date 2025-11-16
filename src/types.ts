@@ -57,6 +57,8 @@ export interface TONLParseContext {
   delimiter: TONLDelimiter;
   currentLine?: number;      // Current line being parsed (for error reporting)
   allLines?: string[];       // All lines (for error context)
+  currentDepth?: number;     // SECURITY FIX (SEC-002): Track recursion depth
+  maxDepth?: number;         // SECURITY FIX (SEC-002): Maximum nesting depth (default: 100)
 }
 
 export interface TONLEncodeContext {

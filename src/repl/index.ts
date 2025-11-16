@@ -41,19 +41,36 @@ export class TONLREPL {
 
   /**
    * Load a TONL file
+   *
+   * SECURITY FIX (SEC-003): Added path validation to prevent path traversal
    */
-  load(filePath: string): void {
+  async load(filePath: string): Promise<void> {
     try {
-      const content = readFileSync(filePath, 'utf-8');
+      // SECURITY FIX (SEC-003): Validate file path before reading
+      // Import PathValidator dynamically to avoid circular dependencies
+      const { PathValidator } = await import('../cli/path-validator.js');
+      const { SecurityError } = await import('../errors/index.js');
 
-      if (filePath.endsWith('.json')) {
-        this.currentDoc = TONLDocument.fromJSON(JSON.parse(content));
-      } else {
-        this.currentDoc = TONLDocument.parse(content);
+      try {
+        const safePath = PathValidator.validateRead(filePath);
+        const content = readFileSync(safePath, 'utf-8');
+
+        if (filePath.endsWith('.json')) {
+          this.currentDoc = TONLDocument.fromJSON(JSON.parse(content));
+        } else {
+          this.currentDoc = TONLDocument.parse(content);
+        }
+
+        this.currentFile = safePath;
+        console.log(`✓ Loaded: ${safePath}`);
+      } catch (error: any) {
+        if (error.name === 'SecurityError' || error.message?.includes('Security')) {
+          console.error(`✗ Security Error: ${error.message}`);
+          console.error(`✗ Access denied to: ${filePath}`);
+        } else {
+          throw error;
+        }
       }
-
-      this.currentFile = filePath;
-      console.log(`✓ Loaded: ${filePath}`);
     } catch (error) {
       console.error(`✗ Error loading file: ${error instanceof Error ? error.message : String(error)}`);
     }

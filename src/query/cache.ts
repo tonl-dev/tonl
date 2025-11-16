@@ -27,26 +27,35 @@ function getDocumentId(document: object): number {
 
 /**
  * Query cache with LRU eviction policy
+ *
+ * BUG-007 FIX: Added tracking for total lookups and misses
  */
 export class QueryCache {
   private cache: Map<string, CacheEntry>;
   private maxSize: number;
   private accessOrder: string[]; // For LRU tracking
+  private totalLookups: number = 0;  // BUG-007 FIX: Track all cache lookup attempts
+  private totalMisses: number = 0;   // BUG-007 FIX: Track cache misses
 
   constructor(maxSize: number = 1000) {
     this.cache = new Map();
     this.maxSize = maxSize;
     this.accessOrder = [];
+    this.totalLookups = 0;
+    this.totalMisses = 0;
   }
 
   /**
    * Get a cached result (with document identity)
    * SECURITY FIX (BF015): Now includes document ID in key
+   * BUG-007 FIX: Track lookups and misses for accurate statistics
    */
   get(key: string, document?: object): any | undefined {
+    this.totalLookups++; // BUG-007 FIX: Increment total lookups
     const cacheKey = document ? this.generateKey(key, document) : key;
     const entry = this.cache.get(cacheKey);
     if (!entry) {
+      this.totalMisses++; // BUG-007 FIX: Increment misses
       return undefined;
     }
 
@@ -114,26 +123,37 @@ export class QueryCache {
 
   /**
    * Clear all cached entries
+   *
+   * BUG-007 FIX: Reset lookup and miss counters
    */
   clear(): void {
     this.cache.clear();
     this.accessOrder = [];
+    this.totalLookups = 0;  // BUG-007 FIX: Reset counters
+    this.totalMisses = 0;   // BUG-007 FIX: Reset counters
   }
 
   /**
    * Get cache statistics
+   *
+   * BUG-007 FIX: Return accurate lookups, hits, misses, and hit rate
    */
   getStats(): CacheStats {
     const entries = Array.from(this.cache.entries());
     const totalHits = entries.reduce((sum, [, entry]) => sum + entry.hits, 0);
     const avgHits = entries.length > 0 ? totalHits / entries.length : 0;
 
+    // BUG-007 FIX: Calculate hit rate correctly as hits / total lookups
+    const hitRate = this.totalLookups > 0 ? (totalHits / this.totalLookups) * 100 : 0;
+
     return {
       size: this.cache.size,
       maxSize: this.maxSize,
       totalHits,
+      totalMisses: this.totalMisses,  // BUG-007 FIX: Return actual misses
+      totalLookups: this.totalLookups, // BUG-007 FIX: Return total lookups
       averageHits: avgHits,
-      hitRate: totalHits > 0 ? totalHits / (totalHits + this.cache.size) : 0
+      hitRate // BUG-007 FIX: Now correctly calculated as percentage
     };
   }
 
@@ -181,13 +201,17 @@ interface CacheEntry {
 
 /**
  * Cache statistics
+ *
+ * BUG-007 FIX: Added totalMisses and totalLookups for accurate metrics
  */
 export interface CacheStats {
   size: number;
   maxSize: number;
   totalHits: number;
+  totalMisses: number;   // BUG-007 FIX: Actual cache misses
+  totalLookups: number;  // BUG-007 FIX: Total cache lookup attempts
   averageHits: number;
-  hitRate: number;
+  hitRate: number;       // BUG-007 FIX: Now correctly calculated as percentage (0-100)
 }
 
 /**

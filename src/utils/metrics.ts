@@ -4,9 +4,18 @@
 
 /**
  * Simple token estimation based on common tokenizers
+ *
+ * SECURITY FIX (SEC-001): Added input size validation to prevent ReDoS attacks
  */
 export function estimateTokens(text: string, tokenizer: "gpt-5" | "gpt-4.5" | "gpt-4o" | "claude-3.5" | "gemini-2.0" | "llama-4" | "claude-3" | "claude-2" | "gemini-1.5" | "gemini-pro" | "palm-2" | "llama-3" | "mistral" | "mixtral" | "o200k" | "cl100k" = "gpt-5"): number {
   if (!text) return 0;
+
+  // SECURITY FIX (SEC-001): Prevent ReDoS by limiting input size
+  // Maximum 10MB of text for token estimation
+  const MAX_INPUT_SIZE = 10_000_000;
+  if (text.length > MAX_INPUT_SIZE) {
+    throw new Error(`Input too large for token estimation: ${text.length} bytes (max: ${MAX_INPUT_SIZE})`);
+  }
 
   // Different tokenizers have slightly different behaviors
   switch (tokenizer) {
