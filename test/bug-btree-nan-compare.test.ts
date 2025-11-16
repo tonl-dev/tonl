@@ -38,22 +38,22 @@ describe('Bug #4: BTree NaN comparison', () => {
 
     const doc = TONLDocument.fromJSON(data);
 
-    try {
-      // Create index on score field (which contains NaN)
-      doc.createIndex('score', 'btree');
+    // BUG-NEW-008 FIX: With the fix, NaN values should be handled gracefully
+    doc.createIndex('score', 'btree');
 
-      console.log('Index created with NaN value');
+    console.log('Index created with NaN value');
 
-      // Try to query using the index
-      const query = doc.query('values[*]');
-      console.log('Query result:', query);
+    // Try to query using the index
+    const query = doc.query('values[*]');
+    console.log('Query result:', query);
 
-      assert.ok(Array.isArray(query), 'Should return array');
-      assert.strictEqual(query.length, 3, 'Should have all 3 items');
-    } catch (error: any) {
-      console.log('Error with NaN in index:', error.message);
-      // Error is acceptable - NaN in numeric comparisons is problematic
-    }
+    assert.ok(Array.isArray(query), 'Should return array');
+    assert.strictEqual(query.length, 3, 'Should have all 3 items');
+
+    // Verify NaN item is still accessible
+    const nanItem = query.find((item: any) => Number.isNaN(item.score));
+    assert.ok(nanItem, 'Should find NaN item');
+    assert.strictEqual(nanItem.id, 2, 'NaN item should have id 2');
   });
 
   test('should handle Infinity in indexed values', () => {
@@ -68,14 +68,47 @@ describe('Bug #4: BTree NaN comparison', () => {
 
     const doc = TONLDocument.fromJSON(data);
 
-    try {
-      doc.createIndex('score', 'btree');
-      console.log('Index created with Infinity values');
+    doc.createIndex('score', 'btree');
+    console.log('Index created with Infinity values');
 
-      const query = doc.query('values[*]');
-      assert.strictEqual(query.length, 4, 'Should have all 4 items');
-    } catch (error: any) {
-      console.log('Error with Infinity:', error.message);
-    }
+    const query = doc.query('values[*]');
+    assert.strictEqual(query.length, 4, 'Should have all 4 items');
+
+    // Verify ordering with Infinity values
+    const infItem = query.find((item: any) => item.score === Infinity);
+    const negInfItem = query.find((item: any) => item.score === -Infinity);
+
+    assert.ok(infItem, 'Should find Infinity item');
+    assert.ok(negInfItem, 'Should find -Infinity item');
+  });
+
+  // BUG-NEW-008: Additional test for NaN comparison fix
+  test('should correctly compare and sort NaN values in B-Tree', () => {
+    const data = {
+      items: [
+        { name: 'a', value: 5 },
+        { name: 'b', value: NaN },
+        { name: 'c', value: 10 },
+        { name: 'd', value: NaN },
+        { name: 'e', value: 3 }
+      ]
+    };
+
+    const doc = TONLDocument.fromJSON(data);
+
+    // Create B-Tree index on value field
+    doc.createIndex('value', 'btree');
+
+    // Query all items
+    const allItems = doc.query('items[*]');
+    assert.strictEqual(allItems.length, 5, 'Should have all 5 items');
+
+    // Find NaN items
+    const nanItems = allItems.filter((item: any) => Number.isNaN(item.value));
+    assert.strictEqual(nanItems.length, 2, 'Should find 2 NaN items');
+
+    // Find numeric items
+    const numericItems = allItems.filter((item: any) => typeof item.value === 'number' && !Number.isNaN(item.value));
+    assert.strictEqual(numericItems.length, 3, 'Should find 3 numeric items');
   });
 });
