@@ -470,21 +470,18 @@ export function parseArrayBlock(
           // Not a known directive, treat as data
         }
 
-        // Check for indexed headers like [0]: value first (before object headers)
+        // Check for indexed headers like [0]: value or [0][3]: value first (before object headers)
         if (hasIndexedHeaders) {
-          const indexedMatch = trimmed.match(/^\[(\d+)\]:\s*(.*)$/);
+          // Match both [index]: value and [index][length]: value patterns
+          const indexedMatch = trimmed.match(/^\[(\d+)\](?:\[(\d+)\])?:\s*(.*)$/);
           if (indexedMatch) {
             const index = parseInt(indexedMatch[1], 10);
-            const valuePart = indexedMatch[2].trim();
+            const nestedArrayLength = indexedMatch[2] ? parseInt(indexedMatch[2], 10) : undefined;
+            const valuePart = indexedMatch[3].trim();
 
             if (valuePart) {
-              // Check if this looks like an array (contains delimiters but not quoted or triple quotes)
-              const isQuoted = valuePart.startsWith('"') && valuePart.endsWith('"');
-              if (valuePart.includes(context.delimiter) &&
-                  !isQuoted &&
-                  !valuePart.startsWith('"""') &&
-                  !valuePart.includes('"""') &&
-                  !valuePart.includes(':')) {  // Not an object and not quoted
+              // If nested array length is specified, always parse as an array
+              if (nestedArrayLength !== undefined) {
                 // Parse as an array
                 const arrayValues = parseTONLLine(valuePart, context.delimiter);
                 const parsedArray: TONLValue[] = [];
@@ -493,8 +490,24 @@ export function parseArrayBlock(
                 }
                 result[index] = parsedArray;
               } else {
-                // Parse as a primitive value
-                result[index] = parsePrimitiveValue(valuePart, context);
+                // Check if this looks like an array (contains delimiters but not quoted or triple quotes)
+                const isQuoted = valuePart.startsWith('"') && valuePart.endsWith('"');
+                if (valuePart.includes(context.delimiter) &&
+                    !isQuoted &&
+                    !valuePart.startsWith('"""') &&
+                    !valuePart.includes('"""') &&
+                    !valuePart.includes(':')) {  // Not an object and not quoted
+                  // Parse as an array
+                  const arrayValues = parseTONLLine(valuePart, context.delimiter);
+                  const parsedArray: TONLValue[] = [];
+                  for (const arrayValue of arrayValues) {
+                    parsedArray.push(parsePrimitiveValue(arrayValue, context));
+                  }
+                  result[index] = parsedArray;
+                } else {
+                  // Parse as a primitive value
+                  result[index] = parsePrimitiveValue(valuePart, context);
+                }
               }
             } else {
               // Check if next lines are indented content for this index

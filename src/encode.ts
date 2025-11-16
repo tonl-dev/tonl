@@ -426,7 +426,7 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
             }
           });
           const separator = context.prettyDelimiters ? ` ${context.delimiter} ` : context.delimiter;
-          lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `[${i}]: ${nestedValues.join(separator)}`);
+          lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `[${i}][${value.length}]: ${nestedValues.join(separator)}`);
         } else {
           // Nested array contains objects or other arrays - use mixed array format
           const nestedBlock = encodeValue(value, `[${i}]`, childContext);
