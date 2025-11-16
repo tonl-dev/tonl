@@ -1,0 +1,45 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="tonl-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#7B68EE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF6B6B;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="56" fill="url(#tonl-gradient)" filter="url(#shadow)"/>
+
+  <!-- TONL text -->
+  <text x="64" y="48" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white">
+    TONL
+  </text>
+
+  <!-- JSON-like brackets -->
+  <text x="24" y="85" font-family="monospace" font-size="16" font-weight="bold" fill="white">
+    {
+  </text>
+  <text x="104" y="85" font-family="monospace" font-size="16" font-weight="bold" fill="white">
+    }
+  </text>
+
+  <!-- Data dots representing fields -->
+  <circle cx="35" cy="75" r="2" fill="white" opacity="0.9"/>
+  <circle cx="45" cy="75" r="2" fill="white" opacity="0.9"/>
+  <circle cx="55" cy="75" r="2" fill="white" opacity="0.9"/>
+  <circle cx="73" cy="75" r="2" fill="white" opacity="0.9"/>
+  <circle cx="83" cy="75" r="2" fill="white" opacity="0.9"/>
+  <circle cx="93" cy="75" r="2" fill="white" opacity="0.9"/>
+
+  <!-- Optimization arrow -->
+  <path d="M 35 95 L 93 95" stroke="white" stroke-width="2" fill="none" opacity="0.8"/>
+  <path d="M 88 90 L 93 95 L 88 100" stroke="white" stroke-width="2" fill="none" opacity="0.8"/>
+
+  <!-- Small text -->
+  <text x="64" y="108" font-family="Arial, sans-serif" font-size="10" text-anchor="middle" fill="white" opacity="0.9">
+    Token Optimized
+  </text>
+</svg>

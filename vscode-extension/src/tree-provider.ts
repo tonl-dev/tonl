@@ -1,7 +1,8 @@
 /**
  * TONL Document Tree Provider (T039)
  *
- * Provides a tree view for exploring TONL document structure
+ * Provides a tree view for exploring TONL document structure.
+ * Features real-time parsing, type-aware icons, and interactive navigation.
  */
 
 import * as vscode from 'vscode';

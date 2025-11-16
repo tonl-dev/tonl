@@ -1,23 +1,36 @@
 {
   "name": "tonl-vscode",
   "displayName": "TONL Language Support",
-  "description": "Syntax highlighting, IntelliSense, and document explorer for TONL files",
-  "version": "0.1.0",
-  "publisher": "tonl",
+  "description": "Complete language support for TONL (Token-Optimized Notation Language) with syntax highlighting, IntelliSense, document explorer, and validation",
+  "version": "1.0.0",
+  "publisher": "tonl-dev",
   "engines": {
-    "vscode": "^1.80.0"
+    "vscode": "^1.85.0"
   },
   "categories": [
     "Programming Languages",
     "Formatters",
-    "Linters"
+    "Linters",
+    "Snippets",
+    "Other"
   ],
   "keywords": [
     "tonl",
     "data",
     "serialization",
-    "llm"
+    "llm",
+    "token optimization",
+    "json alternative",
+    "data format",
+    "syntax highlighting",
+    "intellisense",
+    "validation"
   ],
+  "icon": "resources/tonl-icon.png",
+  "galleryBanner": {
+    "color": "#1e1e1e",
+    "theme": "dark"
+  },
   "activationEvents": [
     "onLanguage:tonl"
   ],
@@ -95,5 +108,17 @@
     "type": "git",
     "url": "https://github.com/tonl-dev/tonl.git",
     "directory": "vscode-extension"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/tonl-dev/tonl/issues"
+  },
+  "homepage": "https://tonl.dev",
+  "author": {
+    "name": "Ersin Koc",
+    "email": "ersin@tonl.dev",
+    "url": "https://github.com/ersinkoc"
+  },
+  "license": "MIT",
+  "markdown": "github",
+  "qna": "https://github.com/tonl-dev/tonl/discussions"
 }
