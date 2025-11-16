@@ -40,6 +40,9 @@ export function parseTONLLine(line: string, delimiter: TONLDelimiter = ","): str
     currentFieldWasQuoted: false
   };
 
+  // Track bracket depth for arrays (schema-first support)
+  let bracketDepth = 0;
+
   while (state.i < line.length) {
     const char = line[state.i];
     const nextChar = line[state.i + 1];
@@ -62,19 +65,34 @@ export function parseTONLLine(line: string, delimiter: TONLDelimiter = ","): str
           state.currentField += delimiter;
           state.i++; // Skip the backslash
         } else if (char === delimiter) {
-          // Field separator - only add field if we're not inside a quote
-          if (state.currentFieldWasQuoted) {
-            state.fields.push(state.currentField);
+          // Field separator - only split if we're not inside brackets or quotes
+          if (bracketDepth === 0) {
+            if (state.currentFieldWasQuoted) {
+              state.fields.push(state.currentField);
+            } else {
+              state.fields.push(state.currentField.trim());
+            }
+            state.currentField = "";
+            state.currentFieldWasQuoted = false;
           } else {
-            state.fields.push(state.currentField.trim());
+            // We're inside brackets, include delimiter in the field
+            state.currentField += char;
           }
-          state.currentField = "";
-          state.currentFieldWasQuoted = false;
         } else if ((char === ' ' || char === '\t') && state.currentField.length === 0 && nextChar === '"') {
           // Skip formatting whitespace before quoted fields (space after comma)
           // This handles cases like "2, \"Bob, Jr.\""
         } else if ((char === ' ' || char === '\t') && state.currentField.length === 0) {
           // For other leading whitespace, preserve it (might be content)
+          state.currentField += char;
+        } else if (char === '[') {
+          // Track bracket depth for arrays
+          bracketDepth++;
+          state.currentField += char;
+        } else if (char === ']') {
+          // Decrease bracket depth when closing bracket found
+          if (bracketDepth > 0) {
+            bracketDepth--;
+          }
           state.currentField += char;
         } else {
           state.currentField += char;
@@ -112,6 +130,16 @@ export function parseTONLLine(line: string, delimiter: TONLDelimiter = ","): str
             // End of quoted field
             state.mode = "plain";
           }
+        } else if (char === '[') {
+          // Track bracket depth for arrays
+          bracketDepth++;
+          state.currentField += char;
+        } else if (char === ']') {
+          // Decrease bracket depth when closing bracket found
+          if (bracketDepth > 0) {
+            bracketDepth--;
+          }
+          state.currentField += char;
         } else {
           state.currentField += char;
         }
@@ -123,6 +151,16 @@ export function parseTONLLine(line: string, delimiter: TONLDelimiter = ","): str
           state.currentField += '"""'; // Add closing triple quotes
           state.mode = "plain";
           state.i += 2; // Skip the next two quotes
+        } else if (char === '[') {
+          // Track bracket depth for arrays
+          bracketDepth++;
+          state.currentField += char;
+        } else if (char === ']') {
+          // Decrease bracket depth when closing bracket found
+          if (bracketDepth > 0) {
+            bracketDepth--;
+          }
+          state.currentField += char;
         } else {
           state.currentField += char;
         }

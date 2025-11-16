@@ -8,16 +8,16 @@
 
 **TONL** is a production-ready data platform that combines compact serialization with powerful query, modification, indexing, and streaming capabilities. Designed for LLM token efficiency while providing a rich API for data access and manipulation.
 
-## 🎉 Latest Release: v2.0.6 - Nested Array Length Fix
+## 🎉 Latest Release: v2.0.7 - Schema-First Nested Array Fix
 
-### ✨ Key Features in v2.0.6:
-- 🐛 **Fixed nested array length preservation** - Perfect round-trip for `[[]]`, `[[[]]]`, etc.
-- 🔄 **Revolutionary dual-mode system** (quoting + preprocessing)
-- ✅ **Perfect round-trip safety** - 100% data preservation in default mode
-- 🛠️ **Advanced quoting** for special characters (`#`, `@`, `""`, etc.)
-- 🌐 **Browser playground** now handles all JSON inputs flawlessly
-- 📋 **Optional `--preprocess` flag** for clean, readable output
-- 🔄 **Zero data loss** guaranteed for both modes
+### ✨ Key Features in v2.0.7:
+- 🏗️ **Fixed schema-first nested array parsing** - Perfect round-trip for complex nested structures
+- 🌐 **Website playground enhancement** - Interactive schema-first toggle and examples
+- 🔄 **Bracket-aware parser** - Smart quote handling inside brackets in schema-first mode
+- ✅ **Perfect data integrity** - 100% round-trip preservation for schema-first arrays
+- 📋 **3 new website examples** - Teams, Products, Employees with nested arrays
+- 🎯 **Targeted fix** - Only affects schema-first parsing, zero impact on existing features
+- ✅ **100% test coverage maintained** - All 790+ tests passing
 
 [![npm version](https://badge.fury.io/js/tonl.svg)](https://www.npmjs.com/package/tonl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

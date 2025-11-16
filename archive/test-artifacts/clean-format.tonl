@@ -1,0 +1,5 @@
+#version 1.0
+root:
+  #schema teams{id,name,projects[],size,technologies[]}
+    1,Backend Infrastructure,[API Gateway,Microservices,Data Pipeline],25,[Node.js,Python,Go,PostgreSQL,Redis]
+    2,Frontend Platform,[Web App,Mobile Web,Component Library],20,[React,TypeScript,Next.js,Tailwind CSS]

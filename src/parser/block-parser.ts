@@ -2,7 +2,7 @@
  * Block-level parsing - handles multi-line structures
  */
 
-import type { TONLParseContext, TONLValue, TONLObject, TONLArray, TONLObjectHeader, TONLColumnDef } from '../types.js';
+import type { TONLParseContext, TONLValue, TONLObject, TONLArray, TONLObjectHeader, TONLColumnDef, TONLDelimiter } from '../types.js';
 import { MISSING_FIELD_MARKER } from '../types.js';
 import { parseObjectHeader, parseTONLLine } from '../parser.js';
 import { coerceValue } from '../infer.js';
@@ -11,6 +11,53 @@ import { unquote } from '../utils/strings.js';
 import { parseSingleLineObject } from './value-parser.js';
 import { extractNestedBlockLines } from './utils.js';
 import { TONLParseError } from '../errors/index.js';
+
+/**
+ * Parse TONL line with bracket support for schema-first arrays
+ * This parser properly handles quotes inside bracket notation
+ */
+function parseTONLLineWithBracketSupport(line: string, delimiter: TONLDelimiter = ","): string[] {
+  // Handle empty lines
+  if (!line || line.trim() === "") {
+    return [];
+  }
+
+  const fields: string[] = [];
+  let currentField = "";
+  let bracketDepth = 0;
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+
+    if (char === '"' && !inQuotes) {
+      inQuotes = true;
+      currentField += char;
+    } else if (char === '"' && inQuotes) {
+      inQuotes = false;
+      currentField += char;
+    } else if (char === '[') {
+      bracketDepth++;
+      currentField += char;
+    } else if (char === ']') {
+      bracketDepth--;
+      currentField += char;
+    } else if (char === delimiter && bracketDepth === 0 && !inQuotes) {
+      // Field separator - only split if we're not inside brackets or quotes
+      fields.push(currentField.trim());
+      currentField = "";
+    } else {
+      currentField += char;
+    }
+  }
+
+  // Add the last field
+  if (currentField.trim()) {
+    fields.push(currentField.trim());
+  }
+
+  return fields;
+}
 
 /**
  * Parse a block starting from a header
@@ -143,7 +190,16 @@ export function parseObjectBlock(
   // Collect keys from all lines to determine if special handling is needed
   for (const line of lines) {
     const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
+    if (!trimmed || trimmed.startsWith('#')) {
+      // Check for schema-first directive
+      if (trimmed.startsWith('#schema ')) {
+        const schemaMatch = trimmed.match(/^#schema\s+(\w+)\{([^}]*)\}$/);
+        if (schemaMatch) {
+          needsSpecialHandling.push('schema_first_' + schemaMatch[1]);
+        }
+      }
+      continue;
+    }
 
     // BUG-014 FIX: Only skip real @ directives, not @ symbol keys
     if (trimmed.startsWith('@')) {
@@ -185,7 +241,177 @@ export function parseObjectBlock(
   while (lineIndex < lines.length) {
     const line = lines[lineIndex];
     const trimmed = line.trim();
-    // Skip empty lines and comments
+
+    // Check for schema-first directive: #schema key{fields}
+    if (trimmed.startsWith('#schema ')) {
+      const schemaMatch = trimmed.match(/^#schema\s+(\w+)\{([^}]*)\}$/);
+      if (schemaMatch) {
+        const key = schemaMatch[1];
+        const fieldsStr = schemaMatch[2];
+
+        // Parse fields
+        const columns: TONLColumnDef[] = [];
+        if (fieldsStr) {
+          const fieldParts = fieldsStr.split(',');
+          for (const fieldPart of fieldParts) {
+            const trimmedField = fieldPart.trim();
+            if (!trimmedField) continue;
+
+            let fieldName: string;
+            let typeHint: string | undefined;
+
+            const colonIndex = trimmedField.indexOf(':');
+            if (colonIndex > 0) {
+              fieldName = trimmedField.slice(0, colonIndex).trim();
+              typeHint = trimmedField.slice(colonIndex + 1).trim();
+            } else {
+              fieldName = trimmedField;
+            }
+
+            // Handle [] notation for arrays (e.g., "projects[]" -> "projects")
+            if (fieldName.endsWith('[]')) {
+              fieldName = fieldName.slice(0, -2);
+              if (!typeHint) {
+                typeHint = 'array'; // Set type hint for arrays
+              }
+            }
+
+            if (typeHint) {
+              columns.push({
+                name: fieldName,
+                type: typeHint as any
+              });
+            } else {
+              columns.push({ name: fieldName });
+            }
+          }
+        }
+
+        // Parse following indented lines as data
+        const arrayData: any[] = [];
+        lineIndex++;
+
+        // Process indented data lines
+        while (lineIndex < lines.length) {
+          const dataLine = lines[lineIndex];
+          const dataTrimmed = dataLine.trim();
+
+          // Stop when we hit a non-indented line
+          if (!dataLine.startsWith(' ') && !dataLine.startsWith('\t') && dataTrimmed !== '') {
+            break;
+          }
+
+          if (dataTrimmed) {
+            const values = parseTONLLineWithBracketSupport(dataTrimmed, context.delimiter);
+            const rowObject: any = {};
+
+            for (let j = 0; j < columns.length; j++) {
+              const column = columns[j];
+              const value = values[j];
+
+              if (value === undefined || value === '') {
+                continue; // Skip missing fields
+              }
+
+              // Handle potential array values (check for different array formats)
+              if (value && value.startsWith('"""') && value.endsWith('"""')) {
+                // Triple-quoted JSON array (complex arrays)
+                try {
+                  const jsonStr = value.slice(3, -3); // Remove triple quotes
+                  rowObject[column.name] = JSON.parse(jsonStr);
+                } catch (e) {
+                  // If JSON parsing fails, treat as string
+                  rowObject[column.name] = value;
+                }
+              } else if (value && value.startsWith('[') && value.endsWith(']')) {
+                // Simple unquoted array format: [elem1,elem2,elem3]
+                try {
+                  const innerContent = value.slice(1, -1).trim(); // Remove brackets and trim
+                  if (innerContent === '') {
+                    rowObject[column.name] = []; // Empty array
+                  } else if (innerContent.startsWith('{') || innerContent.startsWith('[')) {
+                    // If inner content starts with { or [, it's likely a JSON array - parse it directly
+                    try {
+                      rowObject[column.name] = JSON.parse(value);
+                    } catch (e) {
+                      // If JSON parsing fails, fall back to delimiter splitting
+                      throw e;
+                    }
+                  } else {
+                    // Split by delimiter or pipe (for arrays with delimiter conflicts)
+                    let arrayDelimiter = context.delimiter;
+                    // If content contains pipe delimiter, use that as array delimiter
+                    if (innerContent.includes('|')) {
+                      arrayDelimiter = '|';
+                    }
+                    const elements = innerContent.split(arrayDelimiter);
+                    const parsedElements = elements.map(element => {
+                      element = element.trim();
+                      // Try parsing as JSON first (for numbers, booleans, objects)
+                      try {
+                        return JSON.parse(element);
+                      } catch {
+                        // If not valid JSON, treat as string
+                        return element;
+                      }
+                    });
+                    rowObject[column.name] = parsedElements;
+                  }
+                } catch (e) {
+                  // If parsing fails, treat as string
+                  rowObject[column.name] = value;
+                }
+              } else if (value && (value.startsWith('[') || value.includes('['))) {
+                // Regular JSON array or fallback for other cases
+                try {
+                  rowObject[column.name] = JSON.parse(value);
+                } catch (e) {
+                  // If JSON parsing fails, fall back to sub-delimiter handling
+                  const subDelimiter = context.delimiter === ',' ? ';' : context.delimiter;
+                  if (value && value.includes(subDelimiter)) {
+                    // This is likely an array value that needs special parsing
+                    let parsedValue = value.trim();
+                    // Remove quotes if present
+                    if ((parsedValue.startsWith('"') && parsedValue.endsWith('"')) || (parsedValue.startsWith("'") && parsedValue.endsWith("'"))) {
+                      parsedValue = parsedValue.slice(1, -1);
+                    }
+                    // Split into array
+                    const arrayValues = parsedValue.split(subDelimiter).map(item => {
+                      item = item.trim();
+                      return parsePrimitiveValue(item, context);
+                    });
+                    rowObject[column.name] = arrayValues;
+                  } else {
+                    // Apply type hints if present
+                    if (column.type) {
+                      rowObject[column.name] = coerceValue(value, column.type);
+                    } else {
+                      rowObject[column.name] = parsePrimitiveValue(value, context);
+                    }
+                  }
+                }
+              } else {
+                // Apply type hints if present
+                if (column.type) {
+                  rowObject[column.name] = coerceValue(value, column.type);
+                } else {
+                  rowObject[column.name] = parsePrimitiveValue(value, context);
+                }
+              }
+            }
+
+            arrayData.push(rowObject);
+          }
+
+          lineIndex++;
+        }
+
+        result[key] = arrayData;
+        continue;
+      }
+    }
+
+    // Skip empty lines and other comments
     if (!trimmed || trimmed.startsWith('#')) {
       lineIndex++;
       continue;

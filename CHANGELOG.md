@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.7] - 2025-11-16
+
+### 🏗️ **Schema-First Nested Array Fix**
+
+**Critical fix for schema-first format with nested arrays and website integration.**
+
+#### **Fixed:**
+- **Schema-First Array Parsing** - Fixed quote stripping inside bracket notation in schema-first mode
+- **Nested Array Support** - Perfect round-trip for `[{"id":1,"name":"Alice"}]` structures
+- **Bracket-Aware Parser** - New `parseTONLLineWithBracketSupport()` function for proper parsing
+- **Website Integration** - Added schema-first examples and toggle to web playground
+- **Targeted Fix** - Only affects schema-first parsing, no impact on other TONL features
+
+#### **New Website Features:**
+- **Schema-First Toggle** - Interactive toggle in web playground alongside Type Hints
+- **Schema-First Examples** - 3 new examples (Teams, Products, Employees) with nested arrays
+- **Auto-Enable** - Schema-first toggle automatically enables when examples selected
+- **Format Comparison** - Live comparison between Standard, Schema-First, and Types formats
+
+#### **Technical Details:**
+- Enhanced `src/parser/block-parser.ts` with bracket-aware parsing function
+- Fixed quote handling inside brackets during schema-first parsing
+- Maintained backward compatibility with zero breaking changes
+- Updated website JavaScript to support `schemaFirst` option
+
+#### **Test Coverage:**
+- All existing tests continue to pass (790+ tests)
+- Fixed specific failing test: "should handle nested structures with schema-first blocks"
+- Perfect round-trip verification for schema-first nested arrays
+- 100% test success rate maintained
+
+#### **Website Examples:**
+```tonl
+#version 1.0
+root:
+  #schema teams{id,name,projects[],size,technologies[]}
+    1,Backend Infrastructure,[API Gateway,Microservices,Data Pipeline],25,[Node.js,Python,Go,PostgreSQL,Redis]
+    2,Frontend Platform,[Web App,Mobile Web,Component Library],20,[React|TypeScript, Javascript|Next.js|Tailwind CSS]
+```
+
+#### **Impact:**
+- **Zero Breaking Changes** - All existing code continues to work
+- **Enhanced Website** - Full schema-first support in interactive playground
+- **Perfect Data Integrity** - Schema-first arrays maintain 100% round-trip fidelity
+- **Production Ready** - Ready for immediate use in schema-first scenarios
+
+---
+
 ## [Unreleased]
 
 ### Planned

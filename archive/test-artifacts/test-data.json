@@ -1,0 +1,1 @@
+{"teams":[{"id":1,"name":"Backend Infrastructure","projects":["API Gateway","Microservices","Data Pipeline"],"size":25,"technologies":["Node.js","Python","Go","PostgreSQL","Redis"]},{"id":2,"name":"Frontend Platform","projects":["Web App","Mobile Web","Component Library"],"size":20,"technologies":["React","TypeScript","Next.js","Tailwind CSS"]}]}

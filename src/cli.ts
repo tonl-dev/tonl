@@ -179,6 +179,8 @@ interface CLIOptions {
   verbose?: boolean;
   tokenizer?: "gpt-5" | "gpt-4.5" | "gpt-4o" | "claude-3.5" | "gemini-2.0" | "llama-4" | "o200k" | "cl100k";
   preprocess?: boolean;
+  compactTables?: boolean;
+  schemaFirst?: boolean;
 }
 
 /**
@@ -261,6 +263,12 @@ function parseArgs(args: string[]): { command: string; file: string; options: CL
         break;
       case "--preprocess":
         options.preprocess = true;
+        break;
+      case "--compact-tables":
+        options.compactTables = true;
+        break;
+      case "--schema-first":
+        options.schemaFirst = true;
         break;
       default:
         if (!arg.startsWith("-") && !command) {
@@ -359,7 +367,9 @@ async function main() {
             includeTypes: options.includeTypes,
             version: options.version,
             indent: options.indent,
-            singleLinePrimitiveLists: true
+            singleLinePrimitiveLists: true,
+            compactTables: options.compactTables,
+            schemaFirst: options.schemaFirst
           });
 
           tonlOutput = directives + baseTONL;
@@ -390,7 +400,9 @@ async function main() {
             includeTypes: options.includeTypes,
             version: options.version,
             indent: options.indent,
-            singleLinePrimitiveLists: true
+            singleLinePrimitiveLists: true,
+            compactTables: options.compactTables,
+            schemaFirst: options.schemaFirst
           });
         }
 

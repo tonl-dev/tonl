@@ -6,7 +6,7 @@
     <title>Playground - TONL Live Converter</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="js/tonl.iife.js?v=2.0.3"></script>
+    <script src="js/tonl.iife.js?v=2.0.7"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 
     <style>
@@ -250,6 +250,36 @@
                 </div>
             </div>
 
+            <!-- Schema-First Examples -->
+            <div class="mb-4 p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg border border-purple-200 shadow-sm">
+                <h4 class="text-sm font-semibold text-purple-900 mb-3 flex items-center gap-2">
+                    <span>🏗️</span> Schema-First Examples
+                </h4>
+                <div class="grid grid-cols-3 gap-2">
+                    <button @click="loadExample('schema-teams')" class="group p-3 bg-white border border-purple-200 rounded-lg hover:border-purple-400 hover:shadow-md transition text-left">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xl">👥</span>
+                            <span class="font-semibold text-sm text-purple-700">Teams</span>
+                        </div>
+                        <div class="text-xs text-slate-500">2 teams · Nested arrays</div>
+                    </button>
+                    <button @click="loadExample('schema-products')" class="group p-3 bg-white border border-purple-200 rounded-lg hover:border-purple-400 hover:shadow-md transition text-left">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xl">📦</span>
+                            <span class="font-semibold text-sm text-purple-700">Products</span>
+                        </div>
+                        <div class="text-xs text-slate-500">3 products · E-commerce</div>
+                    </button>
+                    <button @click="loadExample('schema-employees')" class="group p-3 bg-white border border-purple-200 rounded-lg hover:border-purple-400 hover:shadow-md transition text-left">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-xl">👔</span>
+                            <span class="font-semibold text-sm text-purple-700">Employees</span>
+                        </div>
+                        <div class="text-xs text-slate-500">5 employees · Company data</div>
+                    </button>
+                </div>
+            </div>
+
             <!-- Simple Examples -->
             <div class="mb-4">
                 <h4 class="text-sm font-semibold text-slate-700 mb-2">Quick Start</h4>
@@ -284,8 +314,21 @@
                         </div>
                     </div>
 
-                    <!-- Type Hints Toggle (Shadcn-style) -->
+                    <!-- Schema-First & Type Hints Toggle (Shadcn-style) -->
                     <div class="p-4 bg-white rounded-lg border border-slate-200 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <label class="text-sm font-semibold text-slate-700">Schema-First Format</label>
+                                <p class="text-xs text-slate-500">Tabular format with minimal repetition</p>
+                            </div>
+                            <button @click="schemaFirst = !schemaFirst; jsonToTONL();"
+                                    :class="schemaFirst ? 'bg-emerald-500' : 'bg-slate-300'"
+                                    class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2">
+                                <span :class="schemaFirst ? 'translate-x-6' : 'translate-x-1'"
+                                      class="inline-block h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200"></span>
+                            </button>
+                        </div>
+
                         <div class="flex items-center justify-between mb-4">
                             <div>
                                 <label class="text-sm font-semibold text-slate-700">Include Type Hints</label>
@@ -299,30 +342,39 @@
                             </button>
                         </div>
 
-                        <!-- Before/After Comparison -->
-                        <div class="grid grid-cols-2 gap-3">
-                            <div :class="!includeTypes ? 'bg-blue-50 border-blue-300' : 'bg-slate-50 border-slate-200'"
-                                 class="p-3 rounded-md border transition-all">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-lg">📦</span>
-                                    <span class="text-xs font-semibold" :class="!includeTypes ? 'text-blue-700' : 'text-slate-500'">
-                                        Compact (OFF) - Max Savings
+                        <!-- Format Comparison -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div :class="!schemaFirst && !includeTypes ? 'bg-blue-50 border-blue-300' : 'bg-slate-50 border-slate-200'"
+                                 class="p-2 rounded-md border transition-all">
+                                <div class="flex items-center gap-1 mb-1">
+                                    <span class="text-sm">📄</span>
+                                    <span class="text-xs font-semibold" :class="!schemaFirst && !includeTypes ? 'text-blue-700' : 'text-slate-500'">
+                                        Standard
                                     </span>
                                 </div>
-                                <code class="text-xs text-slate-600 font-mono block">employees[100]:</code>
-                                <div class="text-xs text-slate-500 mt-1">~44% savings</div>
+                                <code class="text-xs text-slate-600 font-mono block break-all">users[3]:{...}</code>
+                            </div>
+
+                            <div :class="schemaFirst && !includeTypes ? 'bg-purple-50 border-purple-300' : 'bg-slate-50 border-slate-200'"
+                                 class="p-2 rounded-md border transition-all">
+                                <div class="flex items-center gap-1 mb-1">
+                                    <span class="text-sm">🏗️</span>
+                                    <span class="text-xs font-semibold" :class="schemaFirst && !includeTypes ? 'text-purple-700' : 'text-slate-500'">
+                                        Schema-First
+                                    </span>
+                                </div>
+                                <code class="text-xs text-slate-600 font-mono block break-all">#schema users{...}</code>
                             </div>
 
                             <div :class="includeTypes ? 'bg-emerald-50 border-emerald-300' : 'bg-slate-50 border-slate-200'"
-                                 class="p-3 rounded-md border transition-all">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-lg">✅</span>
+                                 class="p-2 rounded-md border transition-all">
+                                <div class="flex items-center gap-1 mb-1">
+                                    <span class="text-sm">✅</span>
                                     <span class="text-xs font-semibold" :class="includeTypes ? 'text-emerald-700' : 'text-slate-500'">
-                                        Validation (ON) - With Types
+                                        Types
                                     </span>
                                 </div>
-                                <code class="text-xs text-slate-600 font-mono block">employees[100]{empId:u32,firstName:str,...}:</code>
-                                <div class="text-xs text-slate-500 mt-1">~39% savings (+ validation)</div>
+                                <code class="text-xs text-slate-600 font-mono block break-all">{id:u32,name:str,...}</code>
                             </div>
                         </div>
                     </div>
@@ -674,6 +726,7 @@
                 copiedCompact: false,
                 copiedPretty: false,
                 includeTypes: false,
+                schemaFirst: false,
                 jsonFormat: 'pretty', // 'compact' or 'pretty'
                 recordCount: 10,
                 maxRecordCount: 100,
@@ -698,10 +751,11 @@
                         const data = JSON.parse(this.jsonInput);
 
                         if (typeof TONL !== 'undefined' && TONL.encodeTONL) {
-                            // IMPORTANT: Pass includeTypes option!
+                            // IMPORTANT: Pass includeTypes and schemaFirst options!
                             // Note: Browser uses quoting by default (no preprocessing)
                             this.tonlOutput = TONL.encodeTONL(data, {
-                                includeTypes: this.includeTypes
+                                includeTypes: this.includeTypes,
+                                schemaFirst: this.schemaFirst
                             });
                         } else {
                             this.tonlOutput = '#version 1.0\\n' + JSON.stringify(data, null, 2);
@@ -860,9 +914,15 @@
                 async loadExample(type) {
                     this.currentExample = type;
 
+                    // Auto-enable schema-first for schema-first examples
+                    if (type.startsWith('schema-')) {
+                        this.schemaFirst = true;
+                    }
+
                     // Priority: Load from JSON files for large datasets
                     const jsonFiles = ['small', 'users', 'employees', 'products', 'transactions', 'apiLogs', 'config',
-                                       'ecommerce', 'api', 'logs', 'nested', 'analytics', 'timeseries', 'catalog', 'social', 'large'];
+                                       'ecommerce', 'api', 'logs', 'nested', 'analytics', 'timeseries', 'catalog', 'social', 'large',
+                                       'schema-teams', 'schema-products', 'schema-employees'];
 
                     if (jsonFiles.includes(type)) {
                         try {
@@ -1858,6 +1918,91 @@
       }
     ]
   }
+}`,
+                        'schema-teams': `{
+  "teams": [
+    {
+      "id": 1,
+      "name": "Backend Infrastructure",
+      "projects": ["API Gateway", "Microservices", "Data Pipeline"],
+      "size": 25,
+      "technologies": ["Node.js", "Python", "Go", "PostgreSQL", "Redis"]
+    },
+    {
+      "id": 2,
+      "name": "Frontend Platform",
+      "projects": ["Web App", "Mobile Web", "Component Library"],
+      "size": 20,
+      "technologies": ["React", "TypeScript, Javascript", "Next.js", "Tailwind CSS"]
+    }
+  ]
+}`,
+                        'schema-products': `{
+  "products": [
+    {
+      "id": 1,
+      "name": "Laptop Pro 15",
+      "price": 1299.99,
+      "category": "Electronics",
+      "features": ["16GB RAM", "512GB SSD", "Intel i7"],
+      "colors": ["Space Gray", "Silver", "Gold"]
+    },
+    {
+      "id": 2,
+      "name": "Wireless Mouse",
+      "price": 29.99,
+      "category": "Accessories",
+      "features": ["Ergonomic", "Wireless", "Long battery"],
+      "colors": ["Black", "White"]
+    },
+    {
+      "id": 3,
+      "name": "USB-C Hub",
+      "price": 49.99,
+      "category": "Accessories",
+      "features": ["7-in-1", "4K HDMI", "PD Charging"],
+      "colors": ["Silver"]
+    }
+  ]
+}`,
+                        'schema-employees': `{
+  "employees": [
+    {
+      "id": 101,
+      "name": "Alice Johnson",
+      "department": "Engineering",
+      "skills": ["JavaScript", "TypeScript", "React"],
+      "projects": ["Web Platform", "Mobile App"]
+    },
+    {
+      "id": 102,
+      "name": "Bob Smith",
+      "department": "Backend",
+      "skills": ["Python", "Go", "PostgreSQL"],
+      "projects": ["API Gateway", "Data Pipeline"]
+    },
+    {
+      "id": 103,
+      "name": "Carol Davis",
+      "department": "Frontend",
+      "skills": ["React", "Vue.js", "CSS"],
+      "projects": ["Web Platform", "Design System"]
+    },
+    {
+      "id": 104,
+      "name": "David Wilson",
+      "department": "DevOps",
+      "skills": ["Docker", "Kubernetes", "AWS"],
+      "projects": ["Infrastructure", "CI/CD"]
+    },
+    {
+      "id": 105,
+      "name": "Eva Martinez",
+      "department": "QA",
+      "skills": ["Testing", "Automation", "Jest"],
+      "projects": ["Testing Suite", "CI/CD"]
+    }
+  ]
 }`
                     };
 
@@ -2000,7 +2145,7 @@
                         </a>
                     </div>
                     <div class="text-xs text-slate-500 mt-2">
-                        <span class="font-semibold">Version:</span> 2.0.2
+                        <span class="font-semibold">Version:</span> 2.0.7
                     </div>
                 </div>
             </div>

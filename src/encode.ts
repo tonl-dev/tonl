@@ -17,6 +17,8 @@ export function encodeTONL(input: TONLValue, opts: {
   indent?: number;
   singleLinePrimitiveLists?: boolean;
   prettyDelimiters?: boolean;
+  compactTables?: boolean;
+  schemaFirst?: boolean;
 } = {}): string {
   const delimiter = opts.delimiter || ",";
   const includeTypes = opts.includeTypes ?? false;
@@ -25,6 +27,8 @@ export function encodeTONL(input: TONLValue, opts: {
   const indent = (opts.indent !== undefined && Number.isFinite(opts.indent) && opts.indent >= 0) ? opts.indent : 2;
   const singleLinePrimitiveLists = opts.singleLinePrimitiveLists ?? true;
   const prettyDelimiters = opts.prettyDelimiters ?? false;
+  const compactTables = opts.compactTables ?? false;
+  const schemaFirst = opts.schemaFirst ?? false;
 
   const context: TONLEncodeContext = {
     delimiter,
@@ -33,6 +37,8 @@ export function encodeTONL(input: TONLValue, opts: {
     indent,
     singleLinePrimitiveLists,
     prettyDelimiters,
+    compactTables,
+    schemaFirst,
     currentIndent: 0,
     seen: new WeakSet()
   };
@@ -93,9 +99,176 @@ function encodeValue(value: TONLValue, key: string, context: TONLEncodeContext):
 }
 
 /**
+ * Determine if an object should use compact tables format
+ * Objects with mixed primitive values and arrays benefit from compact format
+ */
+function shouldUseCompactFormat(obj: TONLObject, key: string, context: TONLEncodeContext): boolean {
+  const keys = Object.keys(obj);
+
+  // Don't use compact format for very simple objects
+  if (keys.length <= 1) {
+    return false;
+  }
+
+  // Check if object has both primitives and arrays (mixed content)
+  const hasPrimitives = keys.some(k => {
+    const v = obj[k];
+    return v !== null && v !== undefined && !Array.isArray(v) && typeof v !== "object";
+  });
+
+  const hasArrays = keys.some(k => Array.isArray(obj[k]));
+
+  return hasPrimitives && hasArrays;
+}
+
+/**
+ * Encode an object using compact tables format
+ * This format displays primitive values inline and arrays as indented tables
+ */
+function encodeObjectCompact(obj: TONLObject, key: string, context: TONLEncodeContext): string {
+  const keys = Object.keys(obj).sort();
+  const lines: string[] = [];
+
+  // Create a simple header without column definitions for the container object
+  lines.push(`${key}:`);
+
+  const childContext = { ...context, currentIndent: context.currentIndent + 1 };
+
+  // Process each property
+  for (const k of keys) {
+    const value = obj[k];
+    if (value === undefined) continue;
+
+    const indent = makeIndent(childContext.currentIndent, childContext.indent);
+
+    if (Array.isArray(value)) {
+      // Handle arrays with compact format
+      const arrayContent = encodeArrayCompact(value, k, childContext);
+      lines.push(indent + arrayContent);
+    } else if (typeof value === "object" && value !== null) {
+      // Handle nested objects normally (but they might also use compact format)
+      const nestedContent = encodeValue(value, k, childContext);
+      lines.push(indent + nestedContent);
+    } else {
+      // Handle primitives as simple inline values without quotes when possible
+      let primitiveValue: string;
+      if (value === null) {
+        primitiveValue = "null";
+      } else if (value === true || value === false) {
+        primitiveValue = String(value);
+      } else if (typeof value === 'number') {
+        primitiveValue = String(value);
+      } else {
+        // For strings, avoid quotes if they don't contain special characters
+        const strVal = String(value);
+        if (strVal.includes(context.delimiter) || strVal.includes("\n") || strVal.includes(":") || strVal.includes('"')) {
+          primitiveValue = tripleQuoteIfNeeded(strVal, context.delimiter);
+        } else {
+          primitiveValue = strVal; // No quotes needed
+        }
+      }
+      lines.push(`${indent}${k}: ${primitiveValue}`);
+    }
+  }
+
+  return lines.join("\n");
+}
+
+/**
+ * Encode an array using compact tables format
+ */
+function encodeArrayCompact(arr: TONLArray, key: string, context: TONLEncodeContext): string {
+  if (arr.length === 0) {
+    return `${key}[0]:`;
+  }
+
+  // Check if this is an array of objects that can be displayed as a table
+  const isStrictlyUniform = isUniformObjectArray(arr);
+  const isSemiUniform = !isStrictlyUniform && isSemiUniformObjectArray(arr, 0.6);
+  const firstItem = arr[0];
+
+  if ((isStrictlyUniform || isSemiUniform) && firstItem && typeof firstItem === "object" && !Array.isArray(firstItem)) {
+    // Check if all values are primitives (safe for tabular format)
+    const hasOnlyPrimitives = arr.every(item =>
+      item && Object.values(item).every(v =>
+        v === null || v === undefined ||
+        (typeof v !== "object" && typeof v !== "function")
+      )
+    );
+
+    if (hasOnlyPrimitives) {
+      // Use tabular format for the array
+      const columns = isSemiUniform ? getAllColumns(arr) : getUniformColumns(arr);
+      const columnDefs: string[] = [];
+
+      for (const col of columns) {
+        let colDef = col;
+        if (col.includes(':') || col.includes(',') || col.includes('{') || col.includes('}') || col.includes('"')) {
+          colDef = `"${col.replace(/"/g, '\\"')}"`;
+        }
+        if (context.includeTypes) {
+          let sampleValue = null;
+          for (const item of arr) {
+            const obj = item as TONLObject;
+            if (obj && typeof obj === 'object' && !Array.isArray(obj) && col in obj && obj[col] !== null && obj[col] !== undefined) {
+              sampleValue = obj[col];
+              break;
+            }
+          }
+          const type = inferPrimitiveType(sampleValue);
+          if (type !== "obj" && type !== "list") {
+            colDef += `:${type}`;
+          }
+        }
+        columnDefs.push(colDef);
+      }
+
+      const lines: string[] = [`${key}[${arr.length}]{${columnDefs.join(",")}}:`];
+      const arrayChildContext = { ...context, currentIndent: context.currentIndent + 1 };
+
+      for (const item of arr) {
+        if (!item || typeof item !== 'object' || Array.isArray(item)) continue;
+        const rowValues: string[] = [];
+        for (const col of columns) {
+          const value = (item as TONLObject)[col];
+          if (!(col in item) || value === undefined) {
+            rowValues.push(MISSING_FIELD_MARKER);
+          } else if (value === null) {
+            rowValues.push("null");
+          } else if (value === true || value === false) {
+            rowValues.push(String(value));
+          } else if (typeof value === 'number') {
+            rowValues.push(String(value));
+          } else {
+            // For strings in compact mode, try to avoid quotes
+            const strVal = String(value);
+            if (strVal.includes(context.delimiter) || strVal.includes("\n") || strVal.includes(":") || strVal.includes('"')) {
+              rowValues.push(tripleQuoteIfNeeded(strVal, context.delimiter));
+            } else {
+              rowValues.push(strVal); // No quotes needed
+            }
+          }
+        }
+        const separator = context.prettyDelimiters ? ` ${context.delimiter} ` : context.delimiter;
+        lines.push(makeIndent(arrayChildContext.currentIndent, arrayChildContext.indent) + rowValues.join(separator));
+      }
+
+      return lines.join("\n");
+    }
+  }
+
+  // For non-tabular arrays, use the regular array encoding
+  return encodeArray(arr, key, context);
+}
+
+/**
  * Encode an object
  */
 function encodeObject(obj: TONLObject, key: string, context: TONLEncodeContext): string {
+  // Check if this object should use compact tables format
+  if (context.compactTables && shouldUseCompactFormat(obj, key, context)) {
+    return encodeObjectCompact(obj, key, context);
+  }
   // BUGFIX BF005: Enhanced circular reference detection
   // Initialize seen set if not present
   if (!context.seen) {
@@ -238,9 +411,167 @@ function encodeObject(obj: TONLObject, key: string, context: TONLEncodeContext):
 }
 
 /**
+ * Determine if an array should use schema-first format
+ * Arrays of uniform objects with primitive values benefit from schema-first format
+ * Now also handles arrays that contain nested primitive arrays
+ */
+function shouldUseSchemaFirstFormat(arr: TONLArray, key: string, context: TONLEncodeContext): boolean {
+  if (arr.length === 0) return false;
+
+  const firstItem = arr[0];
+  if (!firstItem || typeof firstItem !== "object" || Array.isArray(firstItem)) {
+    return false;
+  }
+
+  // Check if this is a uniform array of objects
+  const isUniform = isUniformObjectArray(arr);
+  if (!isUniform) return false;
+
+  // Check if all values are primitives OR primitive arrays (safe for schema-first format)
+  const hasValidValues = arr.every(item => {
+    if (!item) return false;
+
+    return Object.values(item).every(v => {
+      if (v === null || v === undefined) return true;
+      if (typeof v !== "object" && typeof v !== "function") return true; // primitive
+      if (Array.isArray(v)) {
+        // Check if array contains only primitives
+        return v.every(element =>
+          element === null ||
+          element === undefined ||
+          typeof element !== "object" ||
+          typeof element !== "function"
+        );
+      }
+      return false; // non-primitive objects not allowed
+    });
+  });
+
+  return hasValidValues;
+}
+
+/**
+ * Encode an array using schema-first format
+ * Format: #schema key{field:type,field:type} followed by indented data rows
+ * Only for arrays with 3 or fewer elements - larger arrays use regular format
+ */
+function encodeArraySchemaFirst(arr: TONLArray, key: string, context: TONLEncodeContext): string | null {
+  if (arr.length === 0) {
+    return `${key}[0]:`;
+  }
+
+  // Skip schema-first for arrays with more than 3 elements to avoid token waste
+  if (arr.length > 3) {
+    return null; // Signal to use regular encoding
+  }
+
+  const firstItem = arr[0] as TONLObject;
+  const columns = getUniformColumns(arr);
+
+  // Build schema definition using existing working format
+  const schemaFields: string[] = [];
+  for (const col of columns) {
+    let fieldDef = col;
+
+    // Check if this field is an array in the sample data
+    const sampleValue = firstItem[col];
+    if (Array.isArray(sampleValue)) {
+      fieldDef += '[]';
+    } else if (context.includeTypes) {
+      const type = inferPrimitiveType(sampleValue);
+      if (type !== "obj" && type !== "list") {
+        fieldDef += `:${type}`;
+      }
+    }
+
+    schemaFields.push(fieldDef);
+  }
+
+  const lines: string[] = [
+    `#schema ${key}{${schemaFields.join(",")}}`
+  ];
+
+  const childContext = { ...context, currentIndent: context.currentIndent + 1 };
+
+  // Add data rows using existing working format
+  for (const item of arr) {
+    if (!item || typeof item !== 'object' || Array.isArray(item)) continue;
+
+    const rowValues: string[] = [];
+    for (const col of columns) {
+      const value = (item as TONLObject)[col];
+
+      if (!(col in item) || value === undefined) {
+        rowValues.push(MISSING_FIELD_MARKER);
+      } else if (value === null) {
+        rowValues.push("null");
+      } else if (value === true || value === false) {
+        rowValues.push(String(value));
+      } else if (typeof value === 'number') {
+        rowValues.push(String(value));
+      } else if (Array.isArray(value)) {
+        // Handle arrays efficiently - use unquoted format when possible
+        if (value.length === 0) {
+          rowValues.push('[]'); // Empty array
+        } else {
+          // Check if any array elements contain delimiters that would cause parsing conflicts
+          const hasDelimiterConflicts = value.some(item =>
+            typeof item === 'string' && item.includes(context.delimiter)
+          );
+
+          if (hasDelimiterConflicts) {
+            // Use pipe delimiter for array to avoid conflicts (more token efficient than quotes)
+            const pipeDelimited = value.map(item => {
+              if (typeof item === 'string') {
+                return item;
+              } else {
+                return JSON.stringify(item);
+              }
+            }).join('|');
+            rowValues.push(`[${pipeDelimited}]`);
+          } else {
+            // Use clean unquoted array format: [elem1,elem2,elem3]
+            const arrayElements = value.map(item => {
+              if (typeof item === 'string') {
+                return item;
+              } else {
+                return JSON.stringify(item);
+              }
+            });
+            rowValues.push(`[${arrayElements.join(context.delimiter)}]`);
+          }
+        }
+      } else {
+        // For strings in schema-first mode, avoid quotes if possible
+        const strVal = String(value);
+        if (strVal.includes(context.delimiter) || strVal.includes("\n") || strVal.includes(":") || strVal.includes('"')) {
+          rowValues.push(tripleQuoteIfNeeded(strVal, context.delimiter));
+        } else {
+          rowValues.push(strVal); // No quotes needed
+        }
+      }
+    }
+
+    const separator = context.prettyDelimiters ? ` ${context.delimiter} ` : context.delimiter;
+    lines.push(makeIndent(childContext.currentIndent, childContext.indent) + rowValues.join(separator));
+  }
+
+  return lines.join("\n");
+}
+
+/**
  * Encode an array
  */
 function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): string {
+  // Check if schema-first encoding should be used
+  if (context.schemaFirst && shouldUseSchemaFirstFormat(arr, key, context)) {
+    const schemaFirstResult = encodeArraySchemaFirst(arr, key, context);
+    if (schemaFirstResult !== null) {
+      return schemaFirstResult;
+    }
+    // If null returned, fall through to regular encoding (array too large)
+  }
+
   // BUGFIX BF005: Enhanced circular reference detection for arrays
   // Initialize seen set if not present
   if (!context.seen) {

@@ -27,6 +27,8 @@ export interface EncodeOptions {
   indent?: number;            // spaces per level, default 2
   singleLinePrimitiveLists?: boolean; // default true
   prettyDelimiters?: boolean; // add spaces around delimiters (e.g., "1 , 2" instead of "1,2")
+  compactTables?: boolean;    // use compact tabular format for nested data without repeated headers
+  schemaFirst?: boolean;      // use schema-first format: define schema once, data as indented rows
 }
 
 export interface DecodeOptions {
@@ -68,6 +70,8 @@ export interface TONLEncodeContext {
   indent: number;
   singleLinePrimitiveLists: boolean;
   prettyDelimiters: boolean;
+  compactTables: boolean;
+  schemaFirst: boolean;
   currentIndent: number;
   seen?: WeakSet<object>;  // Track circular references
 }

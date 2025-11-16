@@ -23,6 +23,8 @@ export function encodeSmart(input: TONLValue, opts?: {
   version?: string;
   indent?: number;
   singleLinePrimitiveLists?: boolean;
+  compactTables?: boolean;
+  schemaFirst?: boolean;
 }): string {
   // Smart encoding logic to choose optimal delimiter and formatting
   const jsonStr = JSON.stringify(input);
