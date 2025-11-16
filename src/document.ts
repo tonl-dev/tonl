@@ -670,13 +670,15 @@ export class TONLDocument {
    * const stats = doc.getCacheStats();
    * console.log(`Cache hit rate: ${stats.hitRate}%`);
    * ```
+   *
+   * BUG-007 FIX: Now returns accurate misses from cache stats
    */
   getCacheStats(): { hits: number; misses: number; hitRate: number; size: number } {
     const cacheStats = this.evaluator.getCacheStats();
-    // Convert from CacheStats interface to expected format
+    // BUG-007 FIX: Use actual misses from cache stats instead of incorrect calculation
     return {
       hits: cacheStats.totalHits,
-      misses: Math.max(0, cacheStats.size - cacheStats.totalHits),
+      misses: cacheStats.totalMisses,  // BUG-007 FIX: Now accurate
       hitRate: cacheStats.hitRate,
       size: cacheStats.size
     };

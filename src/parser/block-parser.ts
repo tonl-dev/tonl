@@ -15,6 +15,8 @@ import { TONLParseError } from '../errors/index.js';
 /**
  * Parse a block starting from a header
  * Dispatches to parseObjectBlock or parseArrayBlock based on header type
+ *
+ * SECURITY FIX (SEC-002): Added recursion depth limiting to prevent stack overflow
  */
 export function parseBlock(
   header: TONLObjectHeader | null,
@@ -24,6 +26,19 @@ export function parseBlock(
 ): TONLValue {
   if (!header) {
     throw new Error("Invalid header for block parsing");
+  }
+
+  // SECURITY FIX (SEC-002): Check and enforce recursion depth limit
+  const currentDepth = context.currentDepth || 0;
+  const maxDepth = context.maxDepth || 100;
+
+  if (currentDepth >= maxDepth) {
+    throw new TONLParseError(
+      `Maximum nesting depth exceeded (${maxDepth}). Possible deeply nested structure or circular reference.`,
+      context.currentLine,
+      undefined,
+      lines[startIndex]
+    );
   }
 
   const blockLines: string[] = [];
@@ -235,7 +250,10 @@ export function parseObjectBlock(
     if (nestedHeader) {
       const nestedContentLines = extractNestedBlockLines(lines, lineIndex);
       const nestedBlockLines = [line, ...nestedContentLines];
-      const nestedValue = parseBlock(nestedHeader, nestedBlockLines, 0, context);
+      // SECURITY FIX (SEC-002): Increment depth for recursive call
+      const currentDepth = context.currentDepth || 0;
+      const childContext = { ...context, currentDepth: currentDepth + 1 };
+      const nestedValue = parseBlock(nestedHeader, nestedBlockLines, 0, childContext);
       result[nestedHeader.key] = nestedValue;
       lineIndex += nestedContentLines.length + 1;
       continue;
@@ -504,7 +522,10 @@ export function parseArrayBlock(
             if (nestedHeader) {
               const nestedContentLines = extractNestedBlockLines(lines, lineIndex);
               const nestedBlockLines = [line, ...nestedContentLines];
-              const nestedValue = parseBlock(nestedHeader, nestedBlockLines, 0, context);
+              // SECURITY FIX (SEC-002): Increment depth for recursive call
+              const currentDepth = context.currentDepth || 0;
+              const childContext = { ...context, currentDepth: currentDepth + 1 };
+              const nestedValue = parseBlock(nestedHeader, nestedBlockLines, 0, childContext);
 
               const indexMatch = nestedHeader.key.match(/^\[(\d+)\]$/);
               if (indexMatch) {
@@ -523,7 +544,10 @@ export function parseArrayBlock(
           if (nestedHeader) {
             const nestedContentLines = extractNestedBlockLines(lines, lineIndex);
             const nestedBlockLines = [line, ...nestedContentLines];
-            const nestedValue = parseBlock(nestedHeader, nestedBlockLines, 0, context);
+            // SECURITY FIX (SEC-002): Increment depth for recursive call
+            const currentDepth = context.currentDepth || 0;
+            const childContext = { ...context, currentDepth: currentDepth + 1 };
+            const nestedValue = parseBlock(nestedHeader, nestedBlockLines, 0, childContext);
 
             const indexMatch = nestedHeader.key.match(/^\[(\d+)\]$/);
             if (indexMatch) {
