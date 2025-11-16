@@ -8,15 +8,15 @@
 
 **TONL** is a production-ready data platform that combines compact serialization with powerful query, modification, indexing, and streaming capabilities. Designed for LLM token efficiency while providing a rich API for data access and manipulation.
 
-**🎉 v2.0.4 - Dual-Mode System Release**
+## 🎉 Latest Release: v2.0.4 - Dual-Mode System
 
-**✨ What's New in v2.0.4:**
-- 🔄 Revolutionary dual-mode system (quoting + preprocessing)
-- ✅ Perfect round-trip safety in default mode - 100% data preservation
-- 🛠️ Advanced quoting for special characters (`#`, `@`, `""`, etc.)
-- 🌐 Browser playground now handles all JSON inputs flawlessly
-- 📋 Optional `--preprocess` flag for clean, readable output
-- 🔄 Zero data loss guaranteed for both modes
+### ✨ Key Features in v2.0.4:
+- 🔄 **Revolutionary dual-mode system** (quoting + preprocessing)
+- ✅ **Perfect round-trip safety** - 100% data preservation in default mode
+- 🛠️ **Advanced quoting** for special characters (`#`, `@`, `""`, etc.)
+- 🌐 **Browser playground** now handles all JSON inputs flawlessly
+- 📋 **Optional `--preprocess` flag** for clean, readable output
+- 🔄 **Zero data loss** guaranteed for both modes
 
 [![npm version](https://badge.fury.io/js/tonl.svg)](https://www.npmjs.com/package/tonl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -25,6 +25,22 @@
 **🏠 Homepage**: [tonl.dev](https://tonl.dev)
 **📦 GitHub**: [github.com/tonl-dev/tonl](https://github.com/tonl-dev/tonl)
 **📖 Documentation**: [Complete Guides](docs/)
+
+## 📋 Table of Contents
+- [Why TONL?](#why-tonl)
+- [Quick Start](#-quick-start)
+- [Format Overview](#-format-overview)
+- [Feature Set](#-complete-feature-set)
+- [Performance](#-performance-comparison)
+- [Security](#-security--quality)
+- [Use Cases](#-use-cases)
+- [Browser Usage](#-browser-usage)
+- [API Reference](#-complete-api-reference)
+- [Development](#-development)
+- [Roadmap](#-roadmap)
+- [Documentation](#-documentation)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
@@ -578,7 +594,7 @@ tonl format data.tonl --pretty
 - Python, Go, Rust implementations
 - Binary TONL format for extreme compression
 
-See [ROADMAP.md](ROADMAP.md) for details.
+See [ROADMAP.md](ROADMAP.md) for our comprehensive development vision.
 
 ---
 

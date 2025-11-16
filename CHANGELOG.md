@@ -5,7 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.4] - 2025-11-15
+## [Unreleased]
+
+### Planned
+- Performance optimizations for large document processing
+- Enhanced error reporting with line/column tracking
+- Additional tokenizer support for new LLM models
+
+---
+
+## [2.0.4] - 2025-11-16
 
 ### 🔄 **Dual-Mode System Release**
 
@@ -67,7 +76,7 @@ root{hash_key,_at_,empty_key}:
 
 **Major CLI User Experience Improvements** with automatic JSON preprocessing for problematic characters.
 
-#### **New Features:**
+#### 🆕 **New Features:**
 - **Smart JSON Preprocessing** - Automatic transformation of problematic keys (`#`, `@`, `""`, etc.) to safe alternatives
 - **User-Friendly Help System** - CLI shows complete usage guide when no arguments provided
 - **Enhanced Version Command** - `--version`/`-v` works without requiring file arguments

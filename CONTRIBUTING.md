@@ -2,19 +2,19 @@
 
 Thank you for your interest in contributing to TONL (Token-Optimized Notation Language)! We're excited to have you join our mission to build the best LLM-optimized data serialization format.
 
-> 📘 **New to TONL?** Check out the [README](README.md) and [Strategic Plan](STRATEGIC_PLAN.md) first!
+> 📘 **New to TONL?** Check out the [README](README.md) and [How It Works](HOW_IT_WORKS.md) first!
 
----
-
-## Table of Contents
+## 📋 Table of Contents
 - [Getting Started](#-getting-started)
 - [How to Contribute](#-how-to-contribute)
 - [Development Workflow](#-development-workflow)
 - [Testing](#-testing)
 - [Code Style](#-code-style)
 - [Documentation](#-documentation)
-- [Code Review](#-code-review-process)
+- [Code Review Process](#-code-review-process)
 - [Areas for Contribution](#-areas-for-contribution)
+- [Learning Resources](#-learning-resources)
+- [Getting Help](#-getting-help)
 - [Code of Conduct](#-code-of-conduct)
 
 ---
@@ -97,17 +97,19 @@ node --test test/parser.test.ts
 ```
 
 ### Writing Tests
-- Use Node.js built-in test runner
-- Test both happy path and error cases
-- Include edge cases and boundary conditions
-- Test performance-critical code paths
-- Add golden tests for format stability
+- ✅ Use Node.js built-in test runner
+- ✅ Test both happy path and error cases
+- ✅ Include edge cases and boundary conditions
+- ✅ Test performance-critical code paths
+- ✅ Add golden tests for format stability
+- ✅ Include security tests for any new features
 
 ### Test Coverage
-- Aim for high test coverage on core functionality
-- Focus on parser, encoder, and decoder
-- Test CLI commands and options
-- Include integration tests
+- 🎯 Aim for 100% test coverage on core functionality
+- 🔍 Focus on parser, encoder, and decoder
+- 🖥️ Test CLI commands and options
+- 🔗 Include integration tests
+- 🛡️ Add security tests for any user-input processing
 
 ## 🐛 Bug Reports
 
@@ -201,18 +203,18 @@ For new features:
 
 > 💡 **Looking for your first contribution?** Check issues labeled [`good first issue`](https://github.com/tonl-dev/tonl/labels/good%20first%20issue) or [`help wanted`](https://github.com/tonl-dev/tonl/labels/help%20wanted)
 
-### 🔴 Critical Priority (v0.4.0 - Next 3 Months)
+### 🔴 Critical Priority
 
 **We need help with:**
 
-1. **Type Safety Improvements**
+1. **Type Safety Improvements** 🛡️
    - Eliminating `any` types from codebase
    - Adding comprehensive type guards
    - Improving TypeScript strict mode compliance
    - **Impact**: Foundation for all future development
    - **Skills**: TypeScript, type systems
 
-2. **Schema Validation System** 🌟 FLAGSHIP
+2. **Schema Validation System** 🌟 **FLAGSHIP**
    - Designing TONL Schema Language (TSL)
    - Implementing schema parser
    - Building validation engine
@@ -220,14 +222,14 @@ For new features:
    - **Impact**: Critical for enterprise adoption
    - **Skills**: Parser design, validation logic, code generation
 
-3. **Parser Refactoring**
+3. **Parser Refactoring** 🔧
    - Splitting large files into modules
    - Reducing cyclomatic complexity
    - Improving maintainability
    - **Impact**: Code health and extensibility
    - **Skills**: Refactoring, architecture, testing
 
-4. **Enhanced Error Reporting**
+4. **Enhanced Error Reporting** 📝
    - Line/column tracking
    - Rich error messages with suggestions
    - Error recovery strategies

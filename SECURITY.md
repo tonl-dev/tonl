@@ -1,12 +1,27 @@
 # Security Policy
 
-## Reporting a Vulnerability
+## 📋 Table of Contents
+- [Reporting a Vulnerability](#reporting-a-vulnerability)
+- [Security Features](#security-features)
+- [Known Security Considerations](#known-security-considerations)
+- [Best Practices](#best-practices)
+- [Security Changelog](#security-changelog)
+- [Security Testing](#security-testing)
+- [Resources](#security-resources)
+- [Contact](#contact)
+
+---
+
+## 🚨 Reporting a Vulnerability
 
 If you discover a security vulnerability in TONL, please report it by creating a private security advisory on GitHub or by emailing the maintainers directly.
 
-**Please do NOT create public GitHub issues for security vulnerabilities.**
+**⚠️ Important**: Please do NOT create public GitHub issues for security vulnerabilities.
 
-We will respond to security reports within 48 hours and aim to publish fixes within 7 days for critical issues.
+**Our Response:**
+- 🕐 **48 hours** - Initial response to security reports
+- 🚀 **7 days** - Target for publishing critical fixes
+- 🔒 **Private disclosure** - Coordinated security updates
 
 ---
 
@@ -97,7 +112,7 @@ RegexExecutor.test(pattern, input, {
 
 ---
 
-## Known Security Considerations
+## ⚠️ Known Security Considerations
 
 ### 1. User-Supplied Regex Patterns
 
@@ -178,7 +193,7 @@ tonl encode \\server\share\file
 
 ---
 
-## Security Changelog
+## 📅 Security Changelog
 
 ### v1.0.3 (2025-11-05) - Security Release
 
@@ -285,7 +300,24 @@ tonl encode \\server\share\file
 
 ---
 
-## Best Practices
+## 🛡️ Security Testing
+
+Run security tests:
+
+```bash
+# Run security exploit tests
+npm test test/security/exploits/
+
+# Run fuzzing tests
+npm test test/security/fuzzing/
+
+# Run full test suite
+npm test
+```
+
+---
+
+## 📚 Best Practices
 
 ### For Application Developers
 
