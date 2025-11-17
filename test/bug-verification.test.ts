@@ -75,4 +75,69 @@ describe('Bug Verification Tests', () => {
     // For now, just verify the type safety works at runtime
     assert.ok(true, 'CLI type safety test placeholder');
   });
+
+  /**
+   * NEW BUG-001: encode.ts:442 - Incorrect logical operator
+   * The condition uses || when it should use &&
+   * This causes arrays containing objects to be incorrectly marked as primitive arrays
+   */
+  it('NEW BUG-001: Should NOT use schema-first for arrays with nested objects', () => {
+    const data = [
+      { id: 1, nested: { inner: 'value' } },
+      { id: 2, nested: { inner: 'value2' } }
+    ];
+
+    const doc = TONLDocument.fromJSON(data);
+    const tonl = doc.toTONL();
+
+    // Decode and verify round-trip preserves nested objects
+    const decoded = TONLDocument.parse(tonl);
+    assert.deepStrictEqual(decoded.data, data, 'Round-trip should preserve nested objects');
+  });
+
+  it('NEW BUG-001b: Should correctly identify arrays with object elements', () => {
+    const data = [
+      { id: 1, items: [{name: 'obj1'}, {name: 'obj2'}] },
+      { id: 2, items: [{name: 'obj3'}, {name: 'obj4'}] }
+    ];
+
+    const doc = TONLDocument.fromJSON(data);
+    const tonl = doc.toTONL();
+    const decoded = TONLDocument.parse(tonl);
+
+    assert.deepStrictEqual(decoded.data, data, 'Arrays containing objects should round-trip correctly');
+  });
+
+  /**
+   * NEW BUG-001c: Test case that specifically triggers the buggy line 442-443
+   * Testing array property values that contain objects
+   */
+  it('NEW BUG-001c: Array property containing objects should round-trip', () => {
+    // This specifically tests the buggy code path:
+    // An array of objects where one property is an array containing objects
+    const data = [
+      { id: 1, tags: ['simple', 'string'] }, // This should work
+      { id: 2, tags: ['simple', 'string'] }
+    ];
+
+    // Test with simple arrays first (should work)
+    const doc1 = TONLDocument.fromJSON(data);
+    const tonl1 = doc1.toTONL();
+    const decoded1 = TONLDocument.parse(tonl1);
+    assert.deepStrictEqual(decoded1.data, data, 'Simple string arrays should work');
+
+    // Now test with array containing an object (triggers bug)
+    const dataWithObjInArray = [
+      { id: 1, tags: ['simple', {complex: 'object'}] },
+      { id: 2, tags: ['simple', {complex: 'object2'}] }
+    ];
+
+    const doc2 = TONLDocument.fromJSON(dataWithObjInArray);
+    const tonl2 = doc2.toTONL();
+    const decoded2 = TONLDocument.parse(tonl2);
+
+    // This should fail if the bug allows schema-first format for arrays containing objects
+    assert.deepStrictEqual(decoded2.data, dataWithObjInArray,
+      'Arrays containing objects should round-trip correctly - BUG: incorrect || operator allows objects through');
+  });
 });

@@ -10,6 +10,7 @@ import { promises as fs } from 'fs';
 import { decodeTONL } from '../decode.js';
 import { encodeTONL } from '../encode.js';
 import type { EncodeOptions } from '../types.js';
+import { PathValidator } from '../cli/path-validator.js';
 
 /**
  * Simple file lock using lock files
@@ -50,7 +51,8 @@ class FileLock {
       try {
         await fs.unlink(this.lockPath);
       } catch (error) {
-        // Ignore errors during unlock
+        // Log error but don't throw - lock cleanup failure shouldn't break the application
+        console.warn(`Warning: Failed to release file lock at ${this.lockPath}:`, error);
       }
       this.locked = false;
     }
@@ -61,7 +63,8 @@ class FileLock {
       try {
         unlinkSync(this.lockPath);
       } catch (error) {
-        // Ignore errors during unlock
+        // Log error but don't throw - lock cleanup failure shouldn't break the application
+        console.warn(`Warning: Failed to release file lock at ${this.lockPath}:`, error);
       }
       this.locked = false;
     }
@@ -124,20 +127,26 @@ export class FileEditor {
 
   /**
    * Open a TONL file for editing (async)
+   * SECURITY FIX: Added path validation to prevent path traversal attacks
    */
   static async open(filePath: string, options: FileEditorOptions = {}): Promise<FileEditor> {
-    const content = await fs.readFile(filePath, 'utf-8');
+    // Validate path to prevent directory traversal
+    const validatedPath = PathValidator.validateRead(filePath);
+    const content = await fs.readFile(validatedPath, 'utf-8');
     const data = decodeTONL(content);
-    return new FileEditor(filePath, data, content, options);
+    return new FileEditor(validatedPath, data, content, options);
   }
 
   /**
    * Open a TONL file for editing (sync)
+   * SECURITY FIX: Added path validation to prevent path traversal attacks
    */
   static openSync(filePath: string, options: FileEditorOptions = {}): FileEditor {
-    const content = readFileSync(filePath, 'utf-8');
+    // Validate path to prevent directory traversal
+    const validatedPath = PathValidator.validateRead(filePath);
+    const content = readFileSync(validatedPath, 'utf-8');
     const data = decodeTONL(content);
-    return new FileEditor(filePath, data, content, options);
+    return new FileEditor(validatedPath, data, content, options);
   }
 
   /**

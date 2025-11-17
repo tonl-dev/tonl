@@ -26,20 +26,29 @@ function parseTONLLineWithBracketSupport(line: string, delimiter: TONLDelimiter 
   let currentField = "";
   let bracketDepth = 0;
   let inQuotes = false;
+  let escaped = false;
 
   for (let i = 0; i < line.length; i++) {
     const char = line[i];
 
-    if (char === '"' && !inQuotes) {
+    if (escaped) {
+      // Previous character was backslash, add this character literally
+      currentField += char;
+      escaped = false;
+    } else if (char === '\\' && inQuotes) {
+      // Start of escape sequence inside quotes
+      escaped = true;
+      currentField += char;
+    } else if (char === '"' && !inQuotes) {
       inQuotes = true;
       currentField += char;
     } else if (char === '"' && inQuotes) {
       inQuotes = false;
       currentField += char;
-    } else if (char === '[') {
+    } else if (char === '[' && !inQuotes) {
       bracketDepth++;
       currentField += char;
-    } else if (char === ']') {
+    } else if (char === ']' && !inQuotes) {
       bracketDepth--;
       currentField += char;
     } else if (char === delimiter && bracketDepth === 0 && !inQuotes) {
@@ -829,8 +838,8 @@ export function parseArrayBlock(
                             // Collect indented lines that belong to this nested array
                             while (nextLineIndex < nestedContentLines.length) {
                               const nextLine = nestedContentLines[nextLineIndex];
-                              if (nextLine.length > 0 && nextLine[0] === ' ') {
-                                // This line is indented, so it belongs to the nested array
+                              if (nextLine.length > 0 && (nextLine[0] === ' ' || nextLine[0] === '\t')) {
+                                // This line is indented (space or tab), so it belongs to the nested array
                                 furtherNestedLines.push(nextLine);
                                 nextLineIndex++;
                               } else {

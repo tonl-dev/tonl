@@ -11,6 +11,7 @@ import { evaluate } from '../query/evaluator.js';
 import { safeJsonParse } from '../utils/strings.js';
 import { decodeTONL } from '../decode.js';
 import type { TONLValue } from '../types.js';
+import { PathValidator } from '../cli/path-validator.js';
 
 /**
  * Maximum buffer size for TONL accumulation (10MB)
@@ -47,6 +48,7 @@ export interface StreamQueryOptions {
 
 /**
  * Stream query a TONL file line by line
+ * SECURITY FIX: Added path validation to prevent path traversal attacks
  *
  * @param filePath - Path to TONL file
  * @param queryExpression - Query path expression
@@ -59,13 +61,16 @@ export async function* streamQuery(
 ): AsyncGenerator<any> {
   const { filter, map, skip = 0, limit } = options;
 
+  // Validate path to prevent directory traversal
+  const validatedPath = PathValidator.validateRead(filePath);
+
   // Parse query
   const parseResult = parsePath(queryExpression);
   if (!parseResult.success) {
     throw parseResult.error!;
   }
 
-  const fileStream = createReadStream(filePath, 'utf-8');
+  const fileStream = createReadStream(validatedPath, 'utf-8');
   const rl = createInterface({
     input: fileStream,
     crlfDelay: Infinity

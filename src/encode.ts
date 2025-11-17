@@ -439,8 +439,7 @@ function shouldUseSchemaFirstFormat(arr: TONLArray, key: string, context: TONLEn
         return v.every(element =>
           element === null ||
           element === undefined ||
-          typeof element !== "object" ||
-          typeof element !== "function"
+          (typeof element !== "object" && typeof element !== "function")
         );
       }
       return false; // non-primitive objects not allowed
