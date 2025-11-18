@@ -322,9 +322,9 @@ export class BitPacker {
     const [, type, widthStr, bytesStr] = match;
     const bitWidth = type === 'b' ? 1 : parseInt(widthStr, 10);
 
-    // Validate bit width for integer types
-    if (type === 'i' && isNaN(bitWidth)) {
-      throw new Error(`Invalid bit-packed format: missing or invalid bit width for integer type: ${encoded}`);
+    // BUG-NEW-004 FIX: Comprehensive bit width validation
+    if (!Number.isFinite(bitWidth) || bitWidth < 1 || bitWidth > 32) {
+      throw new Error(`Invalid bit width: ${widthStr} (must be 1-32)`);
     }
 
     const packed = bytesStr.split(',').map(s => parseInt(s.trim(), 10));

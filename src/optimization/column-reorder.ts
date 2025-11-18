@@ -124,13 +124,21 @@ export class ColumnReorderer {
     const content = directive.replace(/^@colmap\s+/, '').trim();
 
     // Split by comma and parse integers
-    return content.split(',').map(s => {
+    const indices = content.split(',').map(s => {
       const num = parseInt(s.trim(), 10);
       if (!Number.isFinite(num) || num < 0) {
         throw new Error(`Invalid column mapping: ${s}`);
       }
       return num;
     });
+
+    // BUG-NEW-008 FIX: Check for duplicate indices to prevent data corruption
+    const uniqueIndices = new Set(indices);
+    if (uniqueIndices.size !== indices.length) {
+      throw new Error('Column mapping contains duplicate indices');
+    }
+
+    return indices;
   }
 
   /**
@@ -147,8 +155,12 @@ export class ColumnReorderer {
 
     const original = new Array(reorderedColumns.length);
 
+    // BUG-NEW-001 FIX: Validate mapping indices are within bounds
     for (let i = 0; i < reorderedColumns.length; i++) {
       const originalIndex = mapping[i];
+      if (originalIndex < 0 || originalIndex >= reorderedColumns.length) {
+        throw new Error(`Invalid mapping index: ${originalIndex} (must be 0-${reorderedColumns.length - 1})`);
+      }
       original[originalIndex] = reorderedColumns[i];
     }
 

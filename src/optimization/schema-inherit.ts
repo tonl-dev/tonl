@@ -232,9 +232,20 @@ export class SchemaInheritance {
 
     // Estimate savings: if we define schema once, we save column definitions
     // For each subsequent block: save ~(column_count * avg_column_name_length) bytes
+    // BUG-NEW-007 FIX: Add try-catch and validation for JSON.stringify
     const avgColumnNameLength = commonColumns.reduce((sum, name) => sum + name.length, 0) / commonColumns.length;
-    const savingsPerBlock = (commonColumns.length * avgColumnNameLength) /
-                            (JSON.stringify(data1[0]).length);
+
+    let data1Size: number;
+    try {
+      const jsonStr = JSON.stringify(data1[0]);
+      data1Size = jsonStr.length;
+    } catch {
+      data1Size = 100; // Fallback estimate if stringify fails
+    }
+
+    const savingsPerBlock = data1Size > 0
+      ? (commonColumns.length * avgColumnNameLength) / data1Size
+      : 0;
     const estimatedSavings = Math.round(savingsPerBlock * 100);
 
     return {

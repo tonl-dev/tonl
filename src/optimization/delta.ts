@@ -94,7 +94,10 @@ export class DeltaEncoder {
       sum + (d >= 0 ? d.toString().length + 1 : d.toString().length), 0
     ) / deltas.length;
 
-    const compressionRatio = Math.max(0, 1 - (avgDeltaDigits / avgOriginalDigits));
+    // BUG-NEW-005 FIX: Defensive check for division by zero
+    const compressionRatio = avgOriginalDigits > 0
+      ? Math.max(0, 1 - (avgDeltaDigits / avgOriginalDigits))
+      : 0;
 
     // Recommend if:
     // 1. Sequence is long enough
