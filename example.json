@@ -1,0 +1,24 @@
+{
+  "name": "TONL Example",
+  "version": "1.0.0",
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice",
+      "email": "alice@example.com",
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Bob",
+      "email": "bob@example.com",
+      "active": false
+    }
+  ],
+  "features": ["search", "export", "analytics", "real-time"],
+  "settings": {
+    "theme": "dark",
+    "notifications": true,
+    "maxResults": 100
+  }
+}

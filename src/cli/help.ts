@@ -9,7 +9,7 @@ TONL (Token-Optimized Notation Language) CLI
 Usage:
   tonl encode <file.json> [--out <file.tonl>] [options]
   tonl decode <file.tonl> [--out <file.json>] [--strict]
-  tonl stats  <file.{json,tonl}> [--tokenizer <type>]
+  tonl stats  <file.{json,tonl}> [--tokenizer <type>] [--interactive] [--theme <theme>]
   tonl format <file.tonl> [--pretty] [--out <file.tonl>] [options]
   tonl validate <file.tonl> --schema <file.schema.tonl> [--strict]
   tonl generate-types <file.schema.tonl> --out <file.ts>
@@ -31,6 +31,9 @@ Options:
   --schema <file>       Schema file for validation (.schema.tonl)
   --tokenizer <type>    Token estimation (gpt-5, gpt-4.5, gpt-4o, claude-3.5, gemini-2.0, llama-4, o200k, cl100k)
   --preprocess         Transform problematic keys (#, @, "") to safe alternatives
+  --interactive, -i    Launch interactive stats dashboard (EXPERIMENTAL)
+  --theme <theme>      Color theme for interactive mode (default, neon, matrix, cyberpunk)
+  --compare            Enable comparison mode for file analysis
 
 Examples:
   tonl encode data.json --out data.tonl --smart --stats
@@ -43,5 +46,7 @@ Examples:
   tonl generate-types users.schema.tonl --out types.ts
   tonl query users.tonl "users[?(@.age > 18)]"
   tonl get data.tonl "user.profile.email"
+  tonl stats data.json --interactive
+  tonl stats data.tonl -i --theme cyberpunk
 `);
 }

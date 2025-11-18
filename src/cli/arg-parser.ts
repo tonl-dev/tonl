@@ -91,6 +91,19 @@ export function parseArgs(args: string[]): ParsedArgs {
       case "--schema-first":
         options.schemaFirst = true;
         break;
+      case "--interactive":
+      case "-i":
+        options.interactive = true;
+        break;
+      case "--theme":
+        if (["default", "neon", "matrix", "cyberpunk"].includes(nextArg)) {
+          (options as any).theme = nextArg;
+        }
+        i++;
+        break;
+      case "--compare":
+        options.compare = true;
+        break;
       default:
         if (!arg.startsWith("-") && !command) {
           command = arg;

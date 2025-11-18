@@ -19,6 +19,8 @@ export interface CLIOptions {
   preprocess?: boolean;
   compactTables?: boolean;
   schemaFirst?: boolean;
+  interactive?: boolean;
+  compare?: boolean;
 }
 
 export interface ParsedArgs {
