@@ -199,8 +199,9 @@ function parseConstraint(constraintStr: string): ValidationConstraint | null {
   const value = constraintStr.slice(colonIndex + 1);
 
   // Try to parse as number
+  // BUG-NEW-002 FIX: Use Number.isFinite instead of !isNaN to reject Infinity
   const numValue = parseFloat(value);
-  if (!isNaN(numValue)) {
+  if (Number.isFinite(numValue)) {
     return {
       type: key as any,
       value: numValue

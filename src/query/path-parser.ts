@@ -102,8 +102,12 @@ class PathParser {
 
   /**
    * Get the current token
+   * BUG-NEW-003 FIX: Add explicit empty array check
    */
   private current(): Token {
+    if (this.context.tokens.length === 0) {
+      throw new Error('Cannot get current token: token array is empty');
+    }
     return this.context.tokens[this.currentIndex] || this.context.tokens[this.context.tokens.length - 1];
   }
 

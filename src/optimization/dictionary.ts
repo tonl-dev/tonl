@@ -64,8 +64,13 @@ export class DictionaryBuilder {
     const entries = new Map<string, DictionaryEntry>();
     let totalSavings = 0;
 
+    // BUG-NEW-006 FIX: Validate candidate structure before destructuring
     for (let i = 0; i < candidates.length; i++) {
-      const [original, frequency] = candidates[i];
+      const candidate = candidates[i];
+      if (!candidate || candidate.length < 2) {
+        continue; // Skip invalid candidates
+      }
+      const [original, frequency] = candidate;
       const encoded = encoding === 'alpha'
         ? this.numToAlpha(i)
         : String(i + 1);
