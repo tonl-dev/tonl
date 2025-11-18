@@ -68,7 +68,7 @@ field2:i32[max:100]
 `;
     const schema = parseSchema(schemaText);
     assert.ok(schema !== null);
-    assert.ok(schema.fields.length >= 2);
+    assert.ok(schema.rootFields.length >= 2);
   });
 
   test('should parse valid numeric constraints correctly', () => {
@@ -78,7 +78,7 @@ score:f64[min:-100.5,max:100.5]
 `;
     const schema = parseSchema(schemaText);
     assert.ok(schema !== null);
-    assert.strictEqual(schema.fields.length, 2);
+    assert.strictEqual(schema.rootFields.length, 2);
   });
 });
 
@@ -155,7 +155,7 @@ describe('BUG-NEW-004: Bit width validation in optimization/bit-pack.ts', () => 
 
   test('should accept valid bit width', () => {
     const packer = new BitPacker();
-    const validEncoded = 'i:8:0,1,2,3'; // Valid 8-bit encoding
+    const validEncoded = 'i8:0,1,2,3'; // Valid 8-bit encoding
 
     const result = packer.decodeFromString(validEncoded);
     assert.strictEqual(result.bitWidth, 8);
@@ -206,28 +206,27 @@ describe('BUG-NEW-005: Division by zero in optimization/delta.ts', () => {
 
 describe('BUG-NEW-006: Bounds check in optimization/dictionary.ts', () => {
   test('should handle malformed candidate arrays gracefully', () => {
-    const builder = new DictionaryBuilder();
+    const builder = new DictionaryBuilder({
+      minFrequency: 2,  // Lower threshold for testing
+      minSavings: 5      // Lower threshold for testing
+    });
 
     // Test with normal input to ensure the fix doesn't break functionality
-    const data = [
-      { name: 'test', value: 'test' },
-      { name: 'test', value: 'test' },
-      { name: 'example', value: 'example' }
-    ];
+    const data = ['test', 'test', 'example', 'test', 'demo', 'example', 'demo'];
 
-    const analysis = builder.analyze(data);
+    const analysis = builder.analyzeDictionaryCandidates(data, 'test_column');
     assert.ok(analysis !== null);
-    assert.ok(typeof analysis.estimatedSavings === 'number');
+    assert.ok(typeof analysis.totalSavings === 'number');
   });
 
   test('should not crash with empty or sparse data', () => {
     const builder = new DictionaryBuilder();
 
     const emptyData: any[] = [];
-    const analysis = builder.analyze(emptyData);
+    const analysis = builder.analyzeDictionaryCandidates(emptyData, 'empty_column');
 
     // Should handle empty data gracefully
-    assert.ok(analysis !== null || analysis === null); // Either is acceptable
+    assert.ok(analysis === null); // Empty data should return null
   });
 });
 
@@ -243,11 +242,11 @@ describe('BUG-NEW-007: JSON.stringify error handling in schema-inherit.ts', () =
 
     // The optimizer should handle this without crashing
     // It will use the fallback estimate instead of JSON.stringify
-    const analysis = inheritance.findCommonSchema([obj1], [obj2]);
+    const analysis = inheritance.analyzeSimilarity([obj1], [obj2]);
 
     assert.ok(analysis !== null);
-    assert.ok(typeof analysis.estimatedSavings === 'number');
-    assert.ok(Number.isFinite(analysis.estimatedSavings));
+    assert.ok(typeof analysis.similarity === 'number');
+    assert.ok(Number.isFinite(analysis.similarity));
   });
 
   test('should handle normal objects correctly', () => {
@@ -263,7 +262,7 @@ describe('BUG-NEW-007: JSON.stringify error handling in schema-inherit.ts', () =
       { id: 4, name: 'Diana', age: 28, city: 'NYC' }
     ];
 
-    const analysis = inheritance.findCommonSchema(data1, data2);
+    const analysis = inheritance.analyzeSimilarity(data1, data2);
 
     assert.ok(analysis !== null);
     assert.ok(Array.isArray(analysis.commonColumns));
