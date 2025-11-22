@@ -495,8 +495,16 @@ export function parseObjectBlock(
     }
 
     // Array format: key[N]: values
-    // BUGFIX BUG-F001: Use more permissive regex to catch invalid array syntax
-    const arrayMatch = trimmed.match(/^(.+)\[([^\]]+)\]:\s*(.+)$/);
+    // SECURITY FIX: Pre-validate input length to prevent ReDoS attacks
+    // Use more conservative regex to prevent catastrophic backtracking
+    let arrayMatch: RegExpMatchArray | null = null;
+    if (trimmed.length < 1000) { // Pre-validation limit
+      try {
+        arrayMatch = trimmed.match(/^(.{1,200})\[([^\]]{1,20})\]:\s*(.{0,1000})$/);
+      } catch (error) {
+        // Silently continue if regex fails due to complexity
+      }
+    }
     if (arrayMatch) {
       const key = arrayMatch[1].trim();
       const arrayLengthStr = arrayMatch[2].trim();
