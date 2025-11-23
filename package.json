@@ -1,7 +1,7 @@
 {
   "name": "tonl",
-  "version": "2.2.0",
-  "description": "Token-Optimized Notation Language - A text-first, LLM-friendly serialization format with interactive CLI dashboard, modular architecture, schema validation, streaming, and browser support (Revolutionary Interactive CLI Release)",
+  "version": "2.3.1",
+  "description": "Token-Optimized Notation Language - A text-first, LLM-friendly serialization format with enterprise-level security, high-performance caching, comprehensive validation, streaming, and browser support",
   "homepage": "https://github.com/tonl-dev/tonl",
   "repository": {
     "type": "git",
@@ -99,7 +99,16 @@
     "crud",
     "diff",
     "ai",
-    "gpt"
+    "gpt",
+    "security",
+    "performance",
+    "caching",
+    "regex",
+    "string-builder",
+    "enterprise",
+    "production-ready",
+    "thread-safe",
+    "memory-efficient"
   ],
   "author": "Ersin KOÇ",
   "license": "MIT",

@@ -1,4 +1,0 @@
-{
-  "name": "test",
-  "value": 42
-}

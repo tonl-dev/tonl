@@ -8,14 +8,14 @@
 
 **TONL** is a production-ready data platform that combines compact serialization with powerful query, modification, indexing, and streaming capabilities. Designed for LLM token efficiency while providing a rich API for data access and manipulation.
 
-## 🎉 Latest Release: v2.2.0 - Revolutionary Interactive CLI Experience
+## 🎉 Latest Release: v2.3.1 - Enterprise Security & Performance
 
 ### 🎮 **Interactive Stats Dashboard:**
 - **🎯 Menu-Driven Interface** - Real-time file analysis with beautiful visual feedback
 - **🔄 Live Progress Tracking** - Animated progress bars and loading states
 - **📊 Side-by-Side File Comparison** - Compare JSON/TONL files with detailed compression metrics
 - **🎨 Multiple Color Themes** - default, neon, matrix, cyberpunk themes
-- **⚡ Interactive Tokenizer Switching** - Switch between GPT-5, Claude-3.5, Gemini-2.0 in real-time
+- **⚡ Interactive Tokenizer Switching** - Switch between GPT-5, Claude Sonnet 4.5, Gemini 3 Pro in real-time
 - **📈 Real-Time Compression Metrics** - Live updates of byte/token savings as you analyze
 - **🔍 Deep File Structure Analysis** - Interactive exploration of file contents with navigation
 
@@ -144,7 +144,7 @@ const compressed = delta.encode(timestamps, 'timestamp');
 
 ### CLI Usage
 
-#### 🎮 **Interactive CLI (NEW v2.2.0)**
+#### 🎮 **Interactive CLI (NEW v2.3.1)**
 ```bash
 # Interactive stats dashboard
 tonl stats data.json --interactive
@@ -188,7 +188,7 @@ tonl format data.tonl --pretty --out formatted.tonl
 tonl stats data.json --tokenizer gpt-5
 ```
 
-#### 🎨 **Interactive Themes (v2.2.0)**
+#### 🎨 **Interactive Themes (v2.3.1)**
 ```bash
 # Available themes: default, neon, matrix, cyberpunk
 tonl stats data.json -i --theme neon        # Bright neon colors
@@ -197,7 +197,7 @@ tonl stats data.json -i --theme cyberpunk   # Cyan/purple cyberpunk
 tonl stats data.json -i --theme default     # Clean terminal colors
 ```
 
-#### ⚖️ **File Comparison (v2.2.0)**
+#### ⚖️ **File Comparison (v2.3.1)**
 ```bash
 # Compare JSON and TONL files side-by-side
 tonl stats data.json --compare
@@ -421,7 +421,7 @@ logs[1000]{timestamp:i64,level:str,message:str,metadata:obj}:
 ### ESM (Modern Browsers)
 ```html
 <script type="module">
-  import { encodeTONL, decodeTONL } from 'https://cdn.jsdelivr.net/npm/tonl@2.2.0/+esm';
+  import { encodeTONL, decodeTONL } from 'https://cdn.jsdelivr.net/npm/tonl@2.3.0/+esm';
 
   const data = { users: [{ id: 1, name: "Alice" }] };
   const tonl = encodeTONL(data);
@@ -431,7 +431,7 @@ logs[1000]{timestamp:i64,level:str,message:str,metadata:obj}:
 
 ### UMD (Universal)
 ```html
-<script src="https://unpkg.com/tonl@2.2.0/dist/browser/tonl.umd.js"></script>
+<script src="https://unpkg.com/tonl@2.3.0/dist/browser/tonl.umd.js"></script>
 <script>
   const tonl = TONL.encodeTONL({ hello: "world" });
   console.log(tonl);
@@ -631,7 +631,7 @@ tonl encode test.json
 tonl query data.tonl "users[*].name"
 tonl format data.tonl --pretty
 
-# Test interactive features (v2.2.0+)
+# Test interactive features (v2.3.1+)
 tonl stats data.json --interactive
 tonl stats data.json -i --theme neon
 tonl stats data.json --compare

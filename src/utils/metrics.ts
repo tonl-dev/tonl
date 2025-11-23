@@ -7,7 +7,7 @@
  *
  * SECURITY FIX (SEC-001): Added input size validation to prevent ReDoS attacks
  */
-export function estimateTokens(text: string, tokenizer: "gpt-5" | "gpt-4.5" | "gpt-4o" | "claude-3.5" | "gemini-2.0" | "llama-4" | "claude-3" | "claude-2" | "gemini-1.5" | "gemini-pro" | "palm-2" | "llama-3" | "mistral" | "mixtral" | "o200k" | "cl100k" = "gpt-5"): number {
+export function estimateTokens(text: string, tokenizer: "gpt-5" | "gpt-4.5" | "gpt-4o" | "claude-3.5" | "claude-sonnet-4.5" | "gemini-2.0" | "gemini-2.5-pro" | "gemini-3-pro" | "llama-4" | "claude-3" | "claude-2" | "gemini-1.5" | "gemini-pro" | "palm-2" | "llama-3" | "mistral" | "mixtral" | "o200k" | "cl100k" = "gpt-5"): number {
   if (!text) return 0;
 
   // SECURITY FIX (SEC-001): Prevent ReDoS by limiting input size
@@ -27,12 +27,18 @@ export function estimateTokens(text: string, tokenizer: "gpt-5" | "gpt-4.5" | "g
       return estimateTokensGPT4o(text);
     case "claude-3.5":
       return estimateTokensClaude35(text);
+    case "claude-sonnet-4.5":
+      return estimateTokensClaude35(text); // Same as Claude 3.5 for now
     case "claude-3":
       return estimateTokensClaude3(text);
     case "claude-2":
       return estimateTokensClaude2(text);
     case "gemini-2.0":
       return estimateTokensGemini20(text);
+    case "gemini-2.5-pro":
+      return estimateTokensGemini20(text); // Same as Gemini 2.0 for now
+    case "gemini-3-pro":
+      return estimateTokensGemini20(text); // Same as Gemini 2.0 for now
     case "gemini-1.5":
       return estimateTokensGemini15(text);
     case "gemini-pro":
@@ -486,7 +492,7 @@ export interface CompressionMetrics {
 export function calculateCompressionMetrics(
   original: string,
   compressed: string,
-  tokenizer: "gpt-5" | "gpt-4.5" | "gpt-4o" | "claude-3.5" | "gemini-2.0" | "llama-4" | "claude-3" | "claude-2" | "gemini-1.5" | "gemini-pro" | "palm-2" | "llama-3" | "mistral" | "mixtral" | "o200k" | "cl100k" = "gpt-5"
+  tokenizer: "gpt-5" | "gpt-4.5" | "gpt-4o" | "claude-3.5" | "claude-sonnet-4.5" | "gemini-2.0" | "gemini-2.5-pro" | "gemini-3-pro" | "llama-4" | "claude-3" | "claude-2" | "gemini-1.5" | "gemini-pro" | "palm-2" | "llama-3" | "mistral" | "mixtral" | "o200k" | "cl100k" = "gpt-5"
 ): CompressionMetrics {
   const originalBytes = Buffer.byteLength(original, 'utf8');
   const compressedBytes = Buffer.byteLength(compressed, 'utf8');
