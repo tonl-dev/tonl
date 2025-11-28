@@ -26,10 +26,10 @@ async function main() {
 
     // Special case for --version command (no file required)
     if (args.length === 1 && (args[0] === '--version' || args[0] === '-v')) {
-      const packageVersion = '2.2.0'; // Hard-coded version to avoid ES module issues
+      const packageVersion = '2.4.1'; // Hard-coded version to avoid ES module issues
       console.log(`📦 TONL Version: ${packageVersion}`);
       console.log(`🏠 Token-Optimized Notation Language`);
-      console.log(`📋 Built: 2025-11-18`);
+      console.log(`📋 Built: 2025-11-28`);
       console.log(`🔐 Production Ready with 100% Test Coverage`);
       return;
     }
