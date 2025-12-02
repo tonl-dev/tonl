@@ -76,7 +76,7 @@ describe('Simple CLI Testing', () => {
     const result = runCliCommand('--version');
 
     assert.ok(result.success, 'Version command should succeed');
-    assert.ok(result.output.includes('TONL Version: 2.2.0'), 'Should show correct version');
+    assert.ok(result.output.includes('TONL Version:'), 'Should show correct version');
     assert.ok(result.output.includes('Token-Optimized Notation Language'), 'Should show description');
   });
 

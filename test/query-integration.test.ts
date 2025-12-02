@@ -267,7 +267,7 @@ describe('Integration: Temporal Queries', () => {
       const dec31 = parseTemporalLiteral('@2025-12-31');
       const jan1 = parseTemporalLiteral('@2025-01-01');
 
-      assert.ok(dec31.timestamp < jan1.timestamp);
+      assert.ok(dec31.timestamp > jan1.timestamp); // Dec 31 is AFTER Jan 1
     });
 
     it('should handle leap years', () => {

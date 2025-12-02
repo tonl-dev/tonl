@@ -286,7 +286,7 @@ describe('addDuration() and subtractDuration()', () => {
     const date = new Date('2025-01-15');
     const d = parseDuration('P1Y');
     const result = addDuration(date, d);
-    assert.strictEqual(result.getFullYear(), 2025);
+    assert.strictEqual(result.getFullYear(), 2026); // 2025 + 1 year = 2026
   });
 });
 
@@ -332,7 +332,7 @@ describe('Date utility functions', () => {
 
     it('should handle February correctly', () => {
       const result = endOfMonth(new Date('2025-02-15'));
-      assert.strictEqual(result.getDate(), 29); // 2025 is leap year
+      assert.strictEqual(result.getDate(), 28); // 2025 is NOT a leap year (2024 was)
     });
   });
 
@@ -451,7 +451,7 @@ describe('Temporal comparison functions', () => {
     });
 
     it('should return false for date outside range', () => {
-      assert.ok(!isBetween('2025-01-01', '2025-01-01', '2025-12-31'));
+      assert.ok(!isBetween('2024-12-31', '2025-01-01', '2025-12-31')); // Before range
     });
   });
 
@@ -531,7 +531,7 @@ describe('Temporal comparison functions', () => {
     });
 
     it('should return false for different years', () => {
-      assert.ok(!isSameYear('2025-06-15', '2025-06-15'));
+      assert.ok(!isSameYear('2025-06-15', '2026-06-15')); // Different years
     });
   });
 });
