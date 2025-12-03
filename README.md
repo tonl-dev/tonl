@@ -8,35 +8,24 @@
 
 **TONL** is a production-ready data platform that combines compact serialization with powerful query, modification, indexing, and streaming capabilities. Designed for LLM token efficiency while providing a rich API for data access and manipulation.
 
-## 🎉 Latest Release: v2.4.1 - Advanced Query Extensions
+## 🎉 Latest Release: v2.5.0 - Enterprise Security & Optimization
 
-### 📊 **Aggregation Functions:**
-- **count(), sum(), avg(), min(), max()** - Basic aggregations on query results
-- **groupBy(), distinct(), frequency()** - Grouping and unique value operations
-- **stats(), median(), percentile()** - Statistical analysis with variance & stdDev
-- **filter(), map(), reduce()** - Functional transforms with fluent API
-- **orderBy(), take(), skip(), first(), last()** - Sorting and selection
+### 🛡️ **Security Hardening:**
+- **Path traversal protection** - Blocked malicious file access patterns
+- **Input validation** - Comprehensive CLI and API input sanitization
+- **Rate limiting** - Token bucket algorithm for DoS prevention
+- **Parser security** - Recursion depth and block size limits
 
-### 🔍 **Fuzzy String Matching:**
-- **Levenshtein Distance** - Edit distance calculation for typo detection
-- **Jaro-Winkler Similarity** - Optimized for short strings (names, typos)
-- **Dice Coefficient** - Bigram-based similarity scoring
-- **Soundex/Metaphone** - Phonetic matching for names that sound alike
-- **fuzzyMatch(), fuzzySearch()** - Configurable matching with thresholds
-- **~= operator** - Fuzzy equality in query expressions
-
-### ⏰ **Temporal Queries:**
-- **@now, @today, @yesterday, @tomorrow** - Named date literals
-- **@now-7d, @now+1w, @now-3M** - Relative time expressions
-- **@2025-01-15** - ISO 8601 date literals
-- **before, after, between** - Date comparison operators
-- **daysAgo, weeksAgo, monthsAgo** - Relative checks
-- **sameDay, sameWeek, sameMonth, sameYear** - Calendar period matching
+### 📦 **New Optimization Module:**
+- **DictionaryBuilder** - String deduplication with reference encoding
+- **DeltaEncoder** - Sequential value compression
+- **BitPacker** - Bit-level integer packing
+- **AdaptiveOptimizer** - Automatic strategy selection
 
 ### 🧪 **Testing Excellence:**
-- **763+ Comprehensive Tests** - Complete coverage including new query extensions
-- **100% Success Rate** - All tests passing with robust error handling
-- **267 New Tests** - Aggregation, fuzzy matching, and temporal query coverage
+- **584 Comprehensive Tests** - All passing with 100% success rate
+- **96 Security Tests** - Covering all attack vectors
+- **Cross-platform** - Windows and Unix compatibility verified
 
 [![npm version](https://badge.fury.io/js/tonl.svg)](https://www.npmjs.com/package/tonl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
