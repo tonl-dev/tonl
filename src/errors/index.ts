@@ -24,7 +24,9 @@ export class TONLError extends Error {
     let result = `${this.name}: ${this.message}`;
 
     // SECURITY FIX (BF014): Only show detailed info in development
-    const isDevelopment = process.env.NODE_ENV !== 'production';
+    // BUG-NEW-020 FIX: Default to production-safe behavior when NODE_ENV is not set
+    // Changed from `!== 'production'` to `=== 'development'` for secure-by-default
+    const isDevelopment = process.env.NODE_ENV === 'development';
 
     if (this.line !== undefined) {
       if (isDevelopment) {

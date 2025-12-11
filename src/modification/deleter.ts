@@ -71,6 +71,11 @@ function deleteAtPath(current: any, ast: PathNode[], index: number): any {
     if (node.type === 'property') {
       next = current?.[node.name];
     } else if (node.type === 'index') {
+      // BUG-NEW-016 FIX: Check if current is an array before accessing .length
+      // This prevents "Cannot read property 'length' of null/undefined" errors
+      if (!Array.isArray(current)) {
+        return undefined; // Can't index into non-array
+      }
       const actualIndex = node.index < 0 ? current.length + node.index : node.index;
       next = current?.[actualIndex];
     }

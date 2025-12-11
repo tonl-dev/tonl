@@ -10,9 +10,49 @@ import { BTreeIndex } from './btree-index.js';
 
 /**
  * Create a compound key from multiple values
+ *
+ * BUG-NEW-015 FIX: Handle JSON.stringify errors gracefully
+ * - BigInt values are converted to strings
+ * - Circular references fall back to value inspection
+ * - Other errors are re-thrown with context
  */
 function createCompoundKey(values: any[]): string {
-  return JSON.stringify(values);
+  try {
+    // Custom replacer to handle BigInt and other special values
+    return JSON.stringify(values, (key, value) => {
+      if (typeof value === 'bigint') {
+        return `__bigint__${value.toString()}`;
+      }
+      if (typeof value === 'symbol') {
+        return `__symbol__${value.toString()}`;
+      }
+      if (typeof value === 'function') {
+        return '__function__';
+      }
+      return value;
+    });
+  } catch (error) {
+    // Fallback for circular references or other JSON.stringify failures
+    // Use a simpler string representation
+    const fallbackParts: string[] = [];
+    for (const val of values) {
+      if (val === null) {
+        fallbackParts.push('null');
+      } else if (val === undefined) {
+        fallbackParts.push('undefined');
+      } else if (typeof val === 'bigint') {
+        fallbackParts.push(`bigint:${val.toString()}`);
+      } else if (typeof val === 'symbol') {
+        fallbackParts.push(`symbol:${val.toString()}`);
+      } else if (typeof val === 'object') {
+        // For objects that can't be stringified (circular), use a stable identifier
+        fallbackParts.push(`object:${Object.keys(val).sort().join(',')}`);
+      } else {
+        fallbackParts.push(String(val));
+      }
+    }
+    return `__fallback__[${fallbackParts.join('|')}]`;
+  }
 }
 
 /**

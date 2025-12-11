@@ -16,7 +16,7 @@ import type {
 } from './types.js';
 import { RegexExecutor } from './regex-executor.js';
 import { SecurityError } from '../errors/index.js';
-import { evaluateFuzzyOperator, isFuzzyOperator } from './fuzzy-matcher.js';
+import { evaluateFuzzyOperator, isFuzzyOperator, levenshteinDistance } from './fuzzy-matcher.js';
 import { evaluateTemporalOperator, isTemporalOperator, parseTemporalLiteral } from './temporal-evaluator.js';
 import { isDangerousProperty } from '../utils/property-security.js';
 
@@ -324,8 +324,6 @@ function evaluateFunctionExpression(
       if (args.length !== 2) {
         throw new Error('levenshtein() requires exactly 2 arguments');
       }
-      // Import dynamically to avoid circular dependency
-      const { levenshteinDistance } = require('./fuzzy-matcher.js');
       return levenshteinDistance(String(args[0]), String(args[1]));
 
     // Temporal functions

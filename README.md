@@ -8,7 +8,15 @@
 
 **TONL** is a production-ready data platform that combines compact serialization with powerful query, modification, indexing, and streaming capabilities. Designed for LLM token efficiency while providing a rich API for data access and manipulation.
 
-## 🎉 Latest Release: v2.5.0 - Enterprise Security & Optimization
+## 🎉 Latest Release: v2.5.1 - Critical Bug Fixes
+
+### 🔧 **v2.5.1 (December 11, 2025)**
+- **8 critical bug fixes** including DoS prevention, JSON.stringify vulnerability, and async handling
+- **482 tests** with 100% pass rate across 91 test suites
+- **Zero regressions** - All existing functionality preserved
+
+### 🛡️ **v2.5.0 (December 3, 2025)**
+- Enterprise security hardening and code quality improvements
 
 ### 🛡️ **Security Hardening:**
 - **Path traversal protection** - Blocked malicious file access patterns
@@ -649,7 +657,12 @@ tonl stats data.json --compare
 
 ## 🗺️ Roadmap
 
-**✅ v2.4.1 - Complete (Latest)**
+**✅ v2.5.1 - Complete (Latest)**
+- ✅ Critical bug fixes (Array expansion DoS, JSON.stringify vulnerability, async handling)
+- ✅ 482 tests with 100% pass rate
+- ✅ Enhanced stability and error handling
+
+**✅ v2.5.0 - Complete**
 - ✅ Aggregation Functions (count, sum, avg, groupBy, stats, median, percentile)
 - ✅ Fuzzy String Matching (Levenshtein, Jaro-Winkler, Soundex, Metaphone)
 - ✅ Temporal Queries (@now-7d, before, after, sameDay, daysAgo)

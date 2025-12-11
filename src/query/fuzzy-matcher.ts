@@ -217,11 +217,18 @@ export function jaroSimilarity(a: string, b: string): number {
   if (matches === 0) return 0;
 
   // Count transpositions
+  // BUG-NEW-018 FIX: Add bounds checking to prevent out-of-bounds access
+  // The original code could exceed b.length if bMatches has fewer true values
+  // than expected due to edge cases in the matching algorithm
   let k = 0;
   for (let i = 0; i < a.length; i++) {
     if (!aMatches[i]) continue;
 
-    while (!bMatches[k]) k++;
+    // Advance k to next matched position, with bounds checking
+    while (k < b.length && !bMatches[k]) k++;
+
+    // Safety check: ensure k is within bounds before comparison
+    if (k >= b.length) break;
 
     if (a[i] !== b[k]) transpositions++;
     k++;

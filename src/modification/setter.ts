@@ -8,6 +8,7 @@ import { parsePath } from '../query/path-parser.js';
 import type { PathNode } from '../query/types.js';
 import { SecurityError } from '../errors/index.js';
 import { isDangerousProperty } from '../utils/property-security.js';
+import { MAX_ITERATIONS } from '../utils/security-limits.js';
 
 /**
  * Set a value at a specific path in a document
@@ -218,6 +219,20 @@ function setIndex(
     // Extend array if createPath is enabled and this is the last node
     // Note: actualIndex >= 0 at this point due to check above
     if (isLast && createPath && actualIndex >= current.length) {
+      // BUG-NEW-013 FIX: Prevent DoS via excessive array expansion
+      // Limit how many elements can be added in a single operation
+      const elementsToAdd = actualIndex - current.length + 1;
+      if (elementsToAdd > MAX_ITERATIONS) {
+        throw new SecurityError(
+          `Array expansion blocked: would add ${elementsToAdd} elements (max: ${MAX_ITERATIONS})`,
+          {
+            requestedIndex: arrayIndex,
+            currentLength: current.length,
+            reason: 'Excessive array expansion can cause memory exhaustion',
+          }
+        );
+      }
+
       // Fill with undefined up to the index
       while (current.length <= actualIndex) {
         current.push(undefined);

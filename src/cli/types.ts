@@ -33,6 +33,10 @@ export interface CommandContext {
   file: string;
   options: CLIOptions;
   input: string;
+  /** Query expression for query/get commands */
+  queryExpression?: string;
+  /** Command type for query/get commands */
+  commandType?: 'query' | 'get';
 }
 
 export interface Command {

@@ -26,10 +26,10 @@ async function main() {
 
     // Special case for --version command (no file required)
     if (args.length === 1 && (args[0] === '--version' || args[0] === '-v')) {
-      const packageVersion = '2.5.0'; // Hard-coded version to avoid ES module issues
+      const packageVersion = '2.5.1'; // Hard-coded version to avoid ES module issues
       console.log(`📦 TONL Version: ${packageVersion}`);
       console.log(`🏠 Token-Optimized Notation Language`);
-      console.log(`📋 Built: 2025-12-03`);
+      console.log(`📋 Built: 2025-12-11`);
       console.log(`🔐 Production Ready with 100% Test Coverage`);
       return;
     }
@@ -60,9 +60,7 @@ async function main() {
     // Handle special case for query commands that need additional processing
     if (command === 'query' || command === 'get') {
       const queryExpression = processQueryArgs(args, command, file);
-      // @ts-ignore - Adding query expression to context
       context.queryExpression = queryExpression;
-      // @ts-ignore - Adding command type to context
       context.commandType = command;
     }
 

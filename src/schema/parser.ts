@@ -217,9 +217,33 @@ function parseConstraint(constraintStr: string): ValidationConstraint | null {
 
 /**
  * Load schema from file
+ *
+ * BUG-NEW-019 FIX: Added error handling with context for file operations
  */
 export async function loadSchemaFromFile(filePath: string): Promise<TONLSchema> {
   const fs = await import('fs/promises');
-  const content = await fs.readFile(filePath, 'utf-8');
-  return parseSchema(content);
+
+  let content: string;
+  try {
+    content = await fs.readFile(filePath, 'utf-8');
+  } catch (error) {
+    // Provide context-aware error messages for common file operation failures
+    const nodeError = error as NodeJS.ErrnoException;
+    if (nodeError.code === 'ENOENT') {
+      throw new Error(`Schema file not found: ${filePath}`);
+    } else if (nodeError.code === 'EACCES') {
+      throw new Error(`Permission denied reading schema file: ${filePath}`);
+    } else if (nodeError.code === 'EISDIR') {
+      throw new Error(`Cannot read schema from directory: ${filePath}`);
+    } else {
+      throw new Error(`Failed to read schema file '${filePath}': ${nodeError.message}`);
+    }
+  }
+
+  try {
+    return parseSchema(content);
+  } catch (error) {
+    const parseError = error as Error;
+    throw new Error(`Failed to parse schema file '${filePath}': ${parseError.message}`);
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "tonl",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "Token-Optimized Notation Language - A text-first, LLM-friendly serialization format with enterprise-level security, high-performance caching, comprehensive validation, streaming, and browser support",
   "homepage": "https://github.com/tonl-dev/tonl",
   "repository": {

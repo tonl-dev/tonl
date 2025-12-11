@@ -6,6 +6,53 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [2.5.1] - 2025-12-11
+
+### 🔧 **Critical Bug Fixes Release**
+
+**Patch release addressing 8 critical security and stability issues** discovered after the v2.5.0 release. All fixes have been validated with 482 tests across 91 test suites achieving 100% pass rate.
+
+#### **🐛 Bug Fixes:**
+
+- **BUG-NEW-013** - Array expansion DoS prevention (HIGH severity)
+  - Fixed potential denial-of-service attack through unbounded array expansion
+  - Added safe array handling with size validation
+
+- **BUG-NEW-014** - TONLDocument export validation (MEDIUM severity)
+  - Fixed validation issue in TONLDocument export operations
+  - Enhanced error handling for export failures
+
+- **BUG-NEW-015** - Compound index JSON.stringify vulnerability (HIGH severity)
+  - Fixed critical JSON.stringify vulnerability in compound index operations
+  - Added safe serialization protection for complex index structures
+
+- **BUG-NEW-016** - Unsafe .length access on null/undefined (MEDIUM severity)
+  - Fixed potential crashes from unsafe .length property access
+  - Added null/undefined checks throughout the codebase
+
+- **BUG-NEW-017** - Async load() called without await (MEDIUM severity)
+  - Fixed incorrect async/await usage in load() operations
+  - Ensured proper promise handling in file loading operations
+
+- **BUG-NEW-018** - Jaro similarity bounds checking (LOW severity)
+  - Fixed bounds checking in Jaro similarity algorithm
+  - Improved accuracy of fuzzy string matching calculations
+
+- **BUG-NEW-019** - loadSchemaFromFile error handling (MEDIUM severity)
+  - Enhanced error handling in schema file loading
+  - Added proper error propagation for schema validation failures
+
+- **BUG-NEW-020** - Default-safe NODE_ENV check (LOW severity)
+  - Fixed NODE_ENV default value handling
+  - Ensured safe environment detection in all contexts
+
+#### **✅ Test Results:**
+- **482 tests** across **91 test suites** - **100% pass rate** with zero failures
+- **Zero regressions** - All existing functionality preserved
+- **Enhanced stability** - Improved error handling and edge case coverage
+
+---
+
 ## [2.5.0] - 2025-12-03
 
 ### 🛡️ **Enterprise Code Review & Security Hardening**

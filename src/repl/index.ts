@@ -204,7 +204,12 @@ Indices: ${this.currentDoc.listIndices().join(', ') || 'None'}
         if (args.length === 0) {
           console.error('Usage: .load <file>');
         } else {
-          this.load(args[0]);
+          // BUG-NEW-017 FIX: Properly handle async load() function
+          // The load() method is async but handleCommand() is sync, so we need
+          // to handle the Promise to avoid silent failures
+          this.load(args[0]).catch((error: Error) => {
+            console.error(`✗ Failed to load file: ${error.message}`);
+          });
         }
         break;
 

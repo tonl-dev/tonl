@@ -31,10 +31,8 @@ export const QueryCommand: Command = {
       data = decodeTONL(input, { delimiter: options.delimiter });
     }
 
-    // Get query expression from remaining args - this will be handled by the main CLI
-    // For now, we'll expect the query expression to be passed in the context
-    // @ts-ignore - This will be provided by the main CLI
-    const queryExpr: string = context.queryExpression;
+    // Get query expression from context (provided by the main CLI)
+    const queryExpr = context.queryExpression;
 
     if (!queryExpr) {
       console.error("❌ Error: Query expression required");
@@ -49,13 +47,16 @@ export const QueryCommand: Command = {
     try {
       const module = await import('../../document.js');
       TONLDocument = module.TONLDocument;
+      // BUG-NEW-014 FIX: Validate TONLDocument was successfully imported
+      if (!TONLDocument) {
+        throw new Error('TONLDocument export not found in module');
+      }
     } catch (error) {
       console.error('❌ Failed to load document module:', error);
       process.exit(1);
     }
 
     const doc = TONLDocument.fromJSON(data);
-    // @ts-ignore - This will be provided by the main CLI
     const result = context.commandType === 'get' ? doc.get(queryExpr) : doc.query(queryExpr);
 
     // Output result
