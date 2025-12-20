@@ -24,6 +24,7 @@ coverage/
 
 # Test temporary files
 test/format-test-files/
+test-temp/
 test/*.d.ts
 test/*.d.ts.map
 test/*.js
@@ -201,3 +202,5 @@ tasks/
 bugfixtasks/
 
 tailwindcss-windows-x64.exe
+
+plan/

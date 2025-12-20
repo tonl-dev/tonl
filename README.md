@@ -357,7 +357,7 @@ user{id:u32,name:str,contact:obj,roles:list}:
 ## 🔒 Security & Quality
 
 ```
-✅ Tests:          791+ tests passing (100% coverage)
+✅ Tests:          698+ tests passing (100% coverage)
 ✅ Security:       All vulnerabilities fixed (100%)
 ✅ Security Tests: 96 security tests passing
 ✅ Code Quality:   TypeScript strict mode
@@ -457,6 +457,9 @@ logs[1000]{timestamp:i64,level:str,message:str,metadata:obj}:
 - ESM: 15.5 KB gzipped
 - UMD: 10.7 KB gzipped
 - IIFE: 10.6 KB gzipped
+
+**Examples:**
+See [examples/browser/](examples/browser/) for interactive React and Vue examples.
 
 ---
 
@@ -613,7 +616,7 @@ npm install
 # Build TypeScript
 npm run build
 
-# Run all tests (791+ tests)
+# Run all tests (698+ tests)
 npm test
 
 # Watch mode
@@ -697,6 +700,8 @@ See [ROADMAP.md](ROADMAP.md) for our comprehensive development vision.
 - **[Getting Started Guide](docs/GETTING_STARTED.md)** - Beginner-friendly tutorial with examples
 - **[API Reference](docs/API.md)** - Complete API documentation with examples
 - **[CLI Documentation](docs/CLI.md)** - Command-line tool guide
+- **[Browser API](docs/BROWSER.md)** - Browser usage with ESM, UMD, IIFE builds
+- **[Error Handling](docs/ERROR_HANDLING.md)** - Error classes and troubleshooting
 - **[Query API](docs/QUERY_API.md)** - JSONPath-like query syntax reference
 - **[Modification API](docs/MODIFICATION_API.md)** - CRUD operations guide
 - **[Navigation API](docs/NAVIGATION_API.md)** - Tree traversal methods

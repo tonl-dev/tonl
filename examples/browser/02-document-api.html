@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TONL Browser - Document API</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #1a1a2e;
+      color: #eee;
+    }
+    h1 { color: #4cc9f0; }
+    h2 { color: #7b2cbf; margin-top: 30px; }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .panel {
+      background: #16213e;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    h3 { margin-top: 0; color: #4cc9f0; }
+    textarea, input[type="text"] {
+      width: 100%;
+      font-family: 'Fira Code', monospace;
+      font-size: 13px;
+      padding: 10px;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background: #0f0f23;
+      color: #eee;
+    }
+    textarea { height: 200px; resize: vertical; }
+    input[type="text"] { margin-bottom: 10px; }
+    button {
+      background: #7b2cbf;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      margin: 5px 5px 5px 0;
+    }
+    button:hover { background: #9d4edd; }
+    .result {
+      background: #0f0f23;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-family: monospace;
+      font-size: 13px;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>TONL Document API - Browser Demo</h1>
+  <p>Interactive demonstration of TONLDocument query and modification capabilities.</p>
+
+  <div class="container">
+    <div class="panel">
+      <h3>Sample Data</h3>
+      <textarea id="data-input">{
+  "store": {
+    "name": "TechMart",
+    "products": [
+      { "id": 1, "name": "Laptop", "price": 999, "stock": 5, "category": "electronics" },
+      { "id": 2, "name": "Mouse", "price": 29, "stock": 50, "category": "accessories" },
+      { "id": 3, "name": "Keyboard", "price": 79, "stock": 30, "category": "accessories" },
+      { "id": 4, "name": "Monitor", "price": 399, "stock": 10, "category": "electronics" }
+    ]
+  },
+  "settings": {
+    "currency": "USD",
+    "taxRate": 0.08
+  }
+}</textarea>
+      <button onclick="loadData()">Load Data</button>
+      <div id="load-result" class="result hidden"></div>
+    </div>
+
+    <div class="panel">
+      <h3>TONL Output</h3>
+      <textarea id="tonl-output" readonly></textarea>
+    </div>
+  </div>
+
+  <h2>Query Operations</h2>
+  <div class="container">
+    <div class="panel">
+      <h3>Query Path</h3>
+      <input type="text" id="query-path" placeholder="e.g., store.products[*].name">
+      <button onclick="runQuery()">Query</button>
+      <button onclick="setPath('store.products[*].name')">All Names</button>
+      <button onclick="setPath('store.products[?(@.price > 100)]')">Expensive</button>
+      <button onclick="setPath('$..category')">All Categories</button>
+      <div id="query-result" class="result"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Get Single Value</h3>
+      <input type="text" id="get-path" placeholder="e.g., store.name">
+      <button onclick="getValue()">Get</button>
+      <button onclick="setGetPath('store.name')">Store Name</button>
+      <button onclick="setGetPath('store.products[0].price')">First Price</button>
+      <button onclick="setGetPath('settings.taxRate')">Tax Rate</button>
+      <div id="get-result" class="result"></div>
+    </div>
+  </div>
+
+  <h2>Modification Operations</h2>
+  <div class="container">
+    <div class="panel">
+      <h3>Set Value</h3>
+      <input type="text" id="set-path" placeholder="Path (e.g., settings.currency)">
+      <input type="text" id="set-value" placeholder="Value (e.g., EUR)">
+      <button onclick="setValueOp()">Set</button>
+      <div id="set-result" class="result"></div>
+    </div>
+
+    <div class="panel">
+      <h3>Push to Array</h3>
+      <input type="text" id="push-path" placeholder="Array path (e.g., store.products)">
+      <input type="text" id="push-value" placeholder='JSON value'>
+      <button onclick="pushValue()">Push</button>
+      <div id="push-result" class="result"></div>
+    </div>
+  </div>
+
+  <h2>Document Stats</h2>
+  <div class="panel" style="max-width: 600px;">
+    <button onclick="showStats()">Show Document Stats</button>
+    <button onclick="countNodes()">Count Nodes</button>
+    <button onclick="showPaths()">Show All Paths</button>
+    <div id="stats-result" class="result"></div>
+  </div>
+
+  <!-- Load TONL via ESM -->
+  <script type="module">
+    import { TONLDocument } from '../../dist/browser/tonl.esm.js';
+
+    let doc = null;
+
+    window.loadData = function() {
+      const input = document.getElementById('data-input').value;
+      const result = document.getElementById('load-result');
+      const tonlOutput = document.getElementById('tonl-output');
+
+      try {
+        const data = JSON.parse(input);
+        doc = TONLDocument.fromJSON(data);
+        tonlOutput.value = doc.toTONL();
+        result.textContent = 'Document loaded successfully!';
+        result.classList.remove('hidden');
+      } catch (err) {
+        result.textContent = 'Error: ' + err.message;
+        result.classList.remove('hidden');
+      }
+    };
+
+    window.setPath = function(path) {
+      document.getElementById('query-path').value = path;
+    };
+
+    window.setGetPath = function(path) {
+      document.getElementById('get-path').value = path;
+    };
+
+    window.runQuery = function() {
+      if (!doc) { alert('Load data first!'); return; }
+      const path = document.getElementById('query-path').value;
+      const result = document.getElementById('query-result');
+
+      try {
+        const data = doc.query(path);
+        result.textContent = 'Query: ' + path + '\n\n' + JSON.stringify(data, null, 2);
+      } catch (err) {
+        result.textContent = 'Error: ' + err.message;
+      }
+    };
+
+    window.getValue = function() {
+      if (!doc) { alert('Load data first!'); return; }
+      const path = document.getElementById('get-path').value;
+      const result = document.getElementById('get-result');
+
+      try {
+        const value = doc.get(path);
+        result.textContent = 'Path: ' + path + '\n\n' + JSON.stringify(value, null, 2);
+      } catch (err) {
+        result.textContent = 'Error: ' + err.message;
+      }
+    };
+
+    window.setValueOp = function() {
+      if (!doc) { alert('Load data first!'); return; }
+      const path = document.getElementById('set-path').value;
+      const valueStr = document.getElementById('set-value').value;
+      const result = document.getElementById('set-result');
+      const tonlOutput = document.getElementById('tonl-output');
+
+      try {
+        let value;
+        try { value = JSON.parse(valueStr); } catch { value = valueStr; }
+
+        doc.set(path, value);
+        tonlOutput.value = doc.toTONL();
+        result.textContent = 'Set ' + path + ' = ' + JSON.stringify(value);
+      } catch (err) {
+        result.textContent = 'Error: ' + err.message;
+      }
+    };
+
+    window.pushValue = function() {
+      if (!doc) { alert('Load data first!'); return; }
+      const path = document.getElementById('push-path').value;
+      const valueStr = document.getElementById('push-value').value;
+      const result = document.getElementById('push-result');
+      const tonlOutput = document.getElementById('tonl-output');
+
+      try {
+        const value = JSON.parse(valueStr);
+        doc.push(path, value);
+        tonlOutput.value = doc.toTONL();
+        result.textContent = 'Pushed to ' + path;
+      } catch (err) {
+        result.textContent = 'Error: ' + err.message;
+      }
+    };
+
+    window.showStats = function() {
+      if (!doc) { alert('Load data first!'); return; }
+      const result = document.getElementById('stats-result');
+      const json = JSON.stringify(doc.toJSON());
+      const tonl = doc.toTONL();
+
+      result.textContent = 'Document Statistics\n\n' +
+        'JSON Size: ' + json.length + ' bytes\n' +
+        'TONL Size: ' + tonl.length + ' bytes\n' +
+        'Compression: ' + ((1 - tonl.length / json.length) * 100).toFixed(1) + '%\n' +
+        'Node Count: ' + doc.countNodes();
+    };
+
+    window.countNodes = function() {
+      if (!doc) { alert('Load data first!'); return; }
+      const result = document.getElementById('stats-result');
+      result.textContent = 'Total nodes: ' + doc.countNodes();
+    };
+
+    window.showPaths = function() {
+      if (!doc) { alert('Load data first!'); return; }
+      const result = document.getElementById('stats-result');
+      const paths = [];
+      doc.walk((path, value) => {
+        if (typeof value !== 'object' || value === null) {
+          paths.push(path + ' = ' + JSON.stringify(value));
+        }
+      });
+      result.textContent = 'All Leaf Paths:\n\n' + paths.join('\n');
+    };
+
+    // Auto-load on page load
+    window.addEventListener('load', () => loadData());
+  </script>
+</body>
+</html>

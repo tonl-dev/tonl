@@ -1,6 +1,6 @@
-# Getting Started with TONL v2.1.0
+# Getting Started with TONL v2.5.1
 
-Welcome to TONL! This guide will help you get started with all the powerful features of TONL v2.1.0, including the revolutionary dual-mode system for handling problematic JSON keys and the latest documentation updates.
+Welcome to TONL! This guide will help you get started with all the powerful features of TONL v2.5.1, including the revolutionary dual-mode system for handling problematic JSON keys, enterprise security features, and the latest documentation updates.
 
 ---
 
@@ -350,27 +350,62 @@ await editor.save();
 await editor.restoreBackup();
 ```
 
+### Browser Usage
+
+TONL works in browsers with ESM, UMD, and IIFE builds:
+
+```html
+<!-- ESM (recommended for modern browsers) -->
+<script type="module">
+  import { encodeTONL, decodeTONL, TONLDocument } from 'tonl/browser';
+
+  const doc = TONLDocument.fromJSON({ message: 'Hello, Browser!' });
+  console.log(doc.toTONL());
+</script>
+
+<!-- UMD (for bundlers like Webpack) -->
+<script src="https://unpkg.com/tonl/dist/browser/tonl.umd.js"></script>
+<script>
+  const { encodeTONL, decodeTONL } = TONL;
+  console.log(encodeTONL({ hello: 'world' }));
+</script>
+```
+
+For detailed browser usage, see [Browser API Guide](./BROWSER.md).
+
 ---
 
 ## 📖 Next Steps
 
 1. **Read the API Documentation**
+   - [Full API Reference](./API.md)
    - [Query API Guide](./QUERY_API.md)
    - [Navigation API Guide](./NAVIGATION_API.md)
-   - [Modification API Guide](./docs/MODIFICATION_API.md)
+   - [Modification API Guide](./MODIFICATION_API.md)
 
-2. **Explore Examples**
+2. **Browser Development**
+   - [Browser API Guide](./BROWSER.md) - ESM, UMD, IIFE builds
+   - React, Vue, and vanilla JS examples
+
+3. **Error Handling**
+   - [Error Handling Guide](./ERROR_HANDLING.md) - Error classes and troubleshooting
+
+4. **CLI Reference**
+   - [CLI Documentation](./CLI.md) - All commands and options
+
+5. **Explore Examples**
    - Check the `examples/` directory
    - Run examples: `node examples/query/01-basic-queries.ts`
 
-3. **Try the CLI**
+6. **Try the CLI**
    ```bash
    tonl encode data.json --out data.tonl
    tonl query data.tonl "users[?(@.active)]"
+   tonl validate data.tonl --schema schema.tonl
    tonl
    ```
 
-4. **Join the Community**
+7. **Join the Community**
    - GitHub: https://github.com/tonl-dev/tonl
    - Issues: https://github.com/tonl-dev/tonl/issues
 
@@ -385,7 +420,7 @@ A: TONL is more compact (32-45% smaller) and provides a rich query/modification 
 A: Yes! `TONLDocument.fromJSON(yourData)` - works with any JSON.
 
 ### Q: Is it production-ready?
-A: Yes! v2.0.6 is stable with 100% test pass rate.
+A: Yes! v2.5.1 is stable with 698+ tests and 100% pass rate.
 
 ### Q: How fast is it?
 A: Very fast! Simple queries: 0.005ms, Filters: 0.03ms, 10-1600x faster than targets.

@@ -1,8 +1,8 @@
-# TONL CLI Documentation
+# TONL CLI Documentation v2.5.1
 
 The TONL Command Line Interface provides powerful tools for converting, analyzing, and optimizing TONL data.
 
-## 🎉 v2.1.0 - Bug Fix Release
+## 🎉 v2.5.1 - Enterprise Security & Optimization
 
 **Updated CLI documentation** with latest bug fix improvements:
 
@@ -73,14 +73,16 @@ npm install -g tonl
 
 The CLI provides eight main commands:
 
-- `tonl encode` - Convert JSON to TONL with optimization options
-- `tonl decode` - Convert TONL to JSON
-- `tonl stats` - Analyze and compare data formats
-- `tonl format` - Format and prettify TONL files
-- `tonl validate` - Validate TONL data against schema
-- `tonl generate-types` - Generate TypeScript types from schema
-- `tonl query` - Query TONL files with JSONPath expressions
-- `tonl get` - Get specific values from TONL files
+| Command | Description |
+|---------|-------------|
+| `tonl encode` | Convert JSON to TONL with optimization options |
+| `tonl decode` | Convert TONL to JSON |
+| `tonl format` | Format and prettify TONL files |
+| `tonl validate` | Validate TONL data against schema |
+| `tonl generate-types` | Generate TypeScript types from schema |
+| `tonl stats` | Analyze and compare data formats |
+| `tonl query` | Query TONL files with JSONPath expressions |
+| `tonl get` | Get specific values from TONL files (alias for query) |
 
 ## Global Options
 
@@ -333,6 +335,230 @@ Error: Validation failed in strict mode:
   - Row 2 has 3 columns, expected 2
   - Value 'invalid' cannot be coerced to u32
 ```
+
+## Format Command
+
+Format and prettify TONL files with consistent indentation and delimiters.
+
+### Syntax
+
+```bash
+tonl format <input.tonl> [options]
+```
+
+### Options
+
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--out` | `-o` | Output file path | stdout |
+| `--delimiter` | `-d` | Field delimiter | auto-detect |
+| `--indent` | `-i` | Indentation spaces | `2` |
+| `--include-types` | `-t` | Add type hints | `false` |
+| `--pretty` | | Pretty delimiter spacing | `false` |
+| `--strict` | `-s` | Strict mode parsing | `false` |
+
+### Basic Usage
+
+```bash
+# Format TONL file to stdout
+tonl format data.tonl
+
+# Format with specific delimiter
+tonl format data.tonl --delimiter "|" --out formatted.tonl
+
+# Pretty format with type hints
+tonl format data.tonl --pretty --include-types --out data-pretty.tonl
+```
+
+### Examples
+
+#### Basic Formatting
+
+**Input (messy.tonl):**
+```
+#version 1.0
+users[2]{id,name}:
+1,Alice
+2,Bob
+```
+
+**Command:**
+```bash
+tonl format messy.tonl --indent 2
+```
+
+**Output:**
+```
+#version 1.0
+users[2]{id:u32,name:str}:
+  1, Alice
+  2, Bob
+```
+
+#### Change Delimiter
+
+**Command:**
+```bash
+tonl format data.tonl --delimiter "|" --out data-pipes.tonl
+```
+
+---
+
+## Validate Command
+
+Validate TONL data against a schema file.
+
+### Syntax
+
+```bash
+tonl validate <input.tonl> --schema <schema.schema.tonl> [options]
+```
+
+### Options
+
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--schema` | | Schema file (required) | - |
+| `--delimiter` | `-d` | Field delimiter | auto-detect |
+| `--strict` | `-s` | Strict mode parsing | `false` |
+
+### Basic Usage
+
+```bash
+# Validate data against schema
+tonl validate users.tonl --schema users.schema.tonl
+
+# Validate with strict mode
+tonl validate config.tonl --schema config.schema.tonl --strict
+```
+
+### Examples
+
+#### Schema Definition (users.schema.tonl)
+
+```
+@schema v1
+@strict true
+
+User: obj
+  id: u32 required
+  name: str required min:2 max:100
+  email: str required pattern:email
+  age: u32 min:0 max:150
+
+users: list<User>
+```
+
+#### Valid Data
+
+**Command:**
+```bash
+tonl validate users.tonl --schema users.schema.tonl
+```
+
+**Output (success):**
+```
+✅ Validation successful: users.tonl conforms to schema
+   - Schema: users.schema.tonl
+   - Fields validated: 4
+   - Errors: 0
+```
+
+#### Invalid Data
+
+**Output (failure):**
+```
+❌ Validation failed: 2 error(s) found
+
+Error 1: users[0].email
+  Invalid email format
+  Expected: valid email address
+  Actual: not-an-email
+
+Error 2: users[1].age
+  Value exceeds maximum
+  Expected: max 150
+  Actual: 200
+```
+
+---
+
+## Generate Types Command
+
+Generate TypeScript type definitions from a TONL schema.
+
+### Syntax
+
+```bash
+tonl generate-types <schema.schema.tonl> --out <output.ts>
+```
+
+### Options
+
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--out` | `-o` | Output TypeScript file (required) | - |
+
+### Basic Usage
+
+```bash
+# Generate TypeScript types from schema
+tonl generate-types users.schema.tonl --out types/users.ts
+```
+
+### Examples
+
+#### Schema (api.schema.tonl)
+
+```
+@schema v1
+
+User: obj
+  id: u32 required
+  name: str required
+  email: str required pattern:email
+  roles: list<str>
+
+ApiResponse: obj
+  success: bool required
+  data: User
+  error: str
+```
+
+#### Command
+
+```bash
+tonl generate-types api.schema.tonl --out src/types/api.ts
+```
+
+#### Generated Output (src/types/api.ts)
+
+```typescript
+// Generated by TONL generate-types
+// Schema: api.schema.tonl
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  roles: string[];
+}
+
+export interface ApiResponse {
+  success: boolean;
+  data: User;
+  error?: string;
+}
+```
+
+**Output:**
+```
+✅ Generated TypeScript types: src/types/api.ts
+   - Custom types: 2
+   - Root fields: 0
+```
+
+---
 
 ## Stats Command
 

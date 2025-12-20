@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TONL + Vue 3 Example</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #42b883;
+      min-height: 100vh;
+    }
+    #app { max-width: 900px; margin: 0 auto; }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    h1 { margin: 0 0 10px; color: #2c3e50; }
+    .subtitle { color: #666; margin-bottom: 20px; }
+    .task-list { list-style: none; padding: 0; margin: 0; }
+    .task-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      gap: 12px;
+    }
+    .task-item:last-child { border-bottom: none; }
+    .task-checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    .task-text { flex: 1; }
+    .task-text.completed {
+      text-decoration: line-through;
+      color: #999;
+    }
+    .priority {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .priority-high { background: #fee2e2; color: #991b1b; }
+    .priority-medium { background: #fef3c7; color: #92400e; }
+    .priority-low { background: #dcfce7; color: #166534; }
+    .add-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    input, select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    input[type="text"] { flex: 1; }
+    button {
+      padding: 10px 20px;
+      background: #42b883;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    button:hover { background: #3aa876; }
+    button.delete {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 6px 12px;
+    }
+    button.delete:hover { background: #fecaca; }
+    .tonl-preview {
+      background: #2c3e50;
+      color: #42b883;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      max-height: 250px;
+    }
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .filter-btn {
+      padding: 6px 14px;
+      background: #f3f4f6;
+      color: #374151;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .filter-btn.active {
+      background: #42b883;
+      color: white;
+    }
+    .stats-bar {
+      display: flex;
+      gap: 20px;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 24px; font-weight: 700; color: #2c3e50; }
+    .stat-label { font-size: 12px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="card">
+      <h1>Task Manager</h1>
+      <p class="subtitle">Built with Vue 3 + TONL Browser API</p>
+
+      <div class="filters">
+        <button
+          class="filter-btn"
+          :class="{ active: filter === 'all' }"
+          @click="filter = 'all'">All</button>
+        <button
+          class="filter-btn"
+          :class="{ active: filter === 'active' }"
+          @click="filter = 'active'">Active</button>
+        <button
+          class="filter-btn"
+          :class="{ active: filter === 'completed' }"
+          @click="filter = 'completed'">Completed</button>
+      </div>
+
+      <ul class="task-list">
+        <li v-for="(task, index) in filteredTasks" :key="task.id" class="task-item">
+          <input
+            type="checkbox"
+            class="task-checkbox"
+            :checked="task.completed"
+            @change="toggleTask(getOriginalIndex(task))">
+          <span class="task-text" :class="{ completed: task.completed }">
+            {{ task.text }}
+          </span>
+          <span class="priority" :class="'priority-' + task.priority">
+            {{ task.priority }}
+          </span>
+          <button class="delete" @click="deleteTask(getOriginalIndex(task))">Delete</button>
+        </li>
+      </ul>
+
+      <div class="add-form">
+        <input
+          type="text"
+          v-model="newTaskText"
+          placeholder="Add a new task..."
+          @keyup.enter="addTask">
+        <select v-model="newTaskPriority">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+        <button @click="addTask">Add Task</button>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-value">{{ tasks.length }}</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ activeTasks }}</div>
+          <div class="stat-label">Active</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ completedTasks }}</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">{{ compressionRate }}%</div>
+          <div class="stat-label">TONL Savings</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin: 0 0 15px; color: #2c3e50;">TONL Output</h2>
+      <div class="tonl-preview">{{ tonlOutput }}</div>
+    </div>
+  </div>
+
+  <!-- Vue 3 from CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <!-- Load TONL IIFE bundle -->
+  <script src="../../dist/browser/tonl.iife.js"></script>
+
+  <script>
+    const { createApp, ref, computed, watch } = Vue;
+    const { TONLDocument } = TONL;
+
+    const initialData = {
+      tasks: [
+        { id: 1, text: 'Learn TONL basics', completed: true, priority: 'high' },
+        { id: 2, text: 'Build a Vue app', completed: true, priority: 'high' },
+        { id: 3, text: 'Integrate TONL with Vue', completed: false, priority: 'medium' },
+        { id: 4, text: 'Deploy to production', completed: false, priority: 'low' }
+      ]
+    };
+
+    createApp({
+      setup() {
+        const doc = ref(TONLDocument.fromJSON(initialData));
+        const filter = ref('all');
+        const newTaskText = ref('');
+        const newTaskPriority = ref('medium');
+
+        const tasks = computed(() => doc.value.get('tasks') || []);
+
+        const filteredTasks = computed(() => {
+          if (filter.value === 'active') {
+            return tasks.value.filter(t => !t.completed);
+          } else if (filter.value === 'completed') {
+            return tasks.value.filter(t => t.completed);
+          }
+          return tasks.value;
+        });
+
+        const activeTasks = computed(() => tasks.value.filter(t => !t.completed).length);
+        const completedTasks = computed(() => tasks.value.filter(t => t.completed).length);
+
+        const tonlOutput = computed(() => doc.value.toTONL());
+
+        const compressionRate = computed(() => {
+          const jsonSize = JSON.stringify(doc.value.toJSON()).length;
+          const tonlSize = tonlOutput.value.length;
+          return ((1 - tonlSize / jsonSize) * 100).toFixed(1);
+        });
+
+        const getOriginalIndex = (task) => {
+          return tasks.value.findIndex(t => t.id === task.id);
+        };
+
+        const addTask = () => {
+          if (!newTaskText.value.trim()) return;
+
+          const newDoc = TONLDocument.fromJSON(doc.value.toJSON());
+          const maxId = Math.max(...tasks.value.map(t => t.id), 0);
+          newDoc.push('tasks', {
+            id: maxId + 1,
+            text: newTaskText.value.trim(),
+            completed: false,
+            priority: newTaskPriority.value
+          });
+
+          doc.value = newDoc;
+          newTaskText.value = '';
+        };
+
+        const toggleTask = (index) => {
+          const newDoc = TONLDocument.fromJSON(doc.value.toJSON());
+          const current = tasks.value[index].completed;
+          newDoc.set('tasks[' + index + '].completed', !current);
+          doc.value = newDoc;
+        };
+
+        const deleteTask = (index) => {
+          const newDoc = TONLDocument.fromJSON(doc.value.toJSON());
+          newDoc.delete('tasks[' + index + ']');
+          doc.value = newDoc;
+        };
+
+        return {
+          tasks,
+          filter,
+          filteredTasks,
+          activeTasks,
+          completedTasks,
+          tonlOutput,
+          compressionRate,
+          newTaskText,
+          newTaskPriority,
+          getOriginalIndex,
+          addTask,
+          toggleTask,
+          deleteTask
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>

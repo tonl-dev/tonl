@@ -1,4 +1,4 @@
-# TONL v2.5.0 CLI Cheat Sheet
+# TONL v2.5.1 CLI Cheat Sheet
 
 ## Quick Start
 

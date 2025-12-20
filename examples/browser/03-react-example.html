@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TONL + React Example</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    #root { max-width: 800px; margin: 0 auto; }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    h1 { margin: 0 0 10px; color: #333; }
+    .subtitle { color: #666; margin-bottom: 20px; }
+    .user-list { list-style: none; padding: 0; margin: 0; }
+    .user-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    .user-item:last-child { border-bottom: none; }
+    .user-info { display: flex; flex-direction: column; }
+    .user-name { font-weight: 600; color: #333; }
+    .user-email { font-size: 13px; color: #888; }
+    .user-role {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .role-admin { background: #dcfce7; color: #166534; }
+    .role-user { background: #dbeafe; color: #1e40af; }
+    .add-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+    }
+    input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    button:hover { background: #5a67d8; }
+    button.delete {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 6px 12px;
+    }
+    button.delete:hover { background: #fecaca; }
+    .tonl-preview {
+      background: #1a1a2e;
+      color: #a5b4fc;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      max-height: 200px;
+    }
+    .stats {
+      display: flex;
+      gap: 20px;
+      margin-top: 15px;
+    }
+    .stat {
+      background: #f3f4f6;
+      padding: 10px 15px;
+      border-radius: 6px;
+    }
+    .stat-label { font-size: 12px; color: #666; }
+    .stat-value { font-size: 18px; font-weight: 600; color: #333; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React and ReactDOM from CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Load TONL IIFE bundle -->
+  <script src="../../dist/browser/tonl.iife.js"></script>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+    const { TONLDocument } = TONL;
+
+    // Initial data
+    const initialData = {
+      users: [
+        { id: 1, name: 'Alice Johnson', email: 'alice@example.com', role: 'admin' },
+        { id: 2, name: 'Bob Smith', email: 'bob@example.com', role: 'user' },
+        { id: 3, name: 'Carol White', email: 'carol@example.com', role: 'user' }
+      ]
+    };
+
+    function App() {
+      const [doc, setDoc] = useState(() => TONLDocument.fromJSON(initialData));
+      const [newName, setNewName] = useState('');
+      const [newEmail, setNewEmail] = useState('');
+
+      // Get users from document
+      const users = doc.get('users') || [];
+
+      // TONL representation
+      const tonlOutput = useMemo(() => doc.toTONL(), [doc]);
+
+      // Stats
+      const jsonSize = JSON.stringify(doc.toJSON()).length;
+      const tonlSize = tonlOutput.length;
+      const savings = ((1 - tonlSize / jsonSize) * 100).toFixed(1);
+
+      const addUser = () => {
+        if (!newName || !newEmail) return;
+
+        // Create new document with pushed user
+        const newDoc = TONLDocument.fromJSON(doc.toJSON());
+        const maxId = Math.max(...users.map(u => u.id), 0);
+        newDoc.push('users', {
+          id: maxId + 1,
+          name: newName,
+          email: newEmail,
+          role: 'user'
+        });
+
+        setDoc(newDoc);
+        setNewName('');
+        setNewEmail('');
+      };
+
+      const deleteUser = (index) => {
+        const newDoc = TONLDocument.fromJSON(doc.toJSON());
+        newDoc.delete(`users[${index}]`);
+        setDoc(newDoc);
+      };
+
+      const toggleRole = (index) => {
+        const newDoc = TONLDocument.fromJSON(doc.toJSON());
+        const currentRole = users[index].role;
+        newDoc.set(`users[${index}].role`, currentRole === 'admin' ? 'user' : 'admin');
+        setDoc(newDoc);
+      };
+
+      return (
+        <>
+          <div className="card">
+            <h1>User Management</h1>
+            <p className="subtitle">Built with React + TONL Browser API</p>
+
+            <ul className="user-list">
+              {users.map((user, index) => (
+                <li key={user.id} className="user-item">
+                  <div className="user-info">
+                    <span className="user-name">{user.name}</span>
+                    <span className="user-email">{user.email}</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <span
+                      className={`user-role ${user.role === 'admin' ? 'role-admin' : 'role-user'}`}
+                      onClick={() => toggleRole(index)}
+                      style={{ cursor: 'pointer' }}
+                      title="Click to toggle role"
+                    >
+                      {user.role}
+                    </span>
+                    <button className="delete" onClick={() => deleteUser(index)}>
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="add-form">
+              <input
+                type="text"
+                placeholder="Name"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+              />
+              <button onClick={addUser}>Add User</button>
+            </div>
+          </div>
+
+          <div className="card">
+            <h2 style={{ margin: '0 0 15px' }}>TONL Output</h2>
+            <div className="tonl-preview">{tonlOutput}</div>
+            <div className="stats">
+              <div className="stat">
+                <div className="stat-label">JSON Size</div>
+                <div className="stat-value">{jsonSize} B</div>
+              </div>
+              <div className="stat">
+                <div className="stat-label">TONL Size</div>
+                <div className="stat-value">{tonlSize} B</div>
+              </div>
+              <div className="stat">
+                <div className="stat-label">Savings</div>
+                <div className="stat-value">{savings}%</div>
+              </div>
+              <div className="stat">
+                <div className="stat-label">Users</div>
+                <div className="stat-value">{users.length}</div>
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

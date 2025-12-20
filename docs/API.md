@@ -1,19 +1,32 @@
-# TONL API Documentation v2.1.0
+# TONL API Documentation v2.5.1
 
-**Version:** 2.1.0
+**Version:** 2.5.1
 **Status:** Stable & Production Ready
-**Last Updated:** 2025-11-18
+**Last Updated:** 2025-12-20
 
 This document provides detailed API documentation for the TONL TypeScript library.
+
+## 🎉 What's New in v2.5.1
+
+- **Enhanced Test Coverage**: 698+ tests with comprehensive coverage for all modules
+- **Browser Documentation**: Complete browser API guide (see [BROWSER.md](BROWSER.md))
+- **Error Handling Guide**: Detailed error handling documentation (see [ERROR_HANDLING.md](ERROR_HANDLING.md))
+- **CLI Documentation**: Full CLI documentation with all commands
+- **Zero Breaking Changes**: All existing code continues to work unchanged
+
+## 🎉 What's New in v2.5.0
+
+- **Enterprise Security**: Enhanced security with centralized error messages
+- **Performance Optimization**: Improved caching and query performance
+- **Schema Generation**: TypeScript type generation from schemas
+- **Compound Indexing**: Multi-field index support for complex queries
+- **REPL Improvements**: Enhanced interactive exploration
 
 ## 🎉 What's New in v2.1.0
 
 - **Buffer Size Reporting**: Fixed accurate buffer size reporting in encode-stream overflow error messages
 - **Test Suite Stability**: Resolved incorrect test expectations for buffer overflow scenarios
 - **Enhanced Error Handling**: Improved error message accuracy for stream buffer overflow
-- **887 Tests Passing**: Complete test coverage with 100% success rate
-- **Zero Breaking Changes**: All existing code continues to work seamlessly
-- **Zero Breaking Changes**: All existing functionality preserved
 - **Production Ready**: Fully tested and stable release
 
 ## 🎉 What's New in v2.0.9
@@ -45,7 +58,7 @@ This document provides detailed API documentation for the TONL TypeScript librar
 1. [TONLDocument API](#tonldocument-api) (Primary Interface)
 2. [Core Functions](#core-functions) (Legacy/Lower-level)
 3. [Utility Functions](#utility-functions)
-4. [Dual-Mode System](#dual-mode-system-v204) ⭐ **NEW**
+4. [Dual-Mode System](#dual-mode-system-v204)
 5. [Optimization API](#optimization-api-v200)
 6. [Streaming API](#streaming-api-v075)
 7. [Schema API](#schema-api-v080)
@@ -54,8 +67,10 @@ This document provides detailed API documentation for the TONL TypeScript librar
 10. [Navigation API](#navigation-api-v060)
 11. [Indexing API](#indexing-api-v070)
 12. [File Operations](#file-operations)
-13. [Error Handling](#error-handling)
-14. [Performance](#performance-considerations)
+13. [Error Handling](#error-handling) → See [ERROR_HANDLING.md](ERROR_HANDLING.md)
+14. [Browser API](#browser-api) → See [BROWSER.md](BROWSER.md)
+15. [CLI Reference](#cli-reference) → See [CLI.md](CLI.md)
+16. [Performance](#performance-considerations)
 
 ---
 

@@ -51,6 +51,26 @@
       "types": "./dist/optimization/index.d.ts",
       "import": "./dist/optimization/index.js"
     },
+    "./navigation": {
+      "types": "./dist/navigation/index.d.ts",
+      "import": "./dist/navigation/index.js"
+    },
+    "./indexing": {
+      "types": "./dist/indexing/index.d.ts",
+      "import": "./dist/indexing/index.js"
+    },
+    "./modification": {
+      "types": "./dist/modification/index.d.ts",
+      "import": "./dist/modification/index.js"
+    },
+    "./repl": {
+      "types": "./dist/repl/index.d.ts",
+      "import": "./dist/repl/index.js"
+    },
+    "./errors": {
+      "types": "./dist/errors/index.d.ts",
+      "import": "./dist/errors/index.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "dist/index.js",
@@ -62,7 +82,7 @@
     "build": "tsc && node fix-imports.js",
     "build:browser": "vite build && node scripts/copy-browser-build.js",
     "build:all": "npm run build && npm run build:browser",
-    "test": "npm run build && node --test test/edge-cases.test.ts test/encode_decode_roundtrip.test.ts test/integration.test.ts test/navigation.test.ts test/parser.test.ts test/tonl-document.test.ts test/comprehensive.test.ts test/schema.test.ts test/stream.test.ts test/modification-setter.test.ts test/format.test.ts test/modification-complete.test.ts test/query-evaluator.test.ts test/query-filter.test.ts test/query-path-parser.test.ts test/schema-constraints.test.ts test/integration/query-integration.test.ts",
+    "test": "npm run build && node --test test/edge-cases.test.ts test/encode_decode_roundtrip.test.ts test/integration.test.ts test/navigation.test.ts test/parser.test.ts test/tonl-document.test.ts test/comprehensive.test.ts test/schema.test.ts test/stream.test.ts test/modification-setter.test.ts test/format.test.ts test/modification-complete.test.ts test/query-evaluator.test.ts test/query-filter.test.ts test/query-path-parser.test.ts test/schema-constraints.test.ts test/file-editor.test.ts test/hash-index.test.ts test/repl.test.ts test/browser.test.ts test/transaction.test.ts test/concurrency.test.ts test/integration/query-integration.test.ts test/integration/full-pipeline.test.ts",
     "test:all": "npm run build && node --test test/*.test.ts",
     "test:stable": "npm run test",
     "test:features": "npm run build && node examples/feature-coverage-test.ts",

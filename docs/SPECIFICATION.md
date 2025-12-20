@@ -1,8 +1,8 @@
-# TONL Format Specification v2.0.6
+# TONL Format Specification v2.5.1
 
-**Version:** 2.0.6
+**Version:** 2.5.1
 **Status:** Stable & Production Ready
-**Last Updated:** 2025-11-16
+**Last Updated:** 2025-12-20
 
 This document provides the complete technical specification for the Token-Optimized Notation Language (TONL) format.
 

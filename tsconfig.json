@@ -3,11 +3,13 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "node",
+    "lib": ["ES2022"],
     "allowImportingTsExtensions": false,
     "noEmit": false,
     "outDir": "./dist",
     "strict": true,
     "noImplicitAny": true,
+    "useUnknownInCatchVariables": true,
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -17,7 +19,9 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": ["node"]
+    "types": ["node"],
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo"
   },
   "include": [
     "src/**/*"
