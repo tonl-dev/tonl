@@ -6,6 +6,76 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [2.5.2] - 2025-12-20
+
+### 📚 **Documentation & Testing Excellence Release**
+
+**Major documentation and test coverage release** completing a comprehensive 5-phase improvement plan with 216 new tests, comprehensive browser documentation, and security vulnerability fixes.
+
+#### **🧪 Testing Improvements:**
+
+- **216 new tests added** - Total now 698 tests across 162 suites
+- **Concurrency tests** - 12 tests for parallel operations and thread safety
+- **Browser tests** - 65 tests for browser build validation
+- **Integration tests** - 21 end-to-end pipeline tests
+- **Transaction tests** - 24 tests for ACID transaction handling
+- **REPL tests** - 24 tests for interactive REPL functionality
+- **File editor tests** - 23 tests for file modification operations
+- **Hash index tests** - 47 tests for indexing performance
+
+#### **📖 Documentation:**
+
+- **docs/BROWSER.md** - Complete browser API documentation
+  - ESM, UMD, IIFE bundle usage
+  - React and Vue integration examples
+  - CDN usage patterns
+
+- **docs/ERROR_HANDLING.md** - Comprehensive error handling guide
+  - All error classes documented
+  - Troubleshooting patterns
+  - Best practices
+
+- **examples/browser/** - 4 interactive browser examples
+  - Basic usage with compression stats
+  - TONLDocument API demonstration
+  - React 18 user management app
+  - Vue 3 task manager app
+
+#### **🔐 Security Fixes:**
+
+- **Fixed 5 npm vulnerabilities** in vscode-extension
+  - Removed deprecated `vsce` package
+  - Fixed glob command injection (HIGH)
+  - Fixed jws HMAC verification (HIGH)
+  - Fixed js-yaml prototype pollution (MODERATE)
+  - Fixed xml2js prototype pollution (MODERATE)
+
+- **Updated all dependencies** to latest versions
+  - fast-check: 4.3.0 → 4.5.0
+  - rimraf: 6.1.0 → 6.1.2
+  - terser: 5.44.0 → 5.44.1
+  - vite: 7.1.12 → 7.3.0
+
+#### **📦 Package Improvements:**
+
+- **New exports added** to package.json
+  - `tonl/navigation` - Tree traversal utilities
+  - `tonl/indexing` - Performance indexing
+  - `tonl/modification` - CRUD operations
+  - `tonl/repl` - Interactive REPL
+  - `tonl/errors` - Error classes
+
+- **TypeScript improvements**
+  - Incremental build enabled
+  - Build time reduced to ~1.6s
+
+#### **✅ Test Results:**
+- **698 tests** across **162 test suites** - **100% pass rate**
+- **0 npm vulnerabilities** in all packages
+- **100% backwards compatible** with v2.5.1
+
+---
+
 ## [2.5.1] - 2025-12-11
 
 ### 🔧 **Critical Bug Fixes Release**

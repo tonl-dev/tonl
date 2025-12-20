@@ -8,32 +8,26 @@
 
 **TONL** is a production-ready data platform that combines compact serialization with powerful query, modification, indexing, and streaming capabilities. Designed for LLM token efficiency while providing a rich API for data access and manipulation.
 
-## 🎉 Latest Release: v2.5.1 - Critical Bug Fixes
+## 🎉 Latest Release: v2.5.2 - Documentation & Testing Excellence
+
+### 📚 **v2.5.2 (December 20, 2025)**
+- **216 new tests** - Total 698 tests across 162 suites with 100% pass rate
+- **Browser documentation** - Complete docs/BROWSER.md and docs/ERROR_HANDLING.md
+- **4 browser examples** - React 18 and Vue 3 interactive demos
+- **5 security fixes** - All npm vulnerabilities resolved
+- **Updated dependencies** - All packages at latest versions
 
 ### 🔧 **v2.5.1 (December 11, 2025)**
-- **8 critical bug fixes** including DoS prevention, JSON.stringify vulnerability, and async handling
-- **482 tests** with 100% pass rate across 91 test suites
-- **Zero regressions** - All existing functionality preserved
+- 8 critical bug fixes including DoS prevention and async handling
 
 ### 🛡️ **v2.5.0 (December 3, 2025)**
-- Enterprise security hardening and code quality improvements
-
-### 🛡️ **Security Hardening:**
-- **Path traversal protection** - Blocked malicious file access patterns
-- **Input validation** - Comprehensive CLI and API input sanitization
-- **Rate limiting** - Token bucket algorithm for DoS prevention
-- **Parser security** - Recursion depth and block size limits
-
-### 📦 **New Optimization Module:**
-- **DictionaryBuilder** - String deduplication with reference encoding
-- **DeltaEncoder** - Sequential value compression
-- **BitPacker** - Bit-level integer packing
-- **AdaptiveOptimizer** - Automatic strategy selection
+- Enterprise security hardening and optimization module
 
 ### 🧪 **Testing Excellence:**
-- **584 Comprehensive Tests** - All passing with 100% success rate
+- **698 Comprehensive Tests** - All passing with 100% success rate
 - **96 Security Tests** - Covering all attack vectors
-- **Cross-platform** - Windows and Unix compatibility verified
+- **Concurrency Tests** - Thread safety validation
+- **Browser Tests** - Cross-platform compatibility
 
 [![npm version](https://badge.fury.io/js/tonl.svg)](https://www.npmjs.com/package/tonl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

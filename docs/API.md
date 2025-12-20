@@ -1,12 +1,12 @@
-# TONL API Documentation v2.5.1
+# TONL API Documentation v2.5.2
 
-**Version:** 2.5.1
+**Version:** 2.5.2
 **Status:** Stable & Production Ready
 **Last Updated:** 2025-12-20
 
 This document provides detailed API documentation for the TONL TypeScript library.
 
-## 🎉 What's New in v2.5.1
+## 🎉 What's New in v2.5.2
 
 - **Enhanced Test Coverage**: 698+ tests with comprehensive coverage for all modules
 - **Browser Documentation**: Complete browser API guide (see [BROWSER.md](BROWSER.md))

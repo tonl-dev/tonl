@@ -1,6 +1,6 @@
-# TONL Format Specification v2.5.1
+# TONL Format Specification v2.5.2
 
-**Version:** 2.5.1
+**Version:** 2.5.2
 **Status:** Stable & Production Ready
 **Last Updated:** 2025-12-20
 

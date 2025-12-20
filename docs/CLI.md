@@ -1,8 +1,8 @@
-# TONL CLI Documentation v2.5.1
+# TONL CLI Documentation v2.5.2
 
 The TONL Command Line Interface provides powerful tools for converting, analyzing, and optimizing TONL data.
 
-## 🎉 v2.5.1 - Enterprise Security & Optimization
+## 🎉 v2.5.2 - Enterprise Security & Optimization
 
 **Updated CLI documentation** with latest bug fix improvements:
 

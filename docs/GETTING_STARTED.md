@@ -1,6 +1,6 @@
-# Getting Started with TONL v2.5.1
+# Getting Started with TONL v2.5.2
 
-Welcome to TONL! This guide will help you get started with all the powerful features of TONL v2.5.1, including the revolutionary dual-mode system for handling problematic JSON keys, enterprise security features, and the latest documentation updates.
+Welcome to TONL! This guide will help you get started with all the powerful features of TONL v2.5.2, including the revolutionary dual-mode system for handling problematic JSON keys, enterprise security features, and the latest documentation updates.
 
 ---
 
@@ -420,7 +420,7 @@ A: TONL is more compact (32-45% smaller) and provides a rich query/modification 
 A: Yes! `TONLDocument.fromJSON(yourData)` - works with any JSON.
 
 ### Q: Is it production-ready?
-A: Yes! v2.5.1 is stable with 698+ tests and 100% pass rate.
+A: Yes! v2.5.2 is stable with 698+ tests and 100% pass rate.
 
 ### Q: How fast is it?
 A: Very fast! Simple queries: 0.005ms, Filters: 0.03ms, 10-1600x faster than targets.
