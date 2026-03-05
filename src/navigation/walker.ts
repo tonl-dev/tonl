@@ -197,6 +197,9 @@ function walkBreadthFirst(
   }
 
   const queue: QueueItem[] = [];
+  // HIGH-004 FIX: Limit maximum iterations to prevent unbounded memory growth
+  const MAX_BFS_ITERATIONS = 1_000_000;
+  let iterations = 0;
 
   // Initialize queue
   if (state.includeRoot) {
@@ -220,6 +223,11 @@ function walkBreadthFirst(
 
   // Process queue
   while (queue.length > 0) {
+    // HIGH-004 FIX: Guard against unbounded queue growth
+    if (++iterations > MAX_BFS_ITERATIONS) {
+      return; // Safely stop traversal
+    }
+
     const item = queue.shift()!;
 
     // Check depth limit

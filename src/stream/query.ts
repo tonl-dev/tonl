@@ -150,9 +150,9 @@ export async function* streamQuery(
       }
     }
   } finally {
-    // BUG-FIX-003: Use destroy() instead of close() for proper async cleanup
-    fileStream.destroy();
+    // FIX: Close readline before destroying the underlying stream
     rl.close();
+    fileStream.destroy();
     // Clear buffer to prevent memory leak
     buffer = '';
   }

@@ -17,7 +17,7 @@ export class Transaction {
   private committed = false;
 
   constructor(private data: any) {
-    this.snapshot = JSON.parse(JSON.stringify(data));
+    this.snapshot = structuredClone(data);
   }
 
   recordChange(change: Change): void {

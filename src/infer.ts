@@ -17,9 +17,10 @@ export function inferPrimitiveType(value: unknown): TONLTypeHint {
   }
 
   if (typeof value === "number") {
-    // Handle special values
-    if (!isFinite(value)) {
-      return "f64";
+    // LOW FIX: Use Number.isFinite instead of global isFinite (which coerces)
+    // NaN/Infinity are non-finite and should be treated as null-like
+    if (!Number.isFinite(value)) {
+      return "null";
     }
 
     if (Number.isInteger(value)) {

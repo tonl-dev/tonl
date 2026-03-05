@@ -8,6 +8,22 @@ import { inferPrimitiveType, isUniformObjectArray, getUniformColumns, isSemiUnif
 import { quoteIfNeeded, tripleQuoteIfNeeded, makeIndent } from "./utils/strings.js";
 
 /**
+ * MED-010 FIX: Extract duplicated key quoting logic into a helper
+ */
+function keyNeedsQuoting(k: string): boolean {
+  return k.includes(':') || k.includes(',') || k.includes('{') || k.includes('}') || k.includes('"') ||
+         k.includes('#') || k.includes('@') || k.trim() === '' || k.startsWith(' ') || k.endsWith(' ') ||
+         k.includes('\t') || k.includes('\n') || k.includes('\r');
+}
+
+function quoteKey(k: string): string {
+  if (keyNeedsQuoting(k)) {
+    return `"${k.replace(/\\/g, '\\\\').replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/\t/g, '\\t').replace(/"/g, '\\"')}"`;
+  }
+  return k;
+}
+
+/**
  * Encode a JavaScript value to TONL format.
  *
  * Converts JavaScript objects, arrays, and primitives to the
@@ -369,16 +385,10 @@ function encodeObject(obj: TONLObject, key: string, context: TONLEncodeContext):
   );
 
   // Build column definitions
+  // MED-010 FIX: Use extracted quoteKey helper instead of duplicated logic
   for (const k of keys) {
     const value = obj[k];
-    // Quote column name if it contains special characters or is whitespace-only
-    let col = k;
-    const needsQuoting = k.includes(':') || k.includes(',') || k.includes('{') || k.includes('}') || k.includes('"') ||
-                        k.includes('#') || k.includes('@') || k.trim() === '' || k.startsWith(' ') || k.endsWith(' ') ||
-                        k.includes('\t') || k.includes('\n') || k.includes('\r');
-    if (needsQuoting) {
-      col = `"${k.replace(/\\/g, '\\\\').replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/\t/g, '\\t').replace(/"/g, '\\"')}"`;
-    }
+    let col = quoteKey(k);
     if (context.includeTypes) {
       const type = inferPrimitiveType(value);
       if (type !== "obj" && type !== "list") {
@@ -396,70 +406,32 @@ function encodeObject(obj: TONLObject, key: string, context: TONLEncodeContext):
     header = `${key}{${columns.join(",")}}:`;
   }
 
-  // If object has nested objects, arrays, multiline strings, or special keys, render as multi-line block
-  const hasMultilineStrings = Object.values(obj).some(v =>
-    typeof v === "string" && (v.includes("\n") || v.includes(context.delimiter) || v.includes(":"))
-  );
+  // MED-011 FIX: Always use multi-line block format (the single-line else branch was dead code)
+  const lines: string[] = [header];
+  const childContext = { ...context, currentIndent: context.currentIndent + 1, currentDepth: (context.currentDepth ?? 0) + 1 };
 
-  // Always use multi-line format for single-property objects to avoid parsing confusion
-  const isSinglePropertyObject = keys.length === 1;
+  for (const k of keys) {
+    const value = obj[k];
+    const keyName = quoteKey(k);
 
-  if (hasNestedObjects || Object.values(obj).some(v => Array.isArray(v)) || hasMultilineStrings || hasSpecialKeys || isSinglePropertyObject || keys.length > 1) {
-    const lines: string[] = [header];
-    const childContext = { ...context, currentIndent: context.currentIndent + 1, currentDepth: (context.currentDepth ?? 0) + 1 }; // BUG-NEW-002 FIX: Increment depth
-
-    for (const k of keys) {
-      const value = obj[k];
-      // Quote key name if it contains special characters or is whitespace-only
-      const needsQuoting = k.includes(':') || k.includes(',') || k.includes('{') || k.includes('}') || k.includes('"') ||
-                          k.includes('#') || k.includes('@') || k.trim() === '' || k.startsWith(' ') || k.endsWith(' ') ||
-                          k.includes('\t') || k.includes('\n') || k.includes('\r');
-      const keyName = needsQuoting ? `"${k.replace(/\\/g, '\\\\').replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/\t/g, '\\t').replace(/"/g, '\\"')}"` : k;
-
-      if (Array.isArray(value) || (typeof value === "object" && value !== null)) {
-        const childLine = encodeValue(value, k, childContext);
-        lines.push(makeIndent(childContext.currentIndent, childContext.indent) + childLine);
-      } else {
-        if (value === null) {
-          lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: null`);
-        } else if (value === true || value === false) {
-          lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${String(value)}`);
-        } else if (typeof value === 'number') {
-          lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${String(value)}`);
-        } else if (value !== undefined) {
-          const quoted = tripleQuoteIfNeeded(String(value), context.delimiter);
-          lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${quoted}`);
-        }
-        // undefined values are already filtered out from keys
-      }
-    }
-
-    return lines.join("\n");
-  } else {
-    // Simple object with only primitives - render as single line
-    const parts: string[] = [header];
-    for (const k of keys) {
-      const value = obj[k];
-      // Quote key name if it contains special characters or is whitespace-only
-      const needsQuoting = k.includes(':') || k.includes(',') || k.includes('{') || k.includes('}') || k.includes('"') ||
-                          k.includes('#') || k.includes('@') || k.trim() === '' || k.startsWith(' ') || k.endsWith(' ') ||
-                          k.includes('\t') || k.includes('\n') || k.includes('\r');
-      const keyName = needsQuoting ? `"${k.replace(/\\/g, '\\\\').replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/\t/g, '\\t').replace(/"/g, '\\"')}"` : k;
-
+    if (Array.isArray(value) || (typeof value === "object" && value !== null)) {
+      const childLine = encodeValue(value, k, childContext);
+      lines.push(makeIndent(childContext.currentIndent, childContext.indent) + childLine);
+    } else {
       if (value === null) {
-        parts.push(`${keyName}: null`);
+        lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: null`);
       } else if (value === true || value === false) {
-        parts.push(`${keyName}: ${String(value)}`);
+        lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${String(value)}`);
       } else if (typeof value === 'number') {
-        parts.push(`${keyName}: ${String(value)}`);
+        lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${String(value)}`);
       } else if (value !== undefined) {
         const quoted = tripleQuoteIfNeeded(String(value), context.delimiter);
-        parts.push(`${keyName}: ${quoted}`);
+        lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${quoted}`);
       }
-      // undefined values are already filtered out from keys
     }
-    return parts.join(" ");
   }
+
+  return lines.join("\n");
 
   } finally {
     // Task 011: Remove object from seen after processing

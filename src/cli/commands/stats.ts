@@ -22,8 +22,6 @@ export const StatsCommand: Command = {
       const interactiveStats = new SimpleInteractiveStats();
       await interactiveStats.start(file, {
         tokenizer: options.tokenizer,
-        compareMode: options.compare,
-        verbose: options.verbose
       });
       interactiveStats.close();
       return;

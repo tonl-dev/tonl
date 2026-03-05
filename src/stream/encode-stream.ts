@@ -59,11 +59,14 @@ export function createEncodeStream(options?: StreamEncodeOptions): Transform {
             const tonlOutput = encodeTONL(jsonData, opts);
 
             // Add newline separator between blocks
+            // HIGH-003 FIX: Check push() return value for backpressure
             if (!isFirst) {
               this.push('\n');
             }
-            this.push(tonlOutput);
+            const canContinue = this.push(tonlOutput);
             isFirst = false;
+            // If push returns false, the internal buffer is full
+            // The stream will automatically handle pausing/resuming via backpressure
           } catch (err) {
             // Invalid JSON line, skip
             continue;

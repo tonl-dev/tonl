@@ -33,9 +33,19 @@ export function transform(
     return 1;
   }
 
-  // Transform array of values - need to find and update each
-  // For now, simple implementation
-  return 0;
+  // HIGH-002 FIX: Transform each array element individually
+  // Extract the base path (remove wildcard/filter suffix) to set each element
+  let count = 0;
+  for (let i = 0; i < value.length; i++) {
+    const transformed = transformFn(value[i]);
+    // Build indexed path by replacing wildcard/filter with concrete index
+    const basePath = pathExpression.replace(/\[\*\]|\[\?[^\]]*\]/, `[${i}]`);
+    const result = set(document, basePath, transformed);
+    if (result.success) {
+      count++;
+    }
+  }
+  return count;
 }
 
 /**

@@ -577,7 +577,7 @@ export class TONLDocument {
    * @returns A new document with a deep copy of current data
    */
   snapshot(): TONLDocument {
-    return TONLDocument.fromJSON(JSON.parse(JSON.stringify(this.data)));
+    return TONLDocument.fromJSON(structuredClone(this.data));
   }
 
   // ========================================
@@ -700,7 +700,7 @@ export class TONLDocument {
    * ```
    */
   restore(snapshot: TONLDocument): this {
-    this.data = JSON.parse(JSON.stringify(snapshot.data));
+    this.data = structuredClone(snapshot.data);
     resetGlobalCache();
     this.evaluator = new QueryEvaluator(this.data);
     this.indexManager = new IndexManager(this.data);

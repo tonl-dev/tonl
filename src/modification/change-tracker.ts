@@ -191,12 +191,101 @@ export function diff(original: any, modified: any, path = ''): DiffResult {
 }
 
 /**
- * Apply a diff to a document
+ * Apply a diff to a document, mutating it in place
+ *
+ * Processes changes in reverse order for deletions to avoid index shifting issues,
+ * and in forward order for additions and modifications.
+ *
+ * @param document - The document to modify (will be mutated)
+ * @param diffResult - Diff result from diff()
  */
-export function applyDiff(document: any, diffResult: DiffResult): void {
-  // This is a simplified implementation
-  // A full implementation would need to parse paths and apply changes
-  throw new Error('applyDiff not yet implemented');
+export function applyDiff(document: Record<string, unknown>, diffResult: DiffResult): void {
+  if (!diffResult.hasChanges) return;
+
+  // Apply deletions first (in reverse to avoid index shift issues)
+  const deletions = diffResult.changes.filter(c => c.type === 'deleted');
+  for (let i = deletions.length - 1; i >= 0; i--) {
+    applyChange(document, deletions[i]);
+  }
+
+  // Apply modifications and additions
+  for (const change of diffResult.changes) {
+    if (change.type !== 'deleted') {
+      applyChange(document, change);
+    }
+  }
+}
+
+/**
+ * Apply a single change to a document
+ */
+function applyChange(document: Record<string, unknown>, change: DiffEntry): void {
+  const path = change.path;
+  if (path === '$') {
+    // Root-level change - can't handle in-place
+    return;
+  }
+
+  // Parse path segments (e.g., "a.b[0].c" -> ["a", "b", "[0]", "c"])
+  const segments = parsePathSegments(path);
+  if (segments.length === 0) return;
+
+  // Navigate to parent
+  let current: unknown = document;
+  for (let i = 0; i < segments.length - 1; i++) {
+    const seg = segments[i];
+    if (current === null || current === undefined || typeof current !== 'object') return;
+
+    if (seg.type === 'index') {
+      if (!Array.isArray(current)) return;
+      current = (current as unknown[])[seg.value as number];
+    } else {
+      current = (current as Record<string, unknown>)[seg.value as string];
+    }
+  }
+
+  if (current === null || current === undefined || typeof current !== 'object') return;
+
+  const lastSeg = segments[segments.length - 1];
+
+  switch (change.type) {
+    case 'added':
+    case 'modified':
+      if (lastSeg.type === 'index' && Array.isArray(current)) {
+        (current as unknown[])[lastSeg.value as number] = change.newValue;
+      } else if (lastSeg.type === 'property' && !Array.isArray(current)) {
+        (current as Record<string, unknown>)[lastSeg.value as string] = change.newValue;
+      }
+      break;
+    case 'deleted':
+      if (lastSeg.type === 'index' && Array.isArray(current)) {
+        (current as unknown[]).splice(lastSeg.value as number, 1);
+      } else if (lastSeg.type === 'property' && !Array.isArray(current)) {
+        delete (current as Record<string, unknown>)[lastSeg.value as string];
+      }
+      break;
+  }
+}
+
+interface PathSegment {
+  type: 'property' | 'index';
+  value: string | number;
+}
+
+function parsePathSegments(path: string): PathSegment[] {
+  const segments: PathSegment[] = [];
+  const parts = path.split(/\.|\[|\]/g).filter(Boolean);
+
+  for (const part of parts) {
+    const idx = parseInt(part, 10);
+    if (!isNaN(idx) && String(idx) === part) {
+      segments.push({ type: 'index', value: idx });
+    } else {
+      segments.push({ type: 'property', value: part });
+    }
+  }
+
+  return segments;
 }
 
 /**

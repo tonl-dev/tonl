@@ -51,7 +51,7 @@ import { parseContent } from "./parser/content-parser.js";
 export function decodeTONL(text: string, opts: {
   delimiter?: TONLDelimiter;
   strict?: boolean;
-} = {}): any {
+} = {}): TONLValue {
   const strict = opts.strict ?? false;
   // Split lines and only remove \r (Windows line endings), don't trim other whitespace
   const lines = text.split('\n').map(line => line.replace(/\r$/, '')).filter(line => line.length > 0);

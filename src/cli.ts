@@ -9,6 +9,9 @@ import { getCommand, getAvailableCommands } from "./cli/command-registry.js";
 import { processQueryArgs } from "./cli/commands/query.js";
 import { showHelp } from "./cli/help.js";
 import type { CommandContext } from "./cli/types.js";
+import { readFileSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 
 
 /**
@@ -24,13 +27,19 @@ async function main() {
       return;
     }
 
-    // Special case for --version command (no file required)
+    // MED-015 FIX: Read version from package.json instead of hardcoding
     if (args.length === 1 && (args[0] === '--version' || args[0] === '-v')) {
-      const packageVersion = '2.5.1'; // Hard-coded version to avoid ES module issues
-      console.log(`📦 TONL Version: ${packageVersion}`);
-      console.log(`🏠 Token-Optimized Notation Language`);
-      console.log(`📋 Built: 2025-12-11`);
-      console.log(`🔐 Production Ready with 100% Test Coverage`);
+      let packageVersion = 'unknown';
+      try {
+        const thisDir = dirname(fileURLToPath(import.meta.url));
+        const pkgPath = resolve(thisDir, '..', 'package.json');
+        const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+        packageVersion = pkg.version;
+      } catch {
+        packageVersion = '2.5.2';
+      }
+      console.log(`TONL Version: ${packageVersion}`);
+      console.log(`Token-Optimized Notation Language`);
       return;
     }
 
