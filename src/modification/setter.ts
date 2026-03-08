@@ -2,7 +2,6 @@
  * Core setter implementation for document modification
  */
 
-import type { TONLValue } from '../types.js';
 import type { SetOptions, ModificationResult } from './types.js';
 import { parsePath } from '../query/path-parser.js';
 import type { PathNode } from '../query/types.js';

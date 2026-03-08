@@ -2,8 +2,6 @@
  * Transaction support for atomic modifications
  */
 
-import type { TONLValue } from '../types.js';
-
 export interface Change {
   type: 'set' | 'delete' | 'push' | 'pop';
   path: string;

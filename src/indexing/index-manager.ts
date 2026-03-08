@@ -8,9 +8,6 @@ import type { IIndex, IndexOptions } from './types.js';
 import { HashIndex } from './hash-index.js';
 import { BTreeIndex } from './btree-index.js';
 import { CompoundIndex } from './compound-index.js';
-import { evaluate } from '../query/evaluator.js';
-import { parsePath } from '../query/path-parser.js';
-
 export class IndexManager {
   private indices: Map<string, IIndex> = new Map();
   private document: any;
@@ -127,13 +124,6 @@ export class IndexManager {
   }
 
   /**
-   * Check if index exists
-   */
-  hasIndex(name: string): boolean {
-    return this.indices.has(name);
-  }
-
-  /**
    * Drop an index
    */
   dropIndex(name: string): boolean {
@@ -160,57 +150,4 @@ export class IndexManager {
     return stats;
   }
 
-  /**
-   * Clear all indices
-   */
-  clearAll(): void {
-    for (const index of this.indices.values()) {
-      index.clear();
-    }
-  }
-
-  /**
-   * Drop all indices
-   */
-  dropAll(): void {
-    this.indices.clear();
-  }
-
-  /**
-   * Rebuild all indices
-   */
-  rebuildAll(): void {
-    for (const [name, index] of this.indices) {
-      index.clear();
-      // Rebuild would need field info - simplified for now
-    }
-  }
-
-  /**
-   * Update index when document changes
-   */
-  onInsert(path: string, value: any): void {
-    // Update all indices that might be affected
-    for (const index of this.indices.values()) {
-      // Simplified: would need to check if path matches indexed fields
-      try {
-        index.insert(value, path);
-      } catch (e) {
-        // Ignore unique constraint errors, etc.
-      }
-    }
-  }
-
-  /**
-   * Update index when value deleted
-   */
-  onDelete(path: string, value: any): void {
-    for (const index of this.indices.values()) {
-      try {
-        index.remove(value, path);
-      } catch (e) {
-        // Ignore errors
-      }
-    }
-  }
 }

@@ -8,8 +8,6 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import {
   DEFAULT_SECURITY_LIMITS,
-  createSecurityLimits,
-  validateSecurityLimits,
   MAX_LINE_LENGTH,
   MAX_BUFFER_SIZE,
   MAX_NESTING_DEPTH,
@@ -58,78 +56,4 @@ describe('Security Limits', () => {
     });
   });
 
-  describe('createSecurityLimits', () => {
-    it('should allow custom limits', () => {
-      const custom = createSecurityLimits({ MAX_NESTING_DEPTH: 50 });
-      assert.strictEqual(custom.MAX_NESTING_DEPTH, 50);
-      assert.strictEqual(custom.MAX_LINE_LENGTH, 100_000); // default preserved
-    });
-
-    it('should preserve all defaults when no overrides', () => {
-      const custom = createSecurityLimits({});
-      assert.deepStrictEqual(custom, { ...DEFAULT_SECURITY_LIMITS });
-    });
-
-    it('should allow multiple overrides', () => {
-      const custom = createSecurityLimits({
-        MAX_NESTING_DEPTH: 50,
-        MAX_BUFFER_SIZE: 5 * 1024 * 1024,
-        MAX_BLOCK_LINES: 5000,
-      });
-      assert.strictEqual(custom.MAX_NESTING_DEPTH, 50);
-      assert.strictEqual(custom.MAX_BUFFER_SIZE, 5 * 1024 * 1024);
-      assert.strictEqual(custom.MAX_BLOCK_LINES, 5000);
-    });
-  });
-
-  describe('validateSecurityLimits', () => {
-    it('should pass for valid default limits', () => {
-      assert.doesNotThrow(() => {
-        validateSecurityLimits({ ...DEFAULT_SECURITY_LIMITS });
-      });
-    });
-
-    it('should reject invalid MAX_NESTING_DEPTH', () => {
-      assert.throws(
-        () => validateSecurityLimits({ ...DEFAULT_SECURITY_LIMITS, MAX_NESTING_DEPTH: 0 }),
-        /MAX_NESTING_DEPTH/
-      );
-      assert.throws(
-        () => validateSecurityLimits({ ...DEFAULT_SECURITY_LIMITS, MAX_NESTING_DEPTH: 2000 }),
-        /MAX_NESTING_DEPTH/
-      );
-    });
-
-    it('should reject invalid MAX_INPUT_SIZE', () => {
-      assert.throws(
-        () => validateSecurityLimits({ ...DEFAULT_SECURITY_LIMITS, MAX_INPUT_SIZE: 100 }),
-        /MAX_INPUT_SIZE/
-      );
-      assert.throws(
-        () => validateSecurityLimits({ ...DEFAULT_SECURITY_LIMITS, MAX_INPUT_SIZE: 200 * 1024 * 1024 }),
-        /MAX_INPUT_SIZE/
-      );
-    });
-
-    it('should reject invalid MAX_BUFFER_SIZE', () => {
-      assert.throws(
-        () => validateSecurityLimits({ ...DEFAULT_SECURITY_LIMITS, MAX_BUFFER_SIZE: 100 }),
-        /MAX_BUFFER_SIZE/
-      );
-    });
-
-    it('should reject invalid MAX_REGEX_PATTERN_LENGTH', () => {
-      assert.throws(
-        () => validateSecurityLimits({ ...DEFAULT_SECURITY_LIMITS, MAX_REGEX_PATTERN_LENGTH: 5 }),
-        /MAX_REGEX_PATTERN_LENGTH/
-      );
-    });
-
-    it('should reject invalid MAX_BLOCK_LINES', () => {
-      assert.throws(
-        () => validateSecurityLimits({ ...DEFAULT_SECURITY_LIMITS, MAX_BLOCK_LINES: 10 }),
-        /MAX_BLOCK_LINES/
-      );
-    });
-  });
 });

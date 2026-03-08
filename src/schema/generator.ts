@@ -71,7 +71,6 @@ function generateTypeDefinition(
 ): string[] {
   const lines: string[] = [];
   const exportKeyword = opts.exportAll ? 'export ' : '';
-  const readonlyKeyword = opts.readonly ? 'readonly ' : '';
 
   if (typeDef.description) {
     lines.push(`/** ${typeDef.description} */`);

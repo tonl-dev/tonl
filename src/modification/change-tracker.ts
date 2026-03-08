@@ -4,8 +4,6 @@
  * Tracks all modifications to a document and provides diff capabilities
  */
 
-import type { Change } from './transaction.js';
-
 export interface DiffEntry {
   path: string;
   type: 'added' | 'modified' | 'deleted';
@@ -22,71 +20,6 @@ export interface DiffResult {
     deleted: number;
     total: number;
   };
-}
-
-export class ChangeTracker {
-  private changes: Change[] = [];
-  private enabled = true;
-
-  /**
-   * Record a change
-   */
-  record(change: Change): void {
-    if (this.enabled) {
-      this.changes.push({
-        ...change,
-      });
-    }
-  }
-
-  /**
-   * Get all recorded changes
-   */
-  getChanges(): Change[] {
-    return [...this.changes];
-  }
-
-  /**
-   * Clear all changes
-   */
-  clear(): void {
-    this.changes = [];
-  }
-
-  /**
-   * Get number of changes
-   */
-  count(): number {
-    return this.changes.length;
-  }
-
-  /**
-   * Check if there are any changes
-   */
-  hasChanges(): boolean {
-    return this.changes.length > 0;
-  }
-
-  /**
-   * Enable change tracking
-   */
-  enable(): void {
-    this.enabled = true;
-  }
-
-  /**
-   * Disable change tracking
-   */
-  disable(): void {
-    this.enabled = false;
-  }
-
-  /**
-   * Check if tracking is enabled
-   */
-  isEnabled(): boolean {
-    return this.enabled;
-  }
 }
 
 /**

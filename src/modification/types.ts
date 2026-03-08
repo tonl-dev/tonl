@@ -5,11 +5,6 @@
 import type { TONLValue } from '../types.js';
 
 /**
- * Modification operation type
- */
-export type ModificationType = 'set' | 'delete' | 'insert' | 'update' | 'push' | 'pop';
-
-/**
  * Modification result
  */
 export interface ModificationResult {

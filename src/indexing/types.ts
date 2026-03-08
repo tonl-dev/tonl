@@ -80,23 +80,6 @@ export interface IndexStats {
   depth?: number;
 }
 
-export interface IndexQueryResult {
-  /**
-   * Matching paths
-   */
-  paths: string[];
-
-  /**
-   * Number of results
-   */
-  count: number;
-
-  /**
-   * Query time in ms
-   */
-  queryTime?: number;
-}
-
 /**
  * Base interface for all index implementations
  */

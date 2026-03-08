@@ -15,7 +15,7 @@ import type {
   FilterNode
 } from './types.js';
 import type { TONLValue } from '../types.js';
-import { createContext, createChildContext, isMaxDepthReached, checkIterationLimit, type EvaluationContext } from './context.js';
+import { createContext, isMaxDepthReached, checkIterationLimit, type EvaluationContext } from './context.js';
 import { QueryCache, getGlobalCache } from './cache.js';
 import { evaluateFilterExpression } from './filter-evaluator.js';
 import { SecurityError } from '../errors/index.js';
@@ -323,9 +323,6 @@ export class QueryEvaluator {
   ): any[] {
     const results: any[] = [];
 
-    // Create child context to track depth
-    const childContext = createChildContext(context, current);
-
     // Recursive helper function
     const search = (value: any, depth: number): void => {
       if (depth > context.maxDepth) {
@@ -471,16 +468,7 @@ export class QueryEvaluator {
       // Extract slice with reverse iteration following Python semantics
       const result: any[] = [];
 
-      // For negative step, we iterate while i > effectiveEnd
-      // where effectiveEnd depends on whether end is negative or not
-      let effectiveEnd: number;
-      if (endIndex < 0) {
-        // Negative end index: convert to position from end
-        effectiveEnd = endIndex;
-      } else {
-        // Non-negative end: use as-is
-        effectiveEnd = endIndex;
-      }
+      const effectiveEnd = endIndex;
 
       for (let i = startIndex; i > effectiveEnd; i -= step) {
         if (i >= 0 && i < length) {
@@ -589,18 +577,3 @@ export function evaluate(
   return evaluator.evaluate(ast);
 }
 
-/**
- * Check if a path exists in a document
- */
-export function exists(document: TONLValue, ast: PathNode[]): boolean {
-  const evaluator = new QueryEvaluator(document, { enableCache: false });
-  return evaluator.exists(ast);
-}
-
-/**
- * Get the type of value at a path
- */
-export function typeOf(document: TONLValue, ast: PathNode[]): string | undefined {
-  const evaluator = new QueryEvaluator(document, { enableCache: false });
-  return evaluator.typeOf(ast);
-}

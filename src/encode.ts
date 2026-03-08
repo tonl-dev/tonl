@@ -5,7 +5,7 @@
 import type { TONLValue, TONLObject, TONLArray, TONLEncodeContext, TONLDelimiter } from "./types.js";
 import { MISSING_FIELD_MARKER } from "./types.js";
 import { inferPrimitiveType, isUniformObjectArray, getUniformColumns, isSemiUniformObjectArray, getAllColumns } from "./infer.js";
-import { quoteIfNeeded, tripleQuoteIfNeeded, makeIndent } from "./utils/strings.js";
+import { tripleQuoteIfNeeded, makeIndent } from "./utils/strings.js";
 
 /**
  * MED-010 FIX: Extract duplicated key quoting logic into a helper
@@ -137,8 +137,8 @@ function encodeValue(value: TONLValue, key: string, context: TONLEncodeContext):
   }
 
   // Primitive value
-  // Special handling for boolean, null, and numbers to avoid quoting
-  if (value === true || value === false || value === null) {
+  // Special handling for boolean and numbers to avoid quoting
+  if (value === true || value === false) {
     return `${key}: ${String(value)}`;
   }
 
@@ -372,17 +372,6 @@ function encodeObject(obj: TONLObject, key: string, context: TONLEncodeContext):
     .filter(k => obj[k] !== undefined)
     .sort();
   const columns: string[] = [];
-  // BUG-013 FIX: Use the keys we already collected to check for nested objects
-  const hasNestedObjects = keys.some(k => {
-    const v = obj[k];
-    return typeof v === "object" && v !== null && !Array.isArray(v);
-  });
-
-  // Check if any keys contain special characters that require quoting
-  const hasSpecialKeys = keys.some(k =>
-    k.includes(':') || k.includes(',') || k.includes('{') || k.includes('}') || k.includes('"') ||
-    k.includes('#') || k.includes('@') || k === ''
-  );
 
   // Build column definitions
   // MED-010 FIX: Use extracted quoteKey helper instead of duplicated logic

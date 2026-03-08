@@ -101,42 +101,6 @@ export const DEFAULT_SECURITY_LIMITS: Readonly<SecurityLimits> = Object.freeze({
   MAX_STRING_LENGTH: 10_000,          // Fuzzy match string length
 });
 
-/**
- * Create custom security limits by merging with defaults
- * @param overrides - Partial limits to override
- * @returns Complete security limits with overrides applied
- */
-export function createSecurityLimits(
-  overrides: Partial<SecurityLimits>
-): SecurityLimits {
-  return {
-    ...DEFAULT_SECURITY_LIMITS,
-    ...overrides,
-  };
-}
-
-/**
- * Validate that limits are within acceptable ranges
- * @param limits - Limits to validate
- * @throws Error if any limit is out of range
- */
-export function validateSecurityLimits(limits: SecurityLimits): void {
-  if (limits.MAX_NESTING_DEPTH < 1 || limits.MAX_NESTING_DEPTH > 1000) {
-    throw new Error('MAX_NESTING_DEPTH must be between 1 and 1000');
-  }
-  if (limits.MAX_INPUT_SIZE < 1024 || limits.MAX_INPUT_SIZE > 100 * 1024 * 1024) {
-    throw new Error('MAX_INPUT_SIZE must be between 1KB and 100MB');
-  }
-  if (limits.MAX_BUFFER_SIZE < 1024 || limits.MAX_BUFFER_SIZE > 100 * 1024 * 1024) {
-    throw new Error('MAX_BUFFER_SIZE must be between 1KB and 100MB');
-  }
-  if (limits.MAX_REGEX_PATTERN_LENGTH < 10 || limits.MAX_REGEX_PATTERN_LENGTH > 1000) {
-    throw new Error('MAX_REGEX_PATTERN_LENGTH must be between 10 and 1000');
-  }
-  if (limits.MAX_BLOCK_LINES < 100 || limits.MAX_BLOCK_LINES > 1_000_000) {
-    throw new Error('MAX_BLOCK_LINES must be between 100 and 1,000,000');
-  }
-}
 
 // Re-export individual constants for convenience
 export const {
@@ -153,5 +117,4 @@ export const {
   MAX_BLOCK_LINES,
   MAX_INDENT,
   MAX_STRING_LENGTH,
-  MAX_ENCODE_DEPTH,
 } = DEFAULT_SECURITY_LIMITS;

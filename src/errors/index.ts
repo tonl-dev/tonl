@@ -2,9 +2,6 @@
  * TONL Error classes with enhanced reporting
  */
 
-// Task 014: Export centralized error messages
-export { ErrorMessages, type ErrorMessageKey } from './messages.js';
-
 /**
  * Base TONL error class with location tracking
  */
@@ -159,31 +156,3 @@ export class SecurityError extends Error {
   }
 }
 
-/**
- * Helper to format error location
- */
-export function formatErrorLocation(
-  lines: string[],
-  lineNum: number,
-  column?: number,
-  contextLines: number = 2
-): string {
-  const result: string[] = [];
-  const start = Math.max(0, lineNum - contextLines);
-  const end = Math.min(lines.length, lineNum + contextLines + 1);
-
-  for (let i = start; i < end; i++) {
-    const lineNumber = i + 1;
-    const prefix = i === lineNum ? '>' : ' ';
-    const paddedLineNum = String(lineNumber).padStart(4);
-    result.push(`${prefix} ${paddedLineNum} | ${lines[i]}`);
-
-    // Add caret indicator
-    if (i === lineNum && column !== undefined) {
-      const spaces = ' '.repeat(8 + column); // 8 = prefix + line num + " | "
-      result.push(`${spaces}^`);
-    }
-  }
-
-  return result.join('\n');
-}

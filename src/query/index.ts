@@ -8,7 +8,7 @@
 export * from './types.js';
 
 // Export tokenizer
-export { tokenize, isTokenType, isOperator, getOperatorPrecedence } from './tokenizer.js';
+export { tokenize, isOperator, getOperatorPrecedence } from './tokenizer.js';
 
 // Export parser
 export { parsePath } from './path-parser.js';
@@ -26,9 +26,7 @@ export {
 // Export evaluator
 export {
   QueryEvaluator,
-  evaluate,
-  exists,
-  typeOf
+  evaluate
 } from './evaluator.js';
 
 // Export context

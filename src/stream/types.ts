@@ -19,12 +19,3 @@ export interface StreamDecodeOptions extends DecodeOptions {
   highWaterMark?: number;  // Buffer size for backpressure (default: 16KB)
 }
 
-/**
- * Chunk data for streaming
- */
-export interface TONLChunk {
-  type: 'block' | 'primitive' | 'array';
-  key?: string;
-  data: any;
-  complete: boolean;
-}

@@ -2,10 +2,8 @@
  * TONL Decoder - Converts TONL format back to JSON
  */
 
-import type { TONLValue, TONLObject, TONLArray, TONLParseContext, TONLDelimiter, TONLColumnDef } from "./types.js";
-import { parseTONLLine, parseHeaderLine, parseObjectHeader, detectDelimiter } from "./parser.js";
-import { coerceValue, inferTypeFromString } from "./infer.js";
-import { unquote } from "./utils/strings.js";
+import type { TONLValue, TONLParseContext, TONLDelimiter } from "./types.js";
+import { parseHeaderLine, detectDelimiter } from "./parser.js";
 import { TONLParseError } from "./errors/index.js";
 import { parseContent } from "./parser/content-parser.js";
 
@@ -78,8 +76,6 @@ export function decodeTONL(text: string, opts: {
     // @ symbol keys are @key: value but should be treated as data
     if (line.startsWith('@')) {
       const colonIndex = line.indexOf(':');
-      const spaceIndex = line.indexOf(' ');
-      const tabIndex = line.indexOf('\t');
 
       // Check if this looks like a real directive (@keyword: value format)
       // If colon comes first and it's a known directive keyword, skip it

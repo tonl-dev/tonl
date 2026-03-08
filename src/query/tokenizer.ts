@@ -598,13 +598,6 @@ export function tokenize(input: string): Token[] {
 }
 
 /**
- * Check if a token is of a specific type
- */
-export function isTokenType(token: Token, type: TokenType): boolean {
-  return token.type === type;
-}
-
-/**
  * Check if a token is an operator
  */
 export function isOperator(token: Token): boolean {

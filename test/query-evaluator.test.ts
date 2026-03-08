@@ -18,12 +18,21 @@ import {
   parsePath,
   QueryEvaluator,
   evaluate,
-  exists,
-  typeOf,
   QueryCache,
   getGlobalCache,
   resetGlobalCache
 } from '../dist/query/index.js';
+
+// Local helpers wrapping QueryEvaluator methods (previously exported as standalone functions)
+function exists(document: any, ast: any[]): boolean {
+  const evaluator = new QueryEvaluator(document, { enableCache: false });
+  return evaluator.exists(ast);
+}
+
+function typeOf(document: any, ast: any[]): string | undefined {
+  const evaluator = new QueryEvaluator(document, { enableCache: false });
+  return evaluator.typeOf(ast);
+}
 
 describe('Query Evaluator - T002', () => {
   // Reset cache before all tests

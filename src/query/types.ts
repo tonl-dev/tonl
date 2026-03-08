@@ -210,34 +210,6 @@ export type BinaryOperator =
   | 'instanceof'; // Instance check
 
 /**
- * Fuzzy matching operators
- */
-export type FuzzyOperator =
-  | '~='
-  | '~contains'
-  | '~startsWith'
-  | '~endsWith'
-  | 'fuzzyMatch'
-  | 'soundsLike'
-  | 'similar';
-
-/**
- * Temporal comparison operators
- */
-export type TemporalOperator =
-  | 'before'
-  | 'after'
-  | 'between'
-  | 'daysAgo'
-  | 'weeksAgo'
-  | 'monthsAgo'
-  | 'yearsAgo'
-  | 'sameDay'
-  | 'sameWeek'
-  | 'sameMonth'
-  | 'sameYear';
-
-/**
  * Unary operators for filter expressions
  */
 export type UnaryOperator =

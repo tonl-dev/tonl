@@ -2,7 +2,7 @@
  * Type inference utilities for TONL
  */
 
-import type { TONLTypeHint, TONLValue, TONLObject, TONLArray } from "./types.js";
+import type { TONLTypeHint } from "./types.js";
 
 /**
  * Infer the TONL type hint for a JavaScript value

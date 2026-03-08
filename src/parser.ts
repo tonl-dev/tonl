@@ -2,14 +2,13 @@
  * Core parsing utilities for TONL format
  */
 
-import type { ParserState, ParserMode, TONLDelimiter, TONLObjectHeader, TONLColumnDef } from "./types.js";
+import type { ParserState, TONLDelimiter, TONLObjectHeader, TONLColumnDef } from "./types.js";
 import { TONLParseError } from "./errors/index.js";
 
 // Task 013: Import from centralized security limits
 import {
   MAX_LINE_LENGTH,
   MAX_FIELDS_PER_LINE,
-  MAX_NESTING_DEPTH,
 } from "./utils/security-limits.js";
 
 /**

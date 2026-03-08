@@ -8,16 +8,12 @@ import type {
   FilterExpression,
   BinaryExpression,
   UnaryExpression,
-  LiteralExpression,
-  PropertyExpression,
-  FunctionExpression,
-  BinaryOperator,
-  UnaryOperator
+  FunctionExpression
 } from './types.js';
 import { RegexExecutor } from './regex-executor.js';
 import { SecurityError } from '../errors/index.js';
-import { evaluateFuzzyOperator, isFuzzyOperator, levenshteinDistance } from './fuzzy-matcher.js';
-import { evaluateTemporalOperator, isTemporalOperator, parseTemporalLiteral } from './temporal-evaluator.js';
+import { evaluateFuzzyOperator, levenshteinDistance } from './fuzzy-matcher.js';
+import { evaluateTemporalOperator, parseTemporalLiteral } from './temporal-evaluator.js';
 import { isDangerousProperty } from '../utils/property-security.js';
 
 /**
