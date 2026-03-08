@@ -414,6 +414,43 @@ data[3]{name,value,note}:
 - `""` → empty string `""`
 - `null` → null value
 
+### Format Selection: Tabular vs Block
+
+When encoding an array of objects, the format is determined by the **value types** of the object properties:
+
+- **Tabular format**: Used when ALL property values across all objects are **primitives** (string, number, boolean, null). Each object is encoded as a single delimited row.
+- **Block format**: Required when ANY object contains a property whose value is an **array or nested object**. Each object is encoded as an indented block with key-value pairs, and nested collections continue as sub-blocks.
+
+The encoder automatically detects this and selects the appropriate format.
+
+#### Example: Block Format for Objects with Collections
+
+**JSON:**
+```json
+{
+  "constraints": [
+    {
+      "constraintName": "PK_Users",
+      "tableName": "Users",
+      "columns": ["UserId", "TenantId"]
+    }
+  ]
+}
+```
+
+**TONL (Block Format — `columns` is a nested array):**
+```
+constraints[1]:
+  [0]{columns,constraintName,tableName}:
+    columns[2]: UserId, TenantId
+    constraintName: PK_Users
+    tableName: Users
+```
+
+Tabular format **cannot** represent this because `columns` is a list, not a primitive value.
+
+See also the [Complex Nested Example](#complex-nested-example) for a deeper illustration of block format with multiple levels of nesting.
+
 ### Arrays of Primitives
 
 #### Single-Line Format
