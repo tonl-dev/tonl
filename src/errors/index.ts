@@ -145,7 +145,12 @@ export class SecurityError extends Error {
   toString(): string {
     let result = `${this.name}: ${this.message}`;
 
-    if (this.details) {
+    // Match TONLError: only surface detailed context in development.
+    // In production this would otherwise leak internal paths, regex patterns,
+    // and validation context to anyone who can trigger a security error.
+    const isDevelopment = process.env.NODE_ENV === 'development';
+
+    if (this.details && isDevelopment) {
       result += '\n  Details:';
       for (const [key, value] of Object.entries(this.details)) {
         result += `\n    ${key}: ${JSON.stringify(value)}`;

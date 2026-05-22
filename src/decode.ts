@@ -6,6 +6,7 @@ import type { TONLValue, TONLParseContext, TONLDelimiter } from "./types.js";
 import { parseHeaderLine, detectDelimiter } from "./parser.js";
 import { TONLParseError } from "./errors/index.js";
 import { parseContent } from "./parser/content-parser.js";
+import { MAX_NESTING_DEPTH, MAX_BLOCK_LINES } from "./utils/security-limits.js";
 
 /**
  * Decode a TONL formatted string back to JavaScript value.
@@ -64,7 +65,12 @@ export function decodeTONL(text: string, opts: {
     strict,
     delimiter: opts.delimiter || ",",
     allLines: lines,
-    currentLine: 0
+    currentLine: 0,
+    // Initialize from centralized security limits — without this the parser
+    // falls back to `|| 500` in block-parser, ignoring the documented limit.
+    currentDepth: 0,
+    maxDepth: MAX_NESTING_DEPTH,
+    maxBlockLines: MAX_BLOCK_LINES,
   };
 
   let dataStartIndex = 0;
