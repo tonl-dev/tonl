@@ -2,7 +2,8 @@
 /**
  * TONL Document Tree Provider (T039)
  *
- * Provides a tree view for exploring TONL document structure
+ * Provides a tree view for exploring TONL document structure.
+ * Features real-time parsing, type-aware icons, and interactive navigation.
  */
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
