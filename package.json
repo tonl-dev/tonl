@@ -82,6 +82,7 @@
     "build": "rimraf dist && tsc && node fix-imports.js",
     "build:browser": "vite build && node scripts/copy-browser-build.js",
     "build:all": "npm run build && npm run build:browser",
+    "prepack": "npm run build:all",
     "verify": "npm run build && npm run test:compiled && npm run examples:compiled && npm run build:browser && npm run package:check && npm audit --audit-level=high",
     "test": "npm run build && npm run test:compiled",
     "test:compiled": "node scripts/run-tests.js",
