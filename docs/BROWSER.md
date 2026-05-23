@@ -511,9 +511,9 @@ export function useTONL(initialData) {
 
 | Build | Size | Gzipped |
 |-------|------|---------|
-| ESM | ~105KB | ~28.8KB |
-| UMD | ~105KB | ~29.0KB |
-| IIFE | ~105KB | ~29.0KB |
+| ESM | ~106KB | ~29.3KB |
+| UMD | ~106KB | ~29.5KB |
+| IIFE | ~105KB | ~29.4KB |
 
 ### Tree Shaking
 
@@ -523,7 +523,7 @@ The ESM build supports tree-shaking. Import only what you need:
 // Minimal import (~5KB gzipped)
 import { encodeTONL, decodeTONL } from 'tonl/browser';
 
-// Full import (~29KB gzipped)
+// Full import (~29.5KB gzipped)
 import {
   TONLDocument,
   encodeTONL,
