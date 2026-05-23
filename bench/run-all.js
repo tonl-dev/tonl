@@ -11,19 +11,24 @@ console.log('🚀 TONL Complete Benchmark Suite Starting...\n');
 
 const benchmarks = [
   {
-    name: 'Format Comparison',
-    script: 'run-benchmarks.js',
-    description: 'Byte and token comparison'
+    name: 'Byte Size',
+    command: 'npm run bench --silent',
+    description: 'Byte comparison on fixture data'
   },
   {
     name: 'Token Analysis',
-    script: 'token-analysis.js',
-    description: 'Model-based cost analysis'
+    command: 'npm run bench-tokens --silent',
+    description: 'Token comparison on fixture data'
   },
   {
-    name: 'Performance Analysis',
-    script: 'performance-analysis.js',
-    description: 'Speed and memory performance'
+    name: 'Comprehensive Analysis',
+    command: 'npm run bench-comprehensive --silent',
+    description: 'Byte, token, and cost analysis across fixtures'
+  },
+  {
+    name: 'Query Performance',
+    command: 'npm run bench-query --silent',
+    description: 'Query API speed benchmarks'
   }
 ];
 
@@ -31,13 +36,14 @@ console.log('📋 Tests to Run:\n');
 benchmarks.forEach((benchmark, index) => {
   console.log(`${index + 1}. ${benchmark.name}`);
   console.log(`   📝 ${benchmark.description}`);
-  console.log(`   🔧 Script: ${benchmark.script}\n`);
+  console.log(`   🔧 Command: ${benchmark.command}\n`);
 });
 
 console.log('='.repeat(60));
-console.log('Total test time: ~2-3 minutes.\n');
+console.log('Total test time: ~10-20 seconds.\n');
 
 let totalStartTime = Date.now();
+let failed = false;
 
 for (let i = 0; i < benchmarks.length; i++) {
   const benchmark = benchmarks[i];
@@ -47,7 +53,7 @@ for (let i = 0; i < benchmarks.length; i++) {
   console.log('-'.repeat(50));
 
   try {
-    execSync(`node ${path.join(__dirname, benchmark.script)}`, {
+    execSync(benchmark.command, {
       stdio: 'inherit',
       cwd: path.dirname(__dirname)
     });
@@ -55,6 +61,7 @@ for (let i = 0; i < benchmarks.length; i++) {
     const duration = Date.now() - startTime;
     console.log(`\n✅ ${benchmark.name} completed (${(duration / 1000).toFixed(1)}s)`);
   } catch (error) {
+    failed = true;
     console.log(`\n❌ ${benchmark.name} failed: ${error.message}`);
   }
 
@@ -70,9 +77,13 @@ console.log('\n' + '='.repeat(60));
 console.log('🎉 All Benchmark Suite Completed!');
 console.log(`⏱️  Total time: ${(totalDuration / 1000).toFixed(1)} seconds`);
 console.log('\n📊 Summary Report:');
-console.log('   • Format comparison: Byte and token savings');
-console.log('   • Token analysis: Model-based cost optimization');
-console.log('   • Performance analysis: Speed and memory metrics');
+console.log('   • Byte size comparison');
+console.log('   • Token analysis');
+console.log('   • Comprehensive fixture analysis');
+console.log('   • Query performance metrics');
 console.log('\n💡 See tables above for detailed results.');
-console.log('\n📁 Test data: examples/benchmark-data/');
-console.log('📋 Full report: examples/benchmark-data/README.md');
+console.log('\n📁 Test data: bench/fixtures/');
+
+if (failed) {
+  process.exit(1);
+}

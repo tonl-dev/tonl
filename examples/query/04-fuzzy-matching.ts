@@ -187,19 +187,19 @@ const languages = [
 console.log('   Searching for "JavaScrpt":');
 const jsResults = fuzzySearch('JavaScrpt', languages, { limit: 3 });
 jsResults.forEach((r, i) => {
-  console.log(`     ${i + 1}. ${r.value} (score: ${(r.score * 100).toFixed(1)}%)`);
+  console.log(`     ${i + 1}. ${r.value} (score: ${(r.similarity * 100).toFixed(1)}%)`);
 });
 
 console.log('\n   Searching for "Pyton":');
 const pyResults = fuzzySearch('Pyton', languages, { limit: 3 });
 pyResults.forEach((r, i) => {
-  console.log(`     ${i + 1}. ${r.value} (score: ${(r.score * 100).toFixed(1)}%)`);
+  console.log(`     ${i + 1}. ${r.value} (score: ${(r.similarity * 100).toFixed(1)}%)`);
 });
 
 console.log('\n   Searching for "Typscript":');
 const tsResults = fuzzySearch('Typscript', languages, { limit: 3 });
 tsResults.forEach((r, i) => {
-  console.log(`     ${i + 1}. ${r.value} (score: ${(r.score * 100).toFixed(1)}%)`);
+  console.log(`     ${i + 1}. ${r.value} (score: ${(r.similarity * 100).toFixed(1)}%)`);
 });
 
 // ============================================
@@ -310,7 +310,7 @@ for (const query of typoSearches) {
   const results = fuzzySearch(query, products, { limit: 2, threshold: 0.5 });
   console.log(`\n   Query: "${query}"`);
   results.forEach((r, i) => {
-    console.log(`     ${i + 1}. ${r.value} (${(r.score * 100).toFixed(0)}% match)`);
+    console.log(`     ${i + 1}. ${r.value} (${(r.similarity * 100).toFixed(0)}% match)`);
   });
 }
 

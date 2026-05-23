@@ -10,7 +10,8 @@
  * - Type hints
  */
 
-import { encodeTONL, decodeTONL } from '../../dist/index.js';
+import { isDeepStrictEqual } from 'node:util';
+import { encodeTONL, decodeTONL, encodeSmart } from '../../dist/index.js';
 
 console.log('📦 Core Serialization Features\n');
 console.log('='.repeat(60));
@@ -74,9 +75,7 @@ const original = userData;
 const encoded = encodeTONL(original);
 const decoded = decodeTONL(encoded);
 
-const originalJSON = JSON.stringify(original, null, 2);
-const decodedJSON = JSON.stringify(decoded, null, 2);
-const isIdentical = originalJSON === decodedJSON;
+const isIdentical = isDeepStrictEqual(decoded, original);
 
 console.log('Original → TONL → Decoded → JSON');
 console.log(`Identical: ${isIdentical ? '✅ YES' : '❌ NO'}`);
@@ -84,11 +83,11 @@ console.log(`Identical: ${isIdentical ? '✅ YES' : '❌ NO'}`);
 if (isIdentical) {
     console.log('Perfect bidirectional conversion guaranteed!\n');
 } else {
-    // Data might be semantically identical but with different ordering
-    console.log('⚠️  Minor differences detected (usually key ordering)\n');
+    console.log('❌ Round-trip data changed unexpectedly.\n');
     console.log('Data integrity check:');
     console.log(`  Users count: ${decoded.users?.length === original.users?.length ? '✅' : '❌'}`);
     console.log(`  Metadata present: ${decoded.metadata ? '✅' : '❌'}\n`);
+    process.exitCode = 1;
 }
 
 // ========================================
@@ -102,7 +101,7 @@ const dataWithCommas = {
     items: ['apple,orange', 'banana,grape', 'kiwi,mango']
 };
 
-const tonlWithCommas = encodeTONL(dataWithCommas);
+const tonlWithCommas = encodeSmart(dataWithCommas);
 console.log('Data with commas:');
 console.log(tonlWithCommas);
 console.log('→ Automatically avoids comma delimiter\n');
@@ -112,20 +111,20 @@ const dataWithPipes = {
     paths: ['/usr/bin|/usr/local/bin', '/opt/bin|/home/bin']
 };
 
-const tonlWithPipes = encodeTONL(dataWithPipes);
+const tonlWithPipes = encodeSmart(dataWithPipes);
 console.log('Data with pipes:');
 console.log(tonlWithPipes);
 console.log('→ Automatically avoids pipe delimiter\n');
 
-// Clean data - uses comma (most compact)
+// Clean data - still chooses the delimiter with the lowest quoting overhead
 const cleanData = {
     items: ['apple', 'banana', 'orange']
 };
 
-const tonlClean = encodeTONL(cleanData);
+const tonlClean = encodeSmart(cleanData);
 console.log('Clean data:');
 console.log(tonlClean);
-console.log('→ Uses comma delimiter (most compact)\n');
+console.log('→ Chooses the lowest-overhead delimiter automatically\n');
 
 // ========================================
 // 5. Type Hints

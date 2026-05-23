@@ -25,12 +25,14 @@ function main() {
     const args = process.argv.slice(2);
     const targetFile = args[0];
     if (!targetFile) {
-        console.log("Usage: bench-bytes.ts <file.json>\n");
+        console.log("Usage: bench-bytes.js <file.json>\n");
         console.log("Running benchmark on sample files...\n");
         // Run on sample fixtures
         const sampleFiles = [
             "bench/fixtures/sample-users.json",
-            "bench/fixtures/nested-project.json"
+            "bench/fixtures/nested-project.json",
+            "bench/fixtures/sample.json",
+            "bench/fixtures/northwind.json"
         ];
         const results = [];
         for (const file of sampleFiles) {
@@ -98,4 +100,3 @@ function displayResults(results) {
     console.log(`• Best overall savings: ${Math.max(...results.map(r => Math.max(r.tonlCompression, r.tonlSmartCompression))).toFixed(2)}x`);
 }
 main();
-//# sourceMappingURL=bench-bytes.js.map

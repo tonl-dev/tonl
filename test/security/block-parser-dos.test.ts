@@ -9,9 +9,11 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { decodeTONL } from '../../dist/decode.js';
 
+const TEST_BLOCK_LINE_LIMIT = 10_000;
+
 describe('Block Parser DoS Protection', () => {
   describe('Block Line Limit Enforcement', () => {
-    it('should reject blocks exceeding default line limit (10000)', () => {
+    it('should reject blocks exceeding configured line limit', () => {
       // Generate a TONL string with 15000 lines in a single block
       const lines = ['data:'];
       for (let i = 0; i < 15000; i++) {
@@ -20,7 +22,7 @@ describe('Block Parser DoS Protection', () => {
       const hugeBlock = lines.join('\n');
 
       assert.throws(
-        () => decodeTONL(hugeBlock, { strict: true }),
+        () => decodeTONL(hugeBlock, { strict: true, maxBlockLines: TEST_BLOCK_LINE_LIMIT }),
         /maximum.*block.*lines.*exceeded/i
       );
     });
@@ -47,7 +49,7 @@ describe('Block Parser DoS Protection', () => {
       const hugeArrayBlock = lines.join('\n');
 
       assert.throws(
-        () => decodeTONL(hugeArrayBlock, { strict: true }),
+        () => decodeTONL(hugeArrayBlock, { strict: true, maxBlockLines: TEST_BLOCK_LINE_LIMIT }),
         /maximum.*block.*lines.*exceeded/i
       );
     });
@@ -109,10 +111,10 @@ address:
       const hugeBlock = lines.join('\n');
 
       try {
-        decodeTONL(hugeBlock, { strict: true });
+        decodeTONL(hugeBlock, { strict: true, maxBlockLines: TEST_BLOCK_LINE_LIMIT });
         assert.fail('Expected an error to be thrown');
       } catch (error: any) {
-        assert.ok(error.message.includes('10000'), `Error should mention limit: ${error.message}`);
+        assert.ok(error.message.includes(String(TEST_BLOCK_LINE_LIMIT)), `Error should mention limit: ${error.message}`);
       }
     });
   });
@@ -141,7 +143,7 @@ address:
       const overLimitBlock = lines.join('\n');
 
       assert.throws(
-        () => decodeTONL(overLimitBlock, { strict: true }),
+        () => decodeTONL(overLimitBlock, { strict: true, maxBlockLines: TEST_BLOCK_LINE_LIMIT }),
         /maximum.*block.*lines.*exceeded/i
       );
     });

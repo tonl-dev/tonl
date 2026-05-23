@@ -63,14 +63,14 @@ export interface SecurityLimits {
  * - MAX_LINE_LENGTH: 100KB allows for data rows with many columns
  * - MAX_FIELDS_PER_LINE: 10,000 fields supports wide tables
  * - MAX_NESTING_DEPTH: 100 levels handles deep structures safely
- * - MAX_INPUT_SIZE: 10MB total input prevents memory exhaustion
+ * - MAX_INPUT_SIZE: 20MB total TONL/text input prevents memory exhaustion
  * - MAX_JSON_SIZE: 10MB for inline JSON parsing
  * - MAX_REGEX_PATTERN_LENGTH: 100 chars prevents complex regex
  * - MAX_REGEX_NESTING_DEPTH: 3 levels prevents nested quantifiers
  * - MAX_QUERY_DEPTH: 500 for recursive query operations
  * - MAX_ITERATIONS: 1,000,000 for loop protection
  * - MAX_BUFFER_SIZE: 10MB for streaming operations
- * - MAX_BLOCK_LINES: 10,000 lines per block
+ * - MAX_BLOCK_LINES: 1,000,000 lines per block, bounded by total input size
  * - MAX_INDENT: 10,000 spaces max indentation
  * - MAX_STRING_LENGTH: 10,000 chars for fuzzy matching
  * - MAX_ENCODE_DEPTH: 500 for encoder recursion
@@ -79,13 +79,13 @@ export const DEFAULT_SECURITY_LIMITS: Readonly<SecurityLimits> = Object.freeze({
   // Input limits
   MAX_LINE_LENGTH: 100_000,           // 100KB per line
   MAX_FIELDS_PER_LINE: 10_000,        // Max fields per line
-  MAX_INPUT_SIZE: 10 * 1024 * 1024,   // 10MB total input
+  MAX_INPUT_SIZE: 20 * 1024 * 1024,   // 20MB total TONL/text input
   MAX_JSON_SIZE: 10 * 1024 * 1024,    // 10MB JSON limit
   MAX_BUFFER_SIZE: 10 * 1024 * 1024,  // 10MB stream buffer
 
   // Structure limits
   MAX_NESTING_DEPTH: 100,             // Object/array nesting (parser)
-  MAX_BLOCK_LINES: 10_000,            // Lines per block
+  MAX_BLOCK_LINES: 1_000_000,         // Lines per block, still bounded by input size
   MAX_ENCODE_DEPTH: 500,              // Encoder nesting depth
 
   // Regex limits (ReDoS protection)

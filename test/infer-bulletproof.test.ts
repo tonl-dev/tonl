@@ -54,10 +54,10 @@ describe('BULLETPROOF: Type Inference', () => {
       assert.strictEqual(inferPrimitiveType(0.0000001), 'f64');
     });
 
-    it('should handle f64 for special values', () => {
-      assert.strictEqual(inferPrimitiveType(Infinity), 'f64');
-      assert.strictEqual(inferPrimitiveType(-Infinity), 'f64');
-      assert.strictEqual(inferPrimitiveType(NaN), 'f64');
+    it('should treat non-finite numbers as null-like values', () => {
+      assert.strictEqual(inferPrimitiveType(Infinity), 'null');
+      assert.strictEqual(inferPrimitiveType(-Infinity), 'null');
+      assert.strictEqual(inferPrimitiveType(NaN), 'null');
     });
 
     it('should handle strings', () => {

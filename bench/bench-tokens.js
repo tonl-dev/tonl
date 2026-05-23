@@ -25,13 +25,23 @@ function benchmarkTokens(filepath, tokenizer = "cl100k") {
 function main() {
     const args = process.argv.slice(2);
     let targetFile = "";
-    let tokenizer = "cl100k";
+    let tokenizer = "gpt-5";
+    const supportedTokenizers = [
+        "gpt-5",
+        "gpt-4.5",
+        "gpt-4o",
+        "claude-3.5",
+        "gemini-2.0",
+        "llama-4",
+        "o200k",
+        "cl100k"
+    ];
     // Parse arguments
     for (let i = 0; i < args.length; i++) {
         const arg = args[i];
         if (arg === "--tokenizer" && args[i + 1]) {
             const nextArg = args[i + 1];
-            if (nextArg === "gpt-4o" || nextArg === "o200k" || nextArg === "cl100k") {
+            if (supportedTokenizers.includes(nextArg)) {
                 tokenizer = nextArg;
                 i++;
             }
@@ -41,12 +51,14 @@ function main() {
         }
     }
     if (!targetFile) {
-        console.log("Usage: bench-tokens.ts <file.json> [--tokenizer gpt-4o|o200k|cl100k]\n");
+        console.log("Usage: bench-tokens.js <file.json> [--tokenizer gpt-5|gpt-4.5|gpt-4o|claude-3.5|gemini-2.0|llama-4|o200k|cl100k]\n");
         console.log(`Running token benchmark with ${tokenizer} tokenizer on sample files...\n`);
         // Run on sample fixtures
         const sampleFiles = [
             "bench/fixtures/sample-users.json",
-            "bench/fixtures/nested-project.json"
+            "bench/fixtures/nested-project.json",
+            "bench/fixtures/sample.json",
+            "bench/fixtures/northwind.json"
         ];
         const results = [];
         for (const file of sampleFiles) {
@@ -123,4 +135,3 @@ function displayResults(results, tokenizer) {
     console.log(`• TONL Smart cost: $${tonlSmartCost.toFixed(4)} (save $${(jsonCost - tonlSmartCost).toFixed(4)})`);
 }
 main();
-//# sourceMappingURL=bench-tokens.js.map

@@ -22,6 +22,7 @@ export type ConstraintType =
   | 'required' | 'optional' | 'default'
   // String
   | 'min' | 'max' | 'length' | 'pattern' | 'trim' | 'lowercase' | 'uppercase'
+  | 'enum'
   // Numeric
   | 'range' | 'multipleOf' | 'integer' | 'positive' | 'negative'
   // Array

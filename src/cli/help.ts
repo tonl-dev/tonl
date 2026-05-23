@@ -18,7 +18,7 @@ Usage:
 
 Options:
   --out <file>           Output file (default: stdout)
-  --delimiter <,|\t|;|;> Field delimiter (default: ,)
+  --delimiter <,|\\t|;>  Field delimiter (default: ,)
   --include-types        Include type hints in headers
   --version <string>     TONL version (default: 1.0)
   --indent <number>      Indentation spaces (default: 2)

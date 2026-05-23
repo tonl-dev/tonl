@@ -6,6 +6,7 @@ import type { TONLValue, TONLParseContext, TONLDelimiter } from "./types.js";
 import { parseHeaderLine, detectDelimiter } from "./parser.js";
 import { TONLParseError } from "./errors/index.js";
 import { parseContent } from "./parser/content-parser.js";
+import { MAX_INPUT_SIZE } from "./utils/security-limits.js";
 
 /**
  * Decode a TONL formatted string back to JavaScript value.
@@ -49,7 +50,14 @@ import { parseContent } from "./parser/content-parser.js";
 export function decodeTONL(text: string, opts: {
   delimiter?: TONLDelimiter;
   strict?: boolean;
+  maxBlockLines?: number;
 } = {}): TONLValue {
+  if (text.length > MAX_INPUT_SIZE) {
+    throw new TONLParseError(
+      `Input exceeds maximum size: ${text.length} characters (max: ${MAX_INPUT_SIZE})`
+    );
+  }
+
   const strict = opts.strict ?? false;
   // Split lines and only remove \r (Windows line endings), don't trim other whitespace
   const lines = text.split('\n').map(line => line.replace(/\r$/, '')).filter(line => line.length > 0);
@@ -64,6 +72,7 @@ export function decodeTONL(text: string, opts: {
     strict,
     delimiter: opts.delimiter || ",",
     allLines: lines,
+    maxBlockLines: opts.maxBlockLines,
     currentLine: 0
   };
 

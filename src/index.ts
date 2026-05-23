@@ -13,6 +13,7 @@ import { encodeTONL as _encodeTONL } from "./encode.js";
 import { decodeTONL as _decodeTONL } from "./decode.js";
 import { parseTONLLine, parseHeaderLine, parseObjectHeader, detectDelimiter } from "./parser.js";
 import { inferPrimitiveType, coerceValue, isUniformObjectArray } from "./infer.js";
+import { chooseSmartDelimiter } from "./utils/delimiter.js";
 
 export { _encodeTONL as encodeTONL, _decodeTONL as decodeTONL, parseTONLLine, parseHeaderLine, parseObjectHeader, detectDelimiter, inferPrimitiveType, coerceValue, isUniformObjectArray };
 
@@ -59,39 +60,9 @@ export function encodeSmart(input: TONLValue, opts?: {
   compactTables?: boolean;
   schemaFirst?: boolean;
 }): string {
-  // Smart encoding logic to choose optimal delimiter and formatting
-  const jsonStr = JSON.stringify(input);
-
-  // Optimized delimiter counting - single pass through string (O(n) instead of O(4n))
-  let commaCount = 0, pipeCount = 0, tabCount = 0, semicolonCount = 0;
-  for (let i = 0; i < jsonStr.length; i++) {
-    switch (jsonStr[i]) {
-      case ',': commaCount++; break;
-      case '|': pipeCount++; break;
-      case '\t': tabCount++; break;
-      case ';': semicolonCount++; break;
-    }
-  }
-
-  let bestDelimiter: "," | "|" | "\t" | ";" = ",";
-  let minQuoting = commaCount;
-
-  if (pipeCount < minQuoting) {
-    bestDelimiter = "|";
-    minQuoting = pipeCount;
-  }
-  if (tabCount < minQuoting) {
-    bestDelimiter = "\t";
-    minQuoting = tabCount;
-  }
-  if (semicolonCount < minQuoting) {
-    bestDelimiter = ";";
-    minQuoting = semicolonCount;
-  }
-
   // Choose optimal encoding options
   const smartOpts = {
-    delimiter: bestDelimiter,
+    delimiter: opts?.delimiter ?? chooseSmartDelimiter(input),
     includeTypes: false, // Omit types for compactness
     version: "1.0",
     indent: 2,

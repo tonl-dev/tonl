@@ -11,6 +11,7 @@ import { unquote } from '../utils/strings.js';
 import { parseSingleLineObject } from './value-parser.js';
 import { extractNestedBlockLines } from './utils.js';
 import { TONLParseError } from '../errors/index.js';
+import { MAX_BLOCK_LINES } from '../utils/security-limits.js';
 
 /**
  * Parse TONL line with bracket support for schema-first arrays
@@ -102,7 +103,7 @@ export function parseBlock(
   let i = startIndex + 1;
 
   // SECURITY FIX (Task 001): Get max block lines limit
-  const maxBlockLines = context.maxBlockLines ?? 10000;
+  const maxBlockLines = context.maxBlockLines ?? MAX_BLOCK_LINES;
 
   // Find the block's content lines
   let inMultilineString = false;
@@ -211,7 +212,7 @@ export function parseObjectBlock(
   context: TONLParseContext
 ): TONLObject {
   // SECURITY FIX (Task 001): Validate input lines count
-  const maxBlockLines = context.maxBlockLines ?? 10000;
+  const maxBlockLines = context.maxBlockLines ?? MAX_BLOCK_LINES;
   if (lines.length > maxBlockLines) {
     throw new TONLParseError(
       `Maximum block lines exceeded (${maxBlockLines}). Object block has ${lines.length} lines.`,
@@ -709,7 +710,7 @@ export function parseArrayBlock(
   context: TONLParseContext
 ): TONLArray {
   // SECURITY FIX (Task 001): Validate input lines count
-  const maxBlockLines = context.maxBlockLines ?? 10000;
+  const maxBlockLines = context.maxBlockLines ?? MAX_BLOCK_LINES;
   if (lines.length > maxBlockLines) {
     throw new TONLParseError(
       `Maximum block lines exceeded (${maxBlockLines}). Array block has ${lines.length} lines.`,

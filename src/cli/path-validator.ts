@@ -84,14 +84,19 @@ export class PathValidator {
       });
     }
 
-    // 3. Windows: Check for UNC paths (before other processing)
-    if (process.platform === 'win32') {
-      // UNC paths start with \\ (e.g., \\server\share)
-      if (userPath.startsWith('\\\\')) {
-        throw new SecurityError('UNC paths not allowed', {
-          path: userPath,
-        });
-      }
+    // 3. Cross-platform Windows path protections (before other processing)
+    // UNC paths start with \\ (e.g., \\server\share), and Windows drive
+    // paths can be supplied even when the CLI runs on POSIX.
+    if (userPath.startsWith('\\\\')) {
+      throw new SecurityError('UNC paths not allowed', {
+        path: userPath,
+      });
+    }
+
+    if (/^[a-zA-Z]:[\\/]/.test(userPath)) {
+      throw new SecurityError('Windows absolute paths not allowed', {
+        path: userPath,
+      });
     }
 
     // 4. Normalize path (resolve . and ..)

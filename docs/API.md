@@ -8,7 +8,7 @@ This document provides detailed API documentation for the TONL TypeScript librar
 
 ## 🎉 What's New in v2.5.2
 
-- **Enhanced Test Coverage**: 698+ tests with comprehensive coverage for all modules
+- **Enhanced Test Coverage**: 2,300+ tests with comprehensive coverage for all modules
 - **Browser Documentation**: Complete browser API guide (see [BROWSER.md](BROWSER.md))
 - **Error Handling Guide**: Detailed error handling documentation (see [ERROR_HANDLING.md](ERROR_HANDLING.md))
 - **CLI Documentation**: Full CLI documentation with all commands
@@ -1290,8 +1290,8 @@ const { TONLDocument, encodeTONL, decodeTONL } = require('tonl');
 
 ### Bundle Size
 
-- **Core**: 8.84 KB gzipped
-- **Full**: ~25 KB gzipped (with all features)
+- **Browser ESM**: ~28.8 KB gzipped
+- **Browser UMD/IIFE**: ~29.0 KB gzipped
 - **Tree-shakeable**: Import only what you need
 
 ---
@@ -1520,11 +1520,11 @@ console.log(tonlWithOptimizations);
 
 ## Version
 
-**Current version: 2.1.0**
+**Current version: 2.5.2**
 
 - ✅ Production ready and stable
 - ✅ Full feature set (query, modify, index, stream, schema, optimize)
-- ✅ 100% test coverage (791+ tests)
+- ✅ Broad test suite (2,300+ tests)
 - ✅ Zero runtime dependencies
 - ✅ TypeScript-first with full type safety
 - ✅ Browser and Node.js support

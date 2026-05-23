@@ -420,7 +420,7 @@ A: TONL is more compact (32-45% smaller) and provides a rich query/modification 
 A: Yes! `TONLDocument.fromJSON(yourData)` - works with any JSON.
 
 ### Q: Is it production-ready?
-A: Yes! v2.5.2 is stable with 698+ tests and 100% pass rate.
+A: Yes! v2.5.2 is stable with 2,300+ tests and a clean pass rate.
 
 ### Q: How fast is it?
 A: Very fast! Simple queries: 0.005ms, Filters: 0.03ms, 10-1600x faster than targets.

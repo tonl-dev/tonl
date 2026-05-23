@@ -123,7 +123,10 @@ function parseDirective(line: string, directives: SchemaDirectives): void {
  * Parse field definition: name: type [constraints...]
  */
 function parseFieldDefinition(name: string, typeAndConstraints: string): SchemaField {
-  const parts = typeAndConstraints.split(/\s+/);
+  const parts = typeAndConstraints
+    .split(/\s+/)
+    .map(part => part.replace(/,+$/, ''))
+    .filter(Boolean);
   const typeStr = parts[0];
   const constraintStrs = parts.slice(1);
 
@@ -187,6 +190,13 @@ function parseType(typeStr: string): SchemaType {
 function parseConstraint(constraintStr: string): ValidationConstraint | null {
   // required, optional, etc.
   if (!constraintStr.includes(':')) {
+    if (constraintStr === 'email' || constraintStr === 'url' || constraintStr === 'date') {
+      return {
+        type: 'pattern',
+        value: constraintStr
+      };
+    }
+
     return {
       type: constraintStr as any,
       value: true
@@ -195,13 +205,14 @@ function parseConstraint(constraintStr: string): ValidationConstraint | null {
 
   // key:value format
   const colonIndex = constraintStr.indexOf(':');
-  const key = constraintStr.slice(0, colonIndex);
+  const rawKey = constraintStr.slice(0, colonIndex);
+  const key = normalizeConstraintKey(rawKey);
   const value = constraintStr.slice(colonIndex + 1);
 
   // Try to parse as number
   // BUG-NEW-002 FIX: Use Number.isFinite instead of !isNaN to reject Infinity
-  const numValue = parseFloat(value);
-  if (Number.isFinite(numValue)) {
+  const numValue = Number(value);
+  if (value.trim() !== '' && Number.isFinite(numValue)) {
     return {
       type: key as any,
       value: numValue
@@ -213,6 +224,21 @@ function parseConstraint(constraintStr: string): ValidationConstraint | null {
     type: key as any,
     value: value.replace(/^["']|["']$/g, '')
   };
+}
+
+function normalizeConstraintKey(key: string): string {
+  switch (key) {
+    case 'minLength':
+      return 'min';
+    case 'maxLength':
+      return 'max';
+    case 'email':
+    case 'url':
+    case 'date':
+      return 'pattern';
+    default:
+      return key;
+  }
 }
 
 /**

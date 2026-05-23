@@ -27,7 +27,17 @@ export class SimpleInteractiveStats {
       await this.analyzeAndShow(enhancedStats, filePath, options);
     }
 
+    if (!this.hasInteractiveInput()) {
+      this.close();
+      return;
+    }
+
     await this.showMainMenu(enhancedStats, options);
+  }
+
+  private hasInteractiveInput(): boolean {
+    const input = (this.rl as unknown as { input?: NodeJS.ReadStream }).input;
+    return Boolean(input?.isTTY ?? process.stdin.isTTY);
   }
 
   private async analyzeAndShow(enhancedStats: EnhancedStats, filePath: string, options: AnalyzeOptions): Promise<void> {

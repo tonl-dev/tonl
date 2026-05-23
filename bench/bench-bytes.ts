@@ -5,8 +5,7 @@
  */
 
 import { readFileSync, existsSync } from "fs";
-import { join } from "path";
-import { encodeTONL, encodeSmart } from "../src/index.js";
+import { encodeTONL, encodeSmart } from "../dist/index.js";
 
 interface BenchmarkResult {
   filename: string;
@@ -43,7 +42,7 @@ function main() {
   const targetFile = args[0];
 
   if (!targetFile) {
-    console.log("Usage: bench-bytes.ts <file.json>\n");
+    console.log("Usage: bench-bytes.js <file.json>\n");
     console.log("Running benchmark on sample files...\n");
 
     // Run on sample fixtures

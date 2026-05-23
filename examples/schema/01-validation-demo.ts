@@ -12,7 +12,7 @@
  */
 
 import { TONLDocument } from '../../dist/document.js';
-import { encodeTONL } from '../../dist/index.js';
+import { generateTypeScript, parseSchema } from '../../dist/schema/index.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
@@ -33,7 +33,16 @@ const userSchema = `#schema v1.0
 
 # User validation schema with 13 constraint types demonstrated
 
-users[]:
+Profile: obj
+  bio: str, maxLength:500
+  website: str, url
+  followers: u32, min:0
+
+Settings: obj
+  notifications: bool
+  privacy: str, enum:public|private|friends
+
+User: obj
   id: u32, required
   username: str, required, minLength:3, maxLength:20, pattern:^[a-zA-Z0-9_]+$
   email: str, required, email
@@ -42,13 +51,10 @@ users[]:
   verified: bool, required
   createdAt: str, required
   updatedAt: str
-  profile:
-    bio: str, maxLength:500
-    website: str, url
-    followers: u32, min:0
-  settings:
-    notifications: bool
-    privacy: str, enum:public|private|friends
+  profile: Profile
+  settings: Settings
+
+users: list<User>, required, nonempty:true
 `;
 
 // Create schema file
@@ -123,10 +129,14 @@ const validDoc = new TONLDocument(validData);
 
 console.log('Validating valid data...');
 try {
-    const isValid = validDoc.validate(schemaPath);
-    console.log(isValid ? '✅ Validation PASSED\n' : '❌ Validation FAILED\n');
+    const result = validDoc.validate(schemaPath);
+    if (!result.valid) {
+        throw new Error(result.errors.map(error => `${error.field}: ${error.message}`).join('; '));
+    }
+    console.log('✅ Validation PASSED\n');
 } catch (error: any) {
-    console.log('ℹ️  Validation API may not be implemented yet\n');
+    console.error(`❌ Validation FAILED: ${error.message}\n`);
+    process.exitCode = 1;
 }
 
 // ========================================
@@ -224,21 +234,29 @@ const invalidDataCases = [
 
 console.log('Testing invalid data cases:\n');
 
+let rejectedInvalidCases = 0;
+
 invalidDataCases.forEach(({ name, data }, index) => {
     console.log(`${index + 1}. ${name}`);
     const doc = new TONLDocument(data);
 
     try {
-        const isValid = doc.validate(schemaPath);
-        if (isValid) {
+        const result = doc.validate(schemaPath);
+        if (result.valid) {
             console.log('   ❌ Should have FAILED but PASSED!\n');
         } else {
-            console.log('   ✅ Correctly REJECTED\n');
+            rejectedInvalidCases++;
+            console.log(`   ✅ Correctly REJECTED: ${result.errors[0].message}\n`);
         }
     } catch (error: any) {
+        rejectedInvalidCases++;
         console.log(`   ✅ Correctly REJECTED: ${error.message}\n`);
     }
 });
+
+if (rejectedInvalidCases !== invalidDataCases.length) {
+    process.exitCode = 1;
+}
 
 // ========================================
 // 4. Strict Mode
@@ -263,33 +281,7 @@ console.log('-'.repeat(60));
 
 console.log('Generated TypeScript types from schema:\n');
 
-const generatedTypes = `
-// Auto-generated from demo-users.schema.tonl
-
-export interface User {
-    id: number;
-    username: string; // Pattern: ^[a-zA-Z0-9_]+$, Length: 3-20
-    email: string; // Must be valid email
-    age: number; // Range: 18-120
-    role: 'admin' | 'user' | 'moderator';
-    verified: boolean;
-    createdAt: string;
-    updatedAt?: string;
-    profile?: {
-        bio?: string; // Max length: 500
-        website?: string; // Must be valid URL
-        followers?: number; // Min: 0
-    };
-    settings?: {
-        notifications?: boolean;
-        privacy?: 'public' | 'private' | 'friends';
-    };
-}
-
-export interface UsersData {
-    users: User[];
-}
-`;
+const generatedTypes = generateTypeScript(parseSchema(userSchema));
 
 console.log(generatedTypes);
 
