@@ -47,7 +47,13 @@ if (packResult.status !== 0) {
 
 let pack;
 try {
-  [pack] = JSON.parse(packResult.stdout);
+  const jsonStart = packResult.stdout.search(/(^|\n)\[\s*\{/);
+  if (jsonStart === -1) {
+    throw new Error('missing JSON array');
+  }
+
+  const jsonText = packResult.stdout.slice(packResult.stdout[jsonStart] === '\n' ? jsonStart + 1 : jsonStart);
+  [pack] = JSON.parse(jsonText);
 } catch {
   fail('unable to parse npm pack --json output');
 }
