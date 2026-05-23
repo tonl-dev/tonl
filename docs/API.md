@@ -1290,8 +1290,8 @@ const { TONLDocument, encodeTONL, decodeTONL } = require('tonl');
 
 ### Bundle Size
 
-- **Browser ESM**: ~28.8 KB gzipped
-- **Browser UMD/IIFE**: ~29.0 KB gzipped
+- **Browser ESM**: ~29.3 KB gzipped
+- **Browser UMD/IIFE**: ~29.5 KB gzipped
 - **Tree-shakeable**: Import only what you need
 
 ---

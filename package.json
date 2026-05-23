@@ -79,7 +79,7 @@
     "tonl": "dist/cli.js"
   },
   "scripts": {
-    "build": "tsc && node fix-imports.js",
+    "build": "rimraf dist && tsc && node fix-imports.js",
     "build:browser": "vite build && node scripts/copy-browser-build.js",
     "build:all": "npm run build && npm run build:browser",
     "verify": "npm run build && npm run test:compiled && npm run examples:compiled && npm run build:browser && npm run package:check && npm audit --audit-level=high",
@@ -107,7 +107,7 @@
     "link": "npm run build && npm link",
     "package:check": "node scripts/check-package.js",
     "test:coverage": "npm run build && c8 node scripts/run-tests.js",
-    "test:coverage:report": "npm run test:coverage -- --reporter=html --reporter=text",
+    "test:coverage:report": "npm run build && c8 --reporter=html --reporter=text node scripts/run-tests.js",
     "clean": "rimraf dist"
   },
   "keywords": [
@@ -144,16 +144,16 @@
   "author": "Ersin KOÇ",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^20.19.0 || >=22.12.0"
   },
   "devDependencies": {
-    "@types/node": "^20.19.25",
-    "c8": "^10.1.3",
+    "@types/node": "^25.9.1",
+    "c8": "^11.0.0",
     "fast-check": "^4.3.0",
     "rimraf": "^6.0.1",
     "stream-browserify": "^3.0.0",
     "terser": "^5.44.0",
-    "typescript": "^5.0.0",
-    "vite": "^7.1.12"
+    "typescript": "^6.0.3",
+    "vite": "^8.0.14"
   }
 }
