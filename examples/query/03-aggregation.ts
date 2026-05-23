@@ -170,10 +170,10 @@ console.log('   Median rating:', doc.aggregate('products[*]').median('rating'));
 
 // Percentile
 console.log('\n📈 Percentiles:');
-console.log('   25th percentile (price): $' + doc.aggregate('products[*]').percentile('price', 25));
-console.log('   50th percentile (price): $' + doc.aggregate('products[*]').percentile('price', 50));
-console.log('   75th percentile (price): $' + doc.aggregate('products[*]').percentile('price', 75));
-console.log('   90th percentile (price): $' + doc.aggregate('products[*]').percentile('price', 90));
+console.log('   25th percentile (price): $' + doc.aggregate('products[*]').percentile(25, 'price')?.toFixed(2));
+console.log('   50th percentile (price): $' + doc.aggregate('products[*]').percentile(50, 'price')?.toFixed(2));
+console.log('   75th percentile (price): $' + doc.aggregate('products[*]').percentile(75, 'price')?.toFixed(2));
+console.log('   90th percentile (price): $' + doc.aggregate('products[*]').percentile(90, 'price')?.toFixed(2));
 
 // Frequency
 console.log('\n📊 Frequency Analysis:');

@@ -18,10 +18,9 @@ export {
   validate,
   analyzeAST,
   optimizeAST,
-  astToString,
-  ValidationResult,
-  ASTAnalysis
+  astToString
 } from './validator.js';
+export type { ValidationResult, ASTAnalysis } from './validator.js';
 
 // Export evaluator
 export {

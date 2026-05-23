@@ -624,7 +624,7 @@ async function runTests() {
         if (results.length === 0 || results[0].value !== 'JavaScript') {
             throw new Error('fuzzySearch failed to find best match');
         }
-        console.log(`    💡 Best match: ${results[0].value} (${(results[0].score * 100).toFixed(1)}%)`);
+        console.log(`    💡 Best match: ${results[0].value} (${(results[0].similarity * 100).toFixed(1)}%)`);
     });
 
     test('Fuzzy', 'Case-insensitive matching', () => {

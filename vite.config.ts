@@ -10,7 +10,7 @@ import { resolve } from 'path';
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/browser-core.ts'),
+      entry: resolve(__dirname, 'src/browser.ts'),
       name: 'TONL',
       formats: ['es', 'umd', 'iife'],
       fileName: (format) => {
@@ -65,8 +65,7 @@ export default defineConfig({
     target: 'es2020',
     outDir: 'dist/browser',
     emptyOutDir: true,
-    // Generate source maps for debugging
-    sourcemap: true,
+    sourcemap: false,
     // Report compressed sizes
     reportCompressedSize: true
   },

@@ -5,8 +5,8 @@
  */
 
 import { readFileSync, existsSync } from "fs";
-import { encodeTONL, encodeSmart } from "../src/index.js";
-import { estimateTokens } from "../src/utils/metrics.js";
+import { encodeTONL, encodeSmart } from "../dist/index.js";
+import { estimateTokens } from "../dist/utils/metrics.js";
 
 interface BenchmarkResult {
   filename: string;

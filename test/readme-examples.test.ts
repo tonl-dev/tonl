@@ -331,8 +331,8 @@ describe('README Examples Validation', () => {
       assert.ok(doc instanceof TONLDocument);
     });
 
-    it('TONLDocument.parse() creation (README says fromTONL)', () => {
-      // From README API Reference - Note: README says fromTONL but actual API is parse()
+    it('TONLDocument.parse() creation', () => {
+      // From README API Reference
       const tonl = `#version 1.0
 name: Alice
 age: 30`;
@@ -341,10 +341,10 @@ age: 30`;
       assert.strictEqual(doc.get('age'), 30);
     });
 
-    it('doc.exists() checks existence (README says has)', () => {
+    it('doc.exists() checks existence', () => {
       const doc = TONLDocument.fromJSON({ name: 'Alice' });
 
-      // From README API Reference - Note: README says has() but actual API is exists()
+      // From README API Reference
       assert.strictEqual(doc.exists('name'), true);
       assert.strictEqual(doc.exists('nonexistent'), false);
     });
@@ -443,19 +443,19 @@ age: 30`;
       assert.strictEqual(allEven, true);
     });
 
-    it('doc.size() returns size in bytes (README says getSize)', () => {
+    it('doc.size() returns size in bytes', () => {
       const doc = TONLDocument.fromJSON({ test: 'data' });
 
-      // From README API Reference - Note: README says getSize() but actual API is size()
+      // From README API Reference
       const size = doc.size();
       assert.ok(typeof size === 'number');
       assert.ok(size > 0);
     });
 
-    it('doc.stats() returns statistics (README says getStats)', () => {
+    it('doc.stats() returns statistics', () => {
       const doc = TONLDocument.fromJSON({ test: 'data' });
 
-      // From README API Reference - Note: README says getStats() but actual API is stats()
+      // From README API Reference
       const stats = doc.stats();
       assert.ok(typeof stats === 'object');
     });
@@ -470,12 +470,12 @@ age: 30`;
       assert.ok(doc.getIndex('userById'));
     });
 
-    it('doc.dropIndex() removes index (README says removeIndex)', () => {
+    it('doc.dropIndex() removes index', () => {
       const doc = TONLDocument.fromJSON({
         users: [{ id: 1, name: 'Alice' }]
       });
 
-      // From README API Reference - Note: README says removeIndex but actual API is dropIndex()
+      // From README API Reference
       doc.createIndex('userById', 'users[*].id', 'hash');
       doc.dropIndex('userById');
       assert.strictEqual(doc.getIndex('userById'), undefined);

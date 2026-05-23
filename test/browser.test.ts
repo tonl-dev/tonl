@@ -83,7 +83,7 @@ age: 30`;
       // Data with commas - should use pipe or other delimiter
       const dataWithCommas = { text: 'hello, world, test' };
       const encoded = encodeSmart(dataWithCommas);
-      assert.ok(encoded.length > 0);
+      assert.ok(encoded.includes('#delimiter |'));
     });
 
     test('should accept custom options', () => {
@@ -96,7 +96,12 @@ age: 30`;
       // Data with pipes - should use comma or other delimiter
       const dataWithPipes = { text: 'value|other|test' };
       const encoded = encodeSmart(dataWithPipes);
-      assert.ok(encoded.length > 0);
+      assert.ok(!encoded.includes('#delimiter |'));
+    });
+
+    test('should prefer comma when data has no delimiter collisions', () => {
+      const encoded = encodeSmart({ items: ['apple', 'banana', 'orange'] });
+      assert.ok(!encoded.includes('#delimiter'));
     });
   });
 

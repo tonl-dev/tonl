@@ -15,6 +15,7 @@
 
 import { encodeTONL as _encodeTONL } from "./encode.js";
 import { decodeTONL as _decodeTONL } from "./decode.js";
+import { chooseSmartDelimiter } from "./utils/delimiter.js";
 
 // Core types
 export type { EncodeOptions, DecodeOptions, TONLValue, TONLObject, TONLArray, TONLTypeHint, TONLDelimiter } from "./types.js";
@@ -30,37 +31,8 @@ export function encodeSmart(input: any, opts?: {
   indent?: number;
   singleLinePrimitiveLists?: boolean;
 }): string {
-  const jsonStr = JSON.stringify(input);
-
-  // Optimized delimiter counting - single pass through string (O(n) instead of O(4n))
-  let commaCount = 0, pipeCount = 0, tabCount = 0, semicolonCount = 0;
-  for (let i = 0; i < jsonStr.length; i++) {
-    switch (jsonStr[i]) {
-      case ',': commaCount++; break;
-      case '|': pipeCount++; break;
-      case '\t': tabCount++; break;
-      case ';': semicolonCount++; break;
-    }
-  }
-
-  let bestDelimiter: "," | "|" | "\t" | ";" = ",";
-  let minQuoting = commaCount;
-
-  if (pipeCount < minQuoting) {
-    bestDelimiter = "|";
-    minQuoting = pipeCount;
-  }
-  if (tabCount < minQuoting) {
-    bestDelimiter = "\t";
-    minQuoting = tabCount;
-  }
-  if (semicolonCount < minQuoting) {
-    bestDelimiter = ";";
-    minQuoting = semicolonCount;
-  }
-
   const smartOpts = {
-    delimiter: bestDelimiter,
+    delimiter: opts?.delimiter ?? chooseSmartDelimiter(input),
     includeTypes: false,
     version: "1.0",
     indent: 2,

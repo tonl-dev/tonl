@@ -4,7 +4,7 @@
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import { parseSchema, validateTONL } from '../dist/schema/index.js';
+import { parseSchema, validateTONL, generateTypeScript } from '../dist/schema/index.js';
 
 describe('Schema constraints - unique', () => {
   it('should detect duplicate values in array', () => {
@@ -126,5 +126,70 @@ code: str length:6
     const data2 = { code: 'ABC123' };
     const result2 = validateTONL(data2, schema);
     assert.strictEqual(result2.valid, true);
+  });
+});
+
+describe('Schema constraints - aliases and enum', () => {
+  it('should parse comma-separated constraints and common aliases', () => {
+    const schemaContent = `@schema v1
+
+User: obj
+  username: str, required, minLength:3, maxLength:20, pattern:^[a-zA-Z0-9_]+$
+  email: str, required, email
+  website: str, url
+  role: str, enum:admin|user|moderator
+
+user: User required
+`;
+
+    const schema = parseSchema(schemaContent);
+
+    const validResult = validateTONL({
+      user: {
+        username: 'alice_smith',
+        email: 'alice@example.com',
+        website: 'https://alice.example.com',
+        role: 'admin',
+      },
+    }, schema);
+    assert.strictEqual(validResult.valid, true);
+
+    const invalidResult = validateTONL({
+      user: {
+        username: 'ab',
+        email: 'not-an-email',
+        website: 'ftp://example.com',
+        role: 'superadmin',
+      },
+    }, schema);
+    assert.strictEqual(invalidResult.valid, false);
+    assert.ok(invalidResult.errors.some(error => error.field === 'user.username'));
+    assert.ok(invalidResult.errors.some(error => error.field === 'user.email'));
+    assert.ok(invalidResult.errors.some(error => error.field === 'user.website'));
+    assert.ok(invalidResult.errors.some(error => error.field === 'user.role'));
+  });
+
+  it('should generate literal union types for string enum constraints', () => {
+    const schema = parseSchema(`@schema v1
+
+User: obj
+  role: str enum:admin|user|moderator
+`);
+
+    const generated = generateTypeScript(schema);
+    assert.ok(generated.includes("role?: 'admin' | 'user' | 'moderator';"));
+  });
+
+  it('should preserve commas inside regex constraint values', () => {
+    const schema = parseSchema(`@schema v1
+
+code: str pattern:^[a,b]+$
+`);
+
+    const validResult = validateTONL({ code: 'a,b' }, schema);
+    assert.strictEqual(validResult.valid, true);
+
+    const invalidResult = validateTONL({ code: 'c' }, schema);
+    assert.strictEqual(invalidResult.valid, false);
   });
 });

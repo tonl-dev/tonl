@@ -103,6 +103,8 @@ function generateFieldDeclaration(field: SchemaField, opts: any, indent: string)
       jsdocLines.push(`@maximum ${constraint.value}`);
     } else if (constraint.type === 'pattern') {
       jsdocLines.push(`@pattern ${constraint.value}`);
+    } else if (constraint.type === 'enum') {
+      jsdocLines.push(`@enum ${constraint.value}`);
     }
   }
 
@@ -121,13 +123,25 @@ function generateFieldDeclaration(field: SchemaField, opts: any, indent: string)
   }
 
   // Generate type string
-  const tsType = schemaTypeToTypeScript(field.type);
+  const tsType = fieldTypeToTypeScript(field);
   const optional = isOptionalField(field);
   const questionMark = optional ? '?' : '';
 
   lines.push(`${indent}${readonlyKeyword}${field.name}${questionMark}: ${tsType};`);
 
   return lines;
+}
+
+function fieldTypeToTypeScript(field: SchemaField): string {
+  const enumConstraint = field.constraints.find(constraint => constraint.type === 'enum');
+  if (enumConstraint && field.type.kind === 'primitive' && field.type.baseType === 'str') {
+    return String(enumConstraint.value)
+      .split('|')
+      .map(value => `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`)
+      .join(' | ');
+  }
+
+  return schemaTypeToTypeScript(field.type);
 }
 
 /**

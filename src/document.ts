@@ -16,6 +16,8 @@ import { set as setByPath, deleteValue as deleteByPath, push as pushToArray, pop
 import { IndexManager, type IndexOptions, type IIndex } from './indexing/index.js';
 import { parseSchema, validateTONL, type ValidationResult } from './schema/index.js';
 import { aggregate, AggregationResult, type AggregationOptions } from './query/aggregators.js';
+import { SecurityError } from './errors/index.js';
+import { isDangerousProperty } from './utils/property-security.js';
 
 /**
  * Document statistics
@@ -50,6 +52,26 @@ export interface DocumentStats {
    * Number of primitive values
    */
   primitiveCount: number;
+}
+
+function assertSafePathExpression(pathExpression: string): void {
+  const parts = pathExpression
+    .split(/[\.\[\]]+/)
+    .map(part => part.trim())
+    .filter(Boolean);
+
+  for (const part of parts) {
+    if (isDangerousProperty(part)) {
+      throw new SecurityError(
+        `Access to '${part}' is forbidden (prototype pollution protection)`,
+        {
+          property: part,
+          path: pathExpression,
+          reason: 'Accessing prototype chain properties can lead to security vulnerabilities',
+        }
+      );
+    }
+  }
 }
 
 /**
@@ -168,6 +190,7 @@ export class TONLDocument {
    * ```
    */
   get(pathExpression: string): any {
+    assertSafePathExpression(pathExpression);
     const parseResult = parsePath(pathExpression);
     if (!parseResult.success) {
       throw parseResult.error!;
@@ -206,6 +229,7 @@ export class TONLDocument {
    * @returns True if path exists, false otherwise
    */
   exists(pathExpression: string): boolean {
+    assertSafePathExpression(pathExpression);
     const parseResult = parsePath(pathExpression);
     if (!parseResult.success) {
       return false;
@@ -220,6 +244,7 @@ export class TONLDocument {
    * @returns Type string or undefined if path doesn't exist
    */
   typeOf(pathExpression: string): string | undefined {
+    assertSafePathExpression(pathExpression);
     const parseResult = parsePath(pathExpression);
     if (!parseResult.success) {
       return undefined;
@@ -467,6 +492,7 @@ export class TONLDocument {
    * ```
    */
   set(pathExpression: string, value: any): this {
+    assertSafePathExpression(pathExpression);
     const result = setByPath(this.data, pathExpression, value);
     if (!result.success) {
       throw new Error(result.error || 'Set operation failed');

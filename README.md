@@ -63,8 +63,8 @@
 🔒 **Production Secure** - 100% security hardened (v2.0.3)
 🛠️ **TypeScript-First** - Full type safety & IntelliSense
 📦 **Zero Dependencies** - Pure TypeScript, no bloat
-🌐 **Browser Ready** - 10.5 KB gzipped bundle (IIFE/UMD)
-✅ **100% Tested** - 496/496 tests passing (core functionality)
+🌐 **Browser Ready** - ~29 KB gzipped bundle (IIFE/UMD)
+✅ **Broadly Tested** - 2,300+ tests passing
 
 ---
 
@@ -104,7 +104,7 @@ doc.aggregate('users[*]').stats('age');            // { count, sum, avg, min, ma
 
 // Fuzzy Matching (v2.4.0)
 import { fuzzySearch, soundsLike } from 'tonl/query';
-fuzzySearch('Jon', ['John', 'Jane', 'Bob']);       // [{ value: 'John', score: 0.75 }]
+fuzzySearch('Jon', ['John', 'Jane', 'Bob']);       // [{ value: 'John', similarity: 0.75, index: 0 }]
 soundsLike('Smith', 'Smyth');                      // true
 
 // Temporal Queries (v2.4.0)
@@ -328,7 +328,7 @@ user{id:u32,name:str,contact:obj,roles:list}:
 - **🎨 Visual Customization** - Multiple terminal themes (default, neon, matrix, cyberpunk)
 - **Interactive REPL** - Explore data interactively in terminal
 - **Modular CLI Suite** - `encode`, `decode`, `query`, `validate`, `format`, `stats` with Command Pattern architecture
-- **Browser Support** - ESM, UMD, IIFE builds (8.84 KB gzipped)
+- **Browser Support** - ESM, UMD, IIFE builds (~29 KB gzipped)
 - **VS Code Extension** - Syntax highlighting for `.tonl` files
 - **TypeScript-First** - Full IntelliSense and type safety
 
@@ -351,12 +351,12 @@ user{id:u32,name:str,contact:obj,roles:list}:
 ## 🔒 Security & Quality
 
 ```
-✅ Tests:          698+ tests passing (100% coverage)
+✅ Tests:          2,300+ tests passing
 ✅ Security:       All vulnerabilities fixed (100%)
 ✅ Security Tests: 96 security tests passing
 ✅ Code Quality:   TypeScript strict mode
 ✅ Dependencies:   0 runtime dependencies
-✅ Bundle Size:    10.5 KB gzipped (browser)
+✅ Bundle Size:    ~29 KB gzipped (browser)
 ✅ Performance:    10-1600x faster than targets
 ✅ Production:     Ready & Fully Secure
 ```
@@ -448,9 +448,9 @@ logs[1000]{timestamp:i64,level:str,message:str,metadata:obj}:
 ```
 
 **Bundle Sizes:**
-- ESM: 15.5 KB gzipped
-- UMD: 10.7 KB gzipped
-- IIFE: 10.6 KB gzipped
+- ESM: 28.8 KB gzipped
+- UMD: 29.0 KB gzipped
+- IIFE: 29.0 KB gzipped
 
 **Examples:**
 See [examples/browser/](examples/browser/) for interactive React and Vue examples.
@@ -610,7 +610,7 @@ npm install
 # Build TypeScript
 npm run build
 
-# Run all tests (698+ tests)
+# Run all tests (2,300+ tests)
 npm test
 
 # Watch mode
@@ -675,8 +675,8 @@ tonl stats data.json --compare
 - ✅ Advanced optimization module (60% additional compression)
 - ✅ Complete query, modification, indexing, streaming APIs
 - ✅ Schema validation & TypeScript generation
-- ✅ Browser support (10.5 KB bundles)
-- ✅ 100% test coverage & security hardening
+- ✅ Browser support (~29 KB gzipped bundles)
+- ✅ Broad test suite & security hardening
 
 **🚀 Future**
 - Enhanced VS Code extension (IntelliSense, debugging)

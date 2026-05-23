@@ -66,6 +66,7 @@ export interface EncodeOptions {
 export interface DecodeOptions {
   delimiter?: TONLDelimiter; // if absent, auto-detect from header or heuristics
   strict?: boolean;          // enforce header N count, column counts, etc.
+  maxBlockLines?: number;    // override maximum lines per parsed block
 }
 
 export interface TONLHeader {
@@ -93,7 +94,7 @@ export interface TONLParseContext {
   allLines?: string[];       // All lines (for error context)
   currentDepth?: number;     // SECURITY FIX (SEC-002): Track recursion depth
   maxDepth?: number;         // SECURITY FIX (SEC-002): Maximum nesting depth (default: 100)
-  maxBlockLines?: number;    // SECURITY FIX (Task 001): Maximum lines per block (default: 10000)
+  maxBlockLines?: number;    // SECURITY FIX (Task 001): Maximum lines per block
 }
 
 export interface TONLEncodeContext {

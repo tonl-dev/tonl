@@ -353,6 +353,20 @@ function validateConstraint(
       }
       break;
 
+    case 'enum':
+      {
+        const allowedValues = String(constraint.value).split('|');
+        if (!allowedValues.includes(String(value))) {
+          errors.push({
+            field: path,
+            message: `Value '${value}' is not one of: ${allowedValues.join(', ')}`,
+            expected: allowedValues.join(' | '),
+            actual: String(value)
+          });
+        }
+      }
+      break;
+
     case 'unique':
       if (Array.isArray(value)) {
         const seen = new Set();

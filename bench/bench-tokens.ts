@@ -5,8 +5,8 @@
  */
 
 import { readFileSync, existsSync } from "fs";
-import { encodeTONL, encodeSmart } from "../src/index.js";
-import { estimateTokens, calculateCompressionMetrics, formatMetrics } from "../src/utils/metrics.js";
+import { encodeTONL, encodeSmart } from "../dist/index.js";
+import { estimateTokens } from "../dist/utils/metrics.js";
 
 interface TokenBenchmarkResult {
   filename: string;
@@ -58,7 +58,7 @@ function main() {
   }
 
   if (!targetFile) {
-    console.log("Usage: bench-tokens.ts <file.json> [--tokenizer gpt-5|gpt-4.5|gpt-4o|claude-3.5|gemini-2.0|llama-4|o200k|cl100k]\n");
+    console.log("Usage: bench-tokens.js <file.json> [--tokenizer gpt-5|gpt-4.5|gpt-4o|claude-3.5|gemini-2.0|llama-4|o200k|cl100k]\n");
     console.log(`Running token benchmark with ${tokenizer} tokenizer on sample files...\n`);
 
     // Run on sample fixtures
