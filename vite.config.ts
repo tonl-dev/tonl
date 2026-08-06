@@ -10,7 +10,7 @@ import { resolve } from 'path';
 export default defineConfig({
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/browser.ts'),
+      entry: resolve(import.meta.dirname, 'src/browser.ts'),
       name: 'TONL',
       formats: ['es', 'umd', 'iife'],
       fileName: (format) => {
