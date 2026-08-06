@@ -204,3 +204,7 @@ bugfixtasks/
 tailwindcss-windows-x64.exe
 
 plan/
+
+.wrongstack/**
+!/.wrongstack/
+!/.wrongstack/project.json
