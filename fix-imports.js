@@ -1,28 +1,39 @@
 #!/usr/bin/env node
-import { readFileSync, writeFileSync, statSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { readdirSync, readFileSync, writeFileSync, statSync } from 'fs';
+import { fileURLToPath, pathToFileURL } from 'url';
+import { dirname, join } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const files = [
-  'dist/browser-core.js',
-  'dist/browser-simple.js',
-  'dist/browser.js',
-  'dist/cli.js',
-  'dist/decode.js',
-  'dist/encode.js',
-  'dist/index.js',
-  'dist/parser.js'
-];
+function collectJavaScriptFiles(dir, files = []) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = join(dir, entry.name);
 
-function fixImports(content) {
+    if (entry.isDirectory()) {
+      collectJavaScriptFiles(fullPath, files);
+    } else if (entry.isFile() && entry.name.endsWith('.js')) {
+      files.push(fullPath.slice(__dirname.length + 1));
+    }
+  }
+
+  return files;
+}
+
+function getDistJavaScriptFiles() {
+  return collectJavaScriptFiles(join(__dirname, 'dist')).sort();
+}
+
+function resolveImportTarget(file, importPath) {
+  return join(__dirname, dirname(file), importPath);
+}
+
+export function fixImports(content, file = '') {
   // Fix all relative imports to add .js extensions
   let fixed = content;
 
   // Handle static imports
-  fixed = fixed.replace(/from "(\.\/[^"]+)"/g, (match, path) => {
+  fixed = fixed.replace(/from "(\.\.?\/[^\"]+)"/g, (match, path) => {
     // Skip if already has .js extension
     if (path.endsWith('.js')) {
       return match;
@@ -35,7 +46,7 @@ function fixImports(content) {
   });
 
   // Handle dynamic imports
-  fixed = fixed.replace(/await import\('(\.\/[^']+)'\)/g, (match, path) => {
+  fixed = fixed.replace(/await import\('(\.\.?\/[^']+)'\)/g, (match, path) => {
     // Skip if already has .js extension
     if (path.endsWith('.js')) {
       return match;
@@ -46,11 +57,11 @@ function fixImports(content) {
     }
     // Check if path is a directory by checking if it has corresponding directory
     try {
-      const stats = statSync(`dist/${path}`);
+      const stats = statSync(resolveImportTarget(file, path));
       if (stats.isDirectory()) {
         return `await import('${path}/index.js')`;
       }
-    } catch (e) {
+    } catch {
       // File doesn't exist, assume it's a module
     }
     // Special case: optimization is always a directory
@@ -63,20 +74,43 @@ function fixImports(content) {
   return fixed;
 }
 
-files.forEach(file => {
-  try {
-    const content = readFileSync(file, 'utf8');
-    const fixed = fixImports(content);
+let hadError = false;
 
-    if (content !== fixed) {
-      writeFileSync(file, fixed, 'utf8');
-      console.log(`✅ Fixed imports in ${file}`);
-    } else {
-      console.log(`ℹ️  No changes needed in ${file}`);
+export function fixConfiguredFiles(fileList = getDistJavaScriptFiles()) {
+  hadError = false;
+
+  for (const file of fileList) {
+    const fullPath = join(__dirname, file);
+
+    try {
+      const content = readFileSync(fullPath, 'utf8');
+      const fixed = fixImports(content, file);
+
+      if (content !== fixed) {
+        writeFileSync(fullPath, fixed, 'utf8');
+        console.log(`✅ Fixed imports in ${file}`);
+      } else {
+        console.log(`ℹ️  No changes needed in ${file}`);
+      }
+    } catch (error) {
+      hadError = true;
+      console.error(`❌ Error processing ${file}:`, error instanceof Error ? error.message : String(error));
     }
-  } catch (error) {
-    console.log(`❌ Error processing ${file}:`, error.message);
   }
-});
 
-console.log('🎉 Import fixing complete!');
+  if (hadError) {
+    throw new Error('Import fixing failed');
+  }
+}
+
+const isCliEntrypoint = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isCliEntrypoint) {
+  try {
+    fixConfiguredFiles();
+    console.log('🎉 Import fixing complete!');
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
+}
