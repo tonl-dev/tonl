@@ -122,4 +122,11 @@ export interface ParserState {
   i: number;
   line: string;
   currentFieldWasQuoted: boolean;
+  /**
+   * Parallel array tracking the quoted state of each emitted field.
+   * Populated only when the caller requested quote tracking via
+   * `parseTONLLineWithQuoteInfo`; left empty otherwise. Internal
+   * state — do not depend on this from outside the parser.
+   */
+  fieldQuoted?: boolean[];
 }

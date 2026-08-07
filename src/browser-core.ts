@@ -50,5 +50,5 @@ export { tokenize } from './query/tokenizer.js';
 export { validate, analyzeAST, optimizeAST, astToString } from './query/validator.js';
 
 // Parser utilities (pure TypeScript)
-export { parseTONLLine, parseHeaderLine, parseObjectHeader, detectDelimiter } from "./parser.js";
+export { parseTONLLine, parseTONLLineWithQuoteInfo, parseHeaderLine, parseObjectHeader, detectDelimiter } from "./parser.js";
 export { inferPrimitiveType, coerceValue, isUniformObjectArray } from "./infer.js";

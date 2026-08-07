@@ -8,6 +8,62 @@ import { inferPrimitiveType, isUniformObjectArray, getUniformColumns, isSemiUnif
 import { tripleQuoteIfNeeded, makeIndent } from "./utils/strings.js";
 
 /**
+ * Encode a number to its TONL wire representation.
+ *
+ * BUG-B FIX: Large integers (those whose absolute value exceeds
+ * Number.MAX_SAFE_INTEGER) cannot be represented precisely by
+ * JavaScript numbers. The TONL decoder preserves these values
+ * as strings (for precision safety), but the encoder was writing
+ * them as plain numbers, breaking the roundtrip:
+ *
+ *   encodeTONL({ val: 9007199254740992 })
+ *     -> val: 9007199254740992        // wire
+ *   decodeTONL(...)
+ *     -> { val: "9007199254740992" }  // string!
+ *
+ * This helper centralises the safe representation:
+ * - MAX_SAFE_INTEGER-safe ints: 42 (plain wire)
+ * - Non-integer numbers within safe range: 3.14 (plain wire)
+ * - Integers exceeding MAX_SAFE_INTEGER in magnitude: 9007199254740992
+ *   (encoded as a quoted JSON string literal to match the parser's
+ *   precision-preservation behavior).
+ * - Subnormal / very large floats: encoded as plain wire numbers
+ *   (the decoder represents them as plain JS numbers).
+ *
+ * @param value The number to encode.
+ * @returns The TONL wire token (already including any required
+ *   quotes for the unsafe-integer case).
+ */
+function encodeNumberToken(value: number): string {
+  // Non-finite numbers (Infinity, -Infinity, NaN) MUST be encoded
+  // as plain null since the rest of the encoder routes them
+  // through encodeObject's missing-field branch. This helper
+  // assumes the caller has already routed non-finite cases.
+  if (!Number.isFinite(value)) {
+    return "null";
+  }
+
+  const str = String(value);
+
+  // BUG-B FIX: Only quote the value as a string when its wire
+  // representation is an integer literal that the parser cannot
+  // represent precisely (i.e. integer literals whose magnitude
+  // exceeds MAX_SAFE_INTEGER). Numbers like MAX_VALUE
+  // (1.7976931348623157e+308) are technically integers in JS but
+  // are emitted in scientific notation; the parser handles that
+  // form natively via parseFloat and returns them as numbers, so
+  // we MUST leave them unquoted to preserve the roundtrip.
+  if (
+    /^-?\d+$/.test(str) &&
+    Math.abs(value) > Number.MAX_SAFE_INTEGER
+  ) {
+    return JSON.stringify(str);
+  }
+
+  return str;
+}
+
+/**
  * MED-010 FIX: Extract duplicated key quoting logic into a helper
  */
 function keyNeedsQuoting(k: string): boolean {
@@ -148,7 +204,9 @@ function encodeValue(value: TONLValue, key: string, context: TONLEncodeContext):
       // Infinity, -Infinity, NaN should be encoded as null
       return `${key}: null`;
     }
-    return `${key}: ${String(value)}`;
+    // BUG-B FIX: Use shared helper so large integers are quoted as
+    // strings to match the parser's precision-preservation logic.
+    return `${key}: ${encodeNumberToken(value)}`;
   }
 
   const quoted = tripleQuoteIfNeeded(String(value), context.delimiter);
@@ -214,7 +272,9 @@ function encodeObjectCompact(obj: TONLObject, key: string, context: TONLEncodeCo
       } else if (value === true || value === false) {
         primitiveValue = String(value);
       } else if (typeof value === 'number') {
-        primitiveValue = String(value);
+        // BUG-B FIX: Use shared helper so large integers are quoted
+        // (to match the parser's precision-preservation behavior).
+        primitiveValue = encodeNumberToken(value);
       } else {
         // For strings, avoid quotes if they don't contain special characters
         const strVal = String(value);
@@ -295,7 +355,9 @@ function encodeArrayCompact(arr: TONLArray, key: string, context: TONLEncodeCont
           } else if (value === true || value === false) {
             rowValues.push(String(value));
           } else if (typeof value === 'number') {
-            rowValues.push(String(value));
+            // BUG-B FIX: Use shared helper so large integers are quoted
+            // (to match the parser's precision-preservation behavior).
+            rowValues.push(encodeNumberToken(value));
           } else {
             // For strings in compact mode, try to avoid quotes
             const strVal = String(value);
@@ -412,7 +474,18 @@ function encodeObject(obj: TONLObject, key: string, context: TONLEncodeContext):
       } else if (value === true || value === false) {
         lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${String(value)}`);
       } else if (typeof value === 'number') {
-        lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${String(value)}`);
+        if (!Number.isFinite(value)) {
+          // Non-finite numbers (Infinity, -Infinity, NaN) are written as
+          // their literal token. The decoder recognises unquoted
+          // `Infinity`, `-Infinity`, and `NaN` and converts them back
+          // to actual numeric values. This preserves roundtrip
+          // symmetry for these special values (BUG-B regression check).
+          lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${String(value)}`);
+        } else {
+          // BUG-B FIX: Use shared helper so large integers are quoted as
+          // strings to match the parser's precision-preservation logic.
+          lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${encodeNumberToken(value)}`);
+        }
       } else if (value !== undefined) {
         const quoted = tripleQuoteIfNeeded(String(value), context.delimiter);
         lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `${keyName}: ${quoted}`);
@@ -526,7 +599,9 @@ function encodeArraySchemaFirst(arr: TONLArray, key: string, context: TONLEncode
       } else if (value === true || value === false) {
         rowValues.push(String(value));
       } else if (typeof value === 'number') {
-        rowValues.push(String(value));
+        // BUG-B FIX: Use shared helper so large integers are quoted
+        // (to match the parser's precision-preservation behavior).
+        rowValues.push(encodeNumberToken(value));
       } else if (Array.isArray(value)) {
         // Handle arrays efficiently - use unquoted format when possible
         if (value.length === 0) {
@@ -687,8 +762,9 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
             // Don't quote booleans
             rowValues.push(String(value));
           } else if (typeof value === 'number') {
-            // Don't quote any numbers
-            rowValues.push(String(value));
+            // BUG-B FIX: Use shared helper so large integers are quoted
+            // (to match the parser's precision-preservation behavior).
+            rowValues.push(encodeNumberToken(value));
           } else {
             const quoted = tripleQuoteIfNeeded(String(value), context.delimiter);
             rowValues.push(quoted);
@@ -715,7 +791,9 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
           } else if (value === true || value === false) {
             lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `[${i}]: ${String(value)}`);
           } else if (typeof value === 'number') {
-            lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `[${i}]: ${String(value)}`);
+            // BUG-B FIX: Use shared helper so large integers are quoted
+            // (to match the parser's precision-preservation behavior).
+            lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `[${i}]: ${encodeNumberToken(value)}`);
           } else if (value !== undefined) {
             const quoted = tripleQuoteIfNeeded(String(value), context.delimiter);
             lines.push(makeIndent(childContext.currentIndent, childContext.indent) + `[${i}]: ${quoted}`);

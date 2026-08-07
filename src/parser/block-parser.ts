@@ -4,7 +4,7 @@
 
 import type { TONLParseContext, TONLValue, TONLObject, TONLArray, TONLObjectHeader, TONLColumnDef, TONLDelimiter } from '../types.js';
 import { MISSING_FIELD_MARKER } from '../types.js';
-import { parseObjectHeader, parseTONLLine } from '../parser.js';
+import { parseObjectHeader, parseTONLLine, parseTONLLineWithQuoteInfo } from '../parser.js';
 import { coerceValue } from '../infer.js';
 import { parsePrimitiveValue } from './line-parser.js';
 import { unquote } from '../utils/strings.js';
@@ -1124,7 +1124,12 @@ export function parseArrayBlock(
         // Not a known directive, treat as data
       }
 
-      const values = parseTONLLine(trimmed, context.delimiter);
+      // BUG-A FIX: Use parseTONLLineWithQuoteInfo so we can distinguish
+      // empty quoted strings ("") from missing fields (unquoted empty
+      // between two delimiters). Previously, both produced "" which then
+      // matched MISSING_FIELD_MARKER and silently dropped legitimate empty
+      // string values.
+      const { values, quoted } = parseTONLLineWithQuoteInfo(trimmed, context.delimiter);
       if (values.length === 0) continue;
 
       if (values.length > header.columns.length) {
@@ -1139,9 +1144,12 @@ export function parseArrayBlock(
       for (let j = 0; j < header.columns.length && j < values.length; j++) {
         const column = header.columns[j];
         const value = values[j];
+        const wasQuoted = quoted[j] ?? false;
 
-        // Skip missing field marker - don't add the field to the object
-        if (value === MISSING_FIELD_MARKER) {
+        // Skip missing field marker ONLY for fields that were NOT quoted on the
+        // wire. A quoted empty string ("") is a legitimate user value that
+        // must be preserved as "".
+        if (value === MISSING_FIELD_MARKER && !wasQuoted) {
           continue;
         }
 

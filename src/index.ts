@@ -11,11 +11,11 @@ import type { TONLValue } from "./types.js";
 // Re-export encodeTONL with the original interface for direct use
 import { encodeTONL as _encodeTONL } from "./encode.js";
 import { decodeTONL as _decodeTONL } from "./decode.js";
-import { parseTONLLine, parseHeaderLine, parseObjectHeader, detectDelimiter } from "./parser.js";
+import { parseTONLLine, parseTONLLineWithQuoteInfo, parseHeaderLine, parseObjectHeader, detectDelimiter } from "./parser.js";
 import { inferPrimitiveType, coerceValue, isUniformObjectArray } from "./infer.js";
 import { chooseSmartDelimiter } from "./utils/delimiter.js";
 
-export { _encodeTONL as encodeTONL, _decodeTONL as decodeTONL, parseTONLLine, parseHeaderLine, parseObjectHeader, detectDelimiter, inferPrimitiveType, coerceValue, isUniformObjectArray };
+export { _encodeTONL as encodeTONL, _decodeTONL as decodeTONL, parseTONLLine, parseTONLLineWithQuoteInfo, parseHeaderLine, parseObjectHeader, detectDelimiter, inferPrimitiveType, coerceValue, isUniformObjectArray };
 
 /**
  * Smart encode a JavaScript value to TONL with automatic optimization.
