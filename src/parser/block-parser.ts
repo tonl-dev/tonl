@@ -4,9 +4,9 @@
 
 import type { TONLParseContext, TONLValue, TONLObject, TONLArray, TONLObjectHeader, TONLColumnDef, TONLDelimiter } from '../types.js';
 import { MISSING_FIELD_MARKER } from '../types.js';
-import { parseObjectHeader, parseTONLLine, parseTONLLineWithQuoteInfo } from '../parser.js';
+import { parseObjectHeader, parseTONLLineWithQuoteInfo, readArrayLineKey } from '../parser.js';
 import { coerceValue } from '../infer.js';
-import { parsePrimitiveValue } from './line-parser.js';
+import { parseDelimitedValues, parsePrimitiveValue } from './line-parser.js';
 import { unquote } from '../utils/strings.js';
 import { parseSingleLineObject } from './value-parser.js';
 import { extractNestedBlockLines } from './utils.js';
@@ -534,8 +534,11 @@ export function parseObjectBlock(
         // Silently continue if regex fails due to complexity
       }
     }
-    if (arrayMatch) {
-      const key = arrayMatch[1].trim();
+    // A quoted key is unquoted; text that is not a key falls through to the
+    // key-value parse below.
+    const arrayKey = arrayMatch ? readArrayLineKey(arrayMatch[1]) : null;
+    if (arrayMatch && arrayKey !== null) {
+      const key = arrayKey;
       const arrayLengthStr = arrayMatch[2].trim();
 
       // BUGFIX BUG-F001: Validate array length string
@@ -565,11 +568,7 @@ export function parseObjectBlock(
         const nestedHeader: TONLObjectHeader = { key, isArray: true, arrayLength, columns: [] as TONLColumnDef[] };
         result[key] = parseSingleLineObject(nestedHeader, valuePart, context);
       } else {
-        const fields = parseTONLLine(valuePart, context.delimiter);
-        const resultArray: TONLValue[] = [];
-        for (const field of fields) {
-          resultArray.push(parsePrimitiveValue(field, context));
-        }
+        const resultArray: TONLValue[] = parseDelimitedValues(valuePart, context);
         result[key] = resultArray;
       }
       lineIndex++;
@@ -768,55 +767,24 @@ export function parseArrayBlock(
             if (nestedArrayLength !== undefined) {
               if (valuePart) {
                 // Parse as an array with values
-                const arrayValues = parseTONLLine(valuePart, context.delimiter);
-                const parsedArray: TONLValue[] = [];
-                for (const arrayValue of arrayValues) {
-                  parsedArray.push(parsePrimitiveValue(arrayValue, context));
-                }
+                const parsedArray: TONLValue[] = parseDelimitedValues(valuePart, context);
                 result[index] = parsedArray;
               } else {
                 // Check if there are nested content lines for this array
                 const nestedContentLines = extractNestedBlockLines(lines, lineIndex);
                 if (nestedContentLines.length > 0) {
-                  // Parse nested content as elements of this array
-                  const nestedArray: TONLValue[] = [];
-
-                  for (let nestedLineIndex = 0; nestedLineIndex < nestedContentLines.length; nestedLineIndex++) {
-                    const nestedLine = nestedContentLines[nestedLineIndex];
-                    const nestedTrimmed = nestedLine.trim();
-
-                    // Skip empty lines and comments
-                    if (!nestedTrimmed || nestedTrimmed.startsWith('#')) continue;
-
-                    // Check for indexed headers in nested content
-                    const nestedIndexedMatch = nestedTrimmed.match(/^\[(\d+)\](?:\[(\d+)\])?:\s*(.*)$/);
-                    if (nestedIndexedMatch) {
-                      const nestedIndex = parseInt(nestedIndexedMatch[1], 10);
-                      const nestedArrayLength = nestedIndexedMatch[2] ? parseInt(nestedIndexedMatch[2], 10) : undefined;
-                      const nestedValuePart = nestedIndexedMatch[3].trim();
-
-                      if (nestedArrayLength !== undefined) {
-                        if (nestedValuePart) {
-                          // Parse as array with values
-                          const arrayValues = parseTONLLine(nestedValuePart, context.delimiter);
-                          const parsedArray: TONLValue[] = [];
-                          for (const arrayValue of arrayValues) {
-                            parsedArray.push(parsePrimitiveValue(arrayValue, context));
-                          }
-                          nestedArray[nestedIndex] = parsedArray;
-                        } else {
-                          nestedArray[nestedIndex] = [];
-                        }
-                      } else if (nestedValuePart) {
-                        // Parse as primitive
-                        nestedArray[nestedIndex] = parsePrimitiveValue(nestedValuePart, context);
-                      } else {
-                        nestedArray[nestedIndex] = [];
-                      }
-                    }
-                  }
-
-                  result[index] = nestedArray;
+                  // The nested lines are this array's elements, in the same
+                  // format as any array block, so parse them as one: objects,
+                  // tables and deeper arrays inside it then decode as they
+                  // would at the top level.
+                  const nestedHeader: TONLObjectHeader = {
+                    key: `[${index}]`,
+                    isArray: true,
+                    arrayLength: nestedArrayLength,
+                    columns: []
+                  };
+                  const childContext = { ...context, currentDepth: (context.currentDepth || 0) + 1 };
+                  result[index] = parseArrayBlock(nestedHeader, nestedContentLines, childContext);
                   lineIndex += nestedContentLines.length;
                 } else {
                   // Empty array with specified length
@@ -832,11 +800,7 @@ export function parseArrayBlock(
                   !valuePart.includes('"""') &&
                   !valuePart.includes(':')) {  // Not an object and not quoted
                 // Parse as an array
-                const arrayValues = parseTONLLine(valuePart, context.delimiter);
-                const parsedArray: TONLValue[] = [];
-                for (const arrayValue of arrayValues) {
-                  parsedArray.push(parsePrimitiveValue(arrayValue, context));
-                }
+                const parsedArray: TONLValue[] = parseDelimitedValues(valuePart, context);
                 result[index] = parsedArray;
               } else {
                 // Parse as a primitive value
@@ -874,11 +838,7 @@ export function parseArrayBlock(
                         if (nestedArrayLength !== undefined) {
                           if (nestedValuePart) {
                             // Parse as an array with values
-                            const arrayValues = parseTONLLine(nestedValuePart, context.delimiter);
-                            const parsedArray: TONLValue[] = [];
-                            for (const arrayValue of arrayValues) {
-                              parsedArray.push(parsePrimitiveValue(arrayValue, context));
-                            }
+                            const parsedArray: TONLValue[] = parseDelimitedValues(nestedValuePart, context);
                             nestedArray[nestedIndex] = parsedArray;
                           } else {
                             // Check if there are further nested lines for this nested array
@@ -922,11 +882,7 @@ export function parseArrayBlock(
 
                                   if (furtherArrayLength !== undefined) {
                                     if (furtherValuePart) {
-                                      const arrayValues = parseTONLLine(furtherValuePart, context.delimiter);
-                                      const parsedArray: TONLValue[] = [];
-                                      for (const arrayValue of arrayValues) {
-                                        parsedArray.push(parsePrimitiveValue(arrayValue, context));
-                                      }
+                                      const parsedArray: TONLValue[] = parseDelimitedValues(furtherValuePart, context);
                                       furtherNestedArray[furtherIndex] = parsedArray;
                                     } else {
                                       furtherNestedArray[furtherIndex] = [];
@@ -996,11 +952,7 @@ export function parseArrayBlock(
                         if (nestedArrayLength !== undefined) {
                           if (nestedValuePart) {
                             // Parse as array with values
-                            const arrayValues = parseTONLLine(nestedValuePart, context.delimiter);
-                            const parsedArray: TONLValue[] = [];
-                            for (const arrayValue of arrayValues) {
-                              parsedArray.push(parsePrimitiveValue(arrayValue, context));
-                            }
+                            const parsedArray: TONLValue[] = parseDelimitedValues(nestedValuePart, context);
                             nestedArray[nestedIndex] = parsedArray;
                           } else {
                             // Empty array
@@ -1091,16 +1043,10 @@ export function parseArrayBlock(
           // Parse the inline values from the array header
           const key = arrayWithValuesMatch[1].trim();
           const valuePart = arrayWithValuesMatch[3].trim();
-          const values = parseTONLLine(valuePart, context.delimiter);
-          for (const value of values) {
-            result.push(parsePrimitiveValue(value, context));
-          }
+          result.push(...parseDelimitedValues(valuePart, context));
         } else {
           // Parse as raw values (original behavior)
-          const values = parseTONLLine(lines[0], context.delimiter);
-          for (const value of values) {
-            result.push(parsePrimitiveValue(value, context));
-          }
+          result.push(...parseDelimitedValues(lines[0], context));
         }
       }
     }

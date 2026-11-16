@@ -3,8 +3,8 @@
  */
 
 import type { TONLParseContext, TONLObject, TONLObjectHeader, TONLColumnDef } from '../types.js';
-import { parseObjectHeader, parseTONLLine } from '../parser.js';
-import { parsePrimitiveValue } from './line-parser.js';
+import { parseObjectHeader, readArrayLineKey } from '../parser.js';
+import { parseDelimitedValues, parsePrimitiveValue } from './line-parser.js';
 import { parseSingleLineObject } from './value-parser.js';
 import { parseBlock } from './block-parser.js';
 import { findNextHeader } from './utils.js';
@@ -125,8 +125,11 @@ export function parseContent(content: string, context: TONLParseContext): TONLOb
           // Silently continue if regex fails due to complexity
         }
       }
-      if (arrayMatch) {
-        const key = arrayMatch[1].trim();
+      // A quoted key is unquoted; text that is not a key falls through to
+      // the key-value parse below.
+      const arrayKey = arrayMatch ? readArrayLineKey(arrayMatch[1]) : null;
+      if (arrayMatch && arrayKey !== null) {
+        const key = arrayKey;
         const arrayLengthStr = arrayMatch[2].trim();
 
         // BUG-NEW-008 FIX: Check length before regex to prevent ReDoS
@@ -162,11 +165,7 @@ export function parseContent(content: string, context: TONLParseContext): TONLOb
         const valuePart = arrayMatch[3].trim();
 
         // Parse as primitive array
-        const fields = parseTONLLine(valuePart, context.delimiter);
-        const resultArray: any[] = [];
-        for (const field of fields) {
-          resultArray.push(parsePrimitiveValue(field, context));
-        }
+        const resultArray: any[] = parseDelimitedValues(valuePart, context);
         result[key] = resultArray;
         i++;
         continue;

@@ -10,6 +10,37 @@ import {
   MAX_LINE_LENGTH,
   MAX_FIELDS_PER_LINE,
 } from "./utils/security-limits.js";
+import { unquote } from "./utils/strings.js";
+
+/**
+ * Find the quote that closes the quoted string starting at index 0 of
+ * `text`, skipping backslash escapes.
+ *
+ * @returns Index of the closing quote, or -1 if the string is not closed
+ */
+export function findClosingQuote(text: string): number {
+  for (let i = 1; i < text.length; i++) {
+    if (text[i] === '\\') {
+      i++;
+    } else if (text[i] === '"') {
+      return i;
+    }
+  }
+  return -1;
+}
+
+/**
+ * Read the key in front of `[N]` in a `key[N]: values` line. A quoted key is
+ * unquoted. Returns null when the text is not a key, as in `a: "x[1]: y"`,
+ * where the brackets belong to a quoted value.
+ */
+export function readArrayLineKey(raw: string): string | null {
+  const key = raw.trim();
+  if (key.startsWith('"')) {
+    return findClosingQuote(key) === key.length - 1 ? unquote(key) : null;
+  }
+  return key.includes(':') || key.includes('"') ? null : key;
+}
 
 /**
  * Parse a single TONL line into array of field values.
@@ -167,13 +198,9 @@ function _runParseTONLLine(state: ParserState, delimiter: TONLDelimiter): void {
           } else {
             state.mode = "plain";
           }
-        } else if (char === '[') {
-          bracketDepth++;
-          state.currentField += char;
-        } else if (char === ']') {
-          if (bracketDepth > 0) bracketDepth--;
-          state.currentField += char;
         } else {
+          // Brackets inside a quoted string are content: counting them would
+          // stop the delimiter after the string from splitting.
           state.currentField += char;
         }
         break;
@@ -183,12 +210,6 @@ function _runParseTONLLine(state: ParserState, delimiter: TONLDelimiter): void {
           state.currentField += '"""';
           state.mode = "plain";
           state.i += 2;
-        } else if (char === '[') {
-          bracketDepth++;
-          state.currentField += char;
-        } else if (char === ']') {
-          if (bracketDepth > 0) bracketDepth--;
-          state.currentField += char;
         } else {
           state.currentField += char;
         }
@@ -252,6 +273,17 @@ export function parseObjectHeader(line: string): TONLObjectHeader | null {
     // Indexed key like [0]
     key = `[${indexedKeyMatch[1]}]`;
     remaining = headerContent.slice(indexedKeyMatch[0].length);
+  } else if (headerContent.startsWith('"')) {
+    // Quoted key, written for keys with characters that are TONL syntax
+    const end = findClosingQuote(headerContent);
+    if (end < 0) {
+      return null;
+    }
+    remaining = headerContent.slice(end + 1);
+    if (remaining !== "" && !remaining.startsWith("[") && !remaining.startsWith("{")) {
+      return null;
+    }
+    key = unquote(headerContent.slice(0, end + 1));
   } else {
     // Regular key starting with letter
     const keyMatch = headerContent.match(/^([a-zA-Z_][a-zA-Z0-9_]*)/);
