@@ -151,6 +151,9 @@ export function needsQuoting(value: string, delimiter: TONLDelimiter): boolean {
          value.includes('{') ||
          value.includes('}') ||
          value.includes('#') ||
+         value.includes('[') ||       // Brackets would be read as array syntax
+         value.includes(']') ||
+         value.includes('\\') ||      // An unquoted backslash escapes the next delimiter
          value.includes('"') ||       // Quote characters need quoting
          value.includes('\n') ||
          value.includes('\t') ||      // Tab characters need quoting

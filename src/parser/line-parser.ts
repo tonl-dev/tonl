@@ -4,6 +4,7 @@
 
 import type { TONLParseContext, TONLValue } from '../types.js';
 import { unquote } from '../utils/strings.js';
+import { parseTONLLineWithQuoteInfo } from '../parser.js';
 
 /**
  * Parse a primitive value from a string
@@ -102,4 +103,37 @@ export function parsePrimitiveValue(value: string, context: TONLParseContext): T
 
   // Default to string
   return trimmed;
+}
+
+/**
+ * Parse one field of a delimited line.
+ *
+ * The line parser has already removed the quotes of a quoted field and
+ * unescaped its content, so a quoted field is the string itself: it must not
+ * be trimmed, unquoted again, or coerced to a number, boolean or null.
+ * Triple-quoted fields keep their delimiters and are decoded here.
+ *
+ * @param value Field content as returned by the line parser
+ * @param wasQuoted Whether the field was quoted on the wire
+ * @param context Parse context
+ * @returns Parsed value
+ */
+export function parseFieldValue(value: string, wasQuoted: boolean, context: TONLParseContext): TONLValue {
+  if (wasQuoted && !value.startsWith('"""')) {
+    return value;
+  }
+  return parsePrimitiveValue(value, context);
+}
+
+/**
+ * Split a delimited line of values (an inline array) and parse each field,
+ * keeping quoted fields as strings.
+ *
+ * @param line The values part of the line
+ * @param context Parse context
+ * @returns Parsed values
+ */
+export function parseDelimitedValues(line: string, context: TONLParseContext): TONLValue[] {
+  const { values, quoted } = parseTONLLineWithQuoteInfo(line, context.delimiter);
+  return values.map((value, i) => parseFieldValue(value, quoted[i] ?? false, context));
 }

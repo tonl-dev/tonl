@@ -68,15 +68,26 @@ function encodeNumberToken(value: number): string {
  */
 function keyNeedsQuoting(k: string): boolean {
   return k.includes(':') || k.includes(',') || k.includes('{') || k.includes('}') || k.includes('"') ||
+         k.includes('[') || k.includes(']') ||
          k.includes('#') || k.includes('@') || k.trim() === '' || k.startsWith(' ') || k.endsWith(' ') ||
          k.includes('\t') || k.includes('\n') || k.includes('\r');
 }
 
+function escapeKey(k: string): string {
+  return `"${k.replace(/\\/g, '\\\\').replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/\t/g, '\\t').replace(/"/g, '\\"')}"`;
+}
+
 function quoteKey(k: string): string {
-  if (keyNeedsQuoting(k)) {
-    return `"${k.replace(/\\/g, '\\\\').replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/\t/g, '\\t').replace(/"/g, '\\"')}"`;
-  }
-  return k;
+  return keyNeedsQuoting(k) ? escapeKey(k) : k;
+}
+
+/**
+ * Key for the header line of an object or array value. The decoder reads an
+ * unquoted header key only when it is an identifier, so any other key is
+ * quoted, not just keys with characters that are TONL syntax.
+ */
+function headerKey(k: string): string {
+  return /^[A-Za-z_][A-Za-z0-9_]*$/.test(k) ? k : escapeKey(k);
 }
 
 /**
@@ -466,7 +477,7 @@ function encodeObject(obj: TONLObject, key: string, context: TONLEncodeContext):
     const keyName = quoteKey(k);
 
     if (Array.isArray(value) || (typeof value === "object" && value !== null)) {
-      const childLine = encodeValue(value, k, childContext);
+      const childLine = encodeValue(value, headerKey(k), childContext);
       lines.push(makeIndent(childContext.currentIndent, childContext.indent) + childLine);
     } else {
       if (value === null) {
@@ -712,10 +723,13 @@ function encodeArray(arr: TONLArray, key: string, context: TONLEncodeContext): s
       )
     );
 
-    if (hasOnlyPrimitives) {
+    // For semi-uniform arrays, get ALL columns from all objects
+    const columns = isSemiUniform ? getAllColumns(arr) : getUniformColumns(arr);
+
+    // A table needs at least one column: rows of empty objects are blank
+    // lines that decode to nothing, so those arrays use the mixed format.
+    if (hasOnlyPrimitives && columns.length > 0) {
       // Safe to use tabular format
-      // For semi-uniform arrays, get ALL columns from all objects
-      const columns = isSemiUniform ? getAllColumns(arr) : getUniformColumns(arr);
       const columnDefs: string[] = [];
 
       // For type inference with semi-uniform arrays, we need to check all items

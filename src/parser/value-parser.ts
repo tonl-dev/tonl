@@ -3,8 +3,8 @@
  */
 
 import type { TONLParseContext, TONLValue, TONLObject, TONLObjectHeader } from '../types.js';
-import { parseTONLLine } from '../parser.js';
-import { parsePrimitiveValue } from './line-parser.js';
+import { parseTONLLineWithQuoteInfo } from '../parser.js';
+import { parseFieldValue, parsePrimitiveValue } from './line-parser.js';
 
 /**
  * Parse a single-line object format: key{cols}: val1: val2 val3: val4
@@ -21,7 +21,7 @@ export function parseSingleLineObject(header: TONLObjectHeader | null, valuePart
 
   if (header.isArray) {
     // Parse single-line array format: arr[3]{col1,col2}: val1, val2, val3, val4, val5, val6
-    const fields = parseTONLLine(valuePart, context.delimiter);
+    const { values: fields, quoted } = parseTONLLineWithQuoteInfo(valuePart, context.delimiter);
 
     // BUG-NEW-005 FIX: Validate columns length before division
     if (header.columns.length === 0) {
@@ -41,7 +41,7 @@ export function parseSingleLineObject(header: TONLObjectHeader | null, valuePart
         if (fieldIndex < fields.length) {
           const column = header.columns[j];
           const rawValue = fields[fieldIndex];
-          item[column.name] = parsePrimitiveValue(rawValue, context);
+          item[column.name] = parseFieldValue(rawValue, quoted[fieldIndex] ?? false, context);
         }
       }
       result.push(item);
